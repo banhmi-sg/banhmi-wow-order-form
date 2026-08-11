@@ -1,274 +1,701 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Banh Mi Wow | Order Online</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banh Mi Wow - Authentic Vietnamese Street Food</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#fff1f2',
+              100: '#ffe4e6',
+              500: '#e11d48',
+              600: '#be123c',
+              700: '#9f1239',
+              800: '#881337',
+              dark: '#1c1917',
+            }
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: #fffdf5;
-      color: #333;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-      padding-bottom: 100px;
-    }
-    h1 { text-align: center; color: #8b0000; margin-bottom: 5px; }
-    p.sub { text-align: center; color: #666; font-size: 14px; margin-top: 0; }
-    
-    .menu-item {
-      display: flex;
-      gap: 15px;
-      background: #ffffff;
-      border: 1px solid #e0e0e0;
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 15px;
-      align-items: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-    .menu-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; }
-    .item-details { flex: 1; }
-    .item-title { font-weight: bold; font-size: 16px; margin-bottom: 4px; }
-    .item-desc { font-size: 12px; color: #777; margin-bottom: 6px; }
-    .item-price { font-weight: bold; color: #8b0000; }
-    
-    .btn-add {
-      background: #8b0000;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    /* Modal Overlay */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      justify-content: center;
-      align-items: flex-end;
-      z-index: 1000;
-    }
-    .modal-content {
-      background: #fff;
-      width: 100%;
-      max-width: 600px;
-      border-radius: 16px 16px 0 0;
-      padding: 20px;
-      box-sizing: border-box;
-      animation: slideUp 0.2s ease-out;
-    }
-    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-    .option-group { margin-bottom: 15px; }
-    .option-group label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; }
-    .option-group div { margin-bottom: 6px; font-size: 14px; }
-
-    /* Cart Section */
-    .cart-summary {
-      background: #fff;
-      border: 1px solid #e0e0e0;
-      border-radius: 12px;
-      padding: 15px;
-      margin-top: 20px;
-    }
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px dashed #eee;
-      padding: 8px 0;
-      font-size: 14px;
-    }
-    .cart-item-details { flex: 1; }
-    .cart-item-sub { font-size: 12px; color: #666; }
-    .btn-remove { color: red; cursor: pointer; font-size: 12px; margin-left: 10px; }
-
-    .form-group { margin-top: 15px; }
-    .form-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 14px; }
-    .form-group input, .form-group textarea {
-      width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box;
-    }
-
-    .btn-whatsapp {
-      width: 100%; background-color: #25D366; color: white; border: none;
-      padding: 14px; border-radius: 8px; font-weight: bold; font-size: 16px;
-      cursor: pointer; margin-top: 20px;
-    }
+    body { background-color: #f7f5f0; }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .modal-backdrop { background-color: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); }
   </style>
 </head>
-<body>
+<body class="font-sans text-stone-800 antialiased min-h-screen pb-24 md:pb-12">
 
-  <h1>Banh Mi Wow</h1>
-  <p class="sub">IG: @banhmiwowsg</p>
+  <!-- Header Banner & Branding -->
+  <header class="bg-gradient-to-r from-stone-900 via-brand-800 to-stone-900 text-white shadow-lg sticky top-0 z-30">
+    <div class="max-w-4xl mx-auto px-4 py-4 sm:px-6 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center text-stone-900 text-2xl font-black shadow-md border-2 border-amber-300">
+          🥖
+        </div>
+        <div>
+          <h1 class="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
+            Banh Mi Wow
+            <span class="text-xs bg-amber-400 text-stone-900 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Hội An Style</span>
+          </h1>
+          <p class="text-xs text-stone-300 flex items-center gap-2 mt-0.5">
+            <span class="inline-flex items-center text-amber-400"><i class="fa-solid fa-star text-xs mr-1"></i>4.9 (1.2k)</span>
+            <span>•</span>
+            <a href="https://instagram.com/banhmiwowsg" target="_blank" class="hover:text-amber-300 transition flex items-center gap-1">
+              <i class="fa-brands fa-instagram"></i> @banhmiwowsg
+            </a>
+          </p>
+        </div>
+      </div>
 
-  <!-- MENU ITEMS -->
-  <div class="menu-item">
-    <img src="https://images.unsplash.com/photo-1626803775151-61d756612f97?w=300" alt="Pork Banh Mi">
-    <div class="item-details">
-      <div class="item-title">Traditional Pork Banh Mi</div>
-      <div class="item-desc">Pate, cold cuts, fresh pickles & herbs.</div>
-      <div class="item-price">S$7.50</div>
+      <!-- Quick Cart Button Header -->
+      <button onclick="toggleCartDrawer()" class="relative bg-white/10 hover:bg-white/20 text-white px-4 py-2.5 rounded-xl transition flex items-center gap-2.5 font-semibold text-sm border border-white/10">
+        <i class="fa-solid fa-basket-shopping text-amber-400 text-base"></i>
+        <span class="hidden sm:inline">Your Order</span>
+        <span id="cart-badge-count" class="bg-amber-400 text-stone-900 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
+      </button>
     </div>
-    <button class="btn-add" onclick="openCustomizeModal('Traditional Pork Banh Mi', 7.50)">+ Add</button>
-  </div>
+  </header>
 
-  <div class="menu-item">
-    <img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300" alt="Chicken Banh Mi">
-    <div class="item-details">
-      <div class="item-title">Grilled Chicken Banh Mi</div>
-      <div class="item-desc">Lemongrass grilled chicken & cucumber.</div>
-      <div class="item-price">S$7.00</div>
-    </div>
-    <button class="btn-add" onclick="openCustomizeModal('Grilled Chicken Banh Mi', 7.00)">+ Add</button>
-  </div>
-
-  <!-- CART & CUSTOMER DETAILS -->
-  <div class="cart-summary">
-    <h3>Your Order</h3>
-    <div id="cartList"><p style="color:#888; font-size:14px;">No items added yet.</p></div>
-    <div style="font-weight:bold; margin-top:10px; text-align:right;" id="cartTotal">Total: S$0.00</div>
-  </div>
-
-  <div class="form-group">
-    <label for="custName">Your Name *</label>
-    <input type="text" id="custName" placeholder="e.g. John Tan" required>
-  </div>
-
-  <div class="form-group">
-    <label for="custAddress">Delivery Address / Pickup Info *</label>
-    <textarea id="custAddress" rows="2" placeholder="Full address or Pickup Time" required></textarea>
-  </div>
-
-  <button type="button" class="btn-whatsapp" onclick="sendWhatsAppOrder()">
-    Submit Order via WhatsApp
-  </button>
-
-  <!-- CUSTOMIZATION MODAL -->
-  <div class="modal" id="customModal">
-    <div class="modal-content">
-      <h3 id="modalTitle" style="margin-top:0;">Customize Item</h3>
+  <!-- Main Content Container -->
+  <main class="max-w-4xl mx-auto px-4 py-6 sm:px-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Menu Grid (Left / Main Column) -->
+    <div class="lg:col-span-2 space-y-6">
       
-      <div class="option-group">
-        <label>Chili / Spice Level:</label>
-        <div><input type="radio" name="chili" value="Normal Chili" checked> Normal Chili</div>
-        <div><input type="radio" name="chili" value="More Chili"> More Chili</div>
-        <div><input type="radio" name="chili" value="No Chili"> No Chili</div>
+      <!-- Announcement -->
+      <div class="bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl p-4 text-stone-900 shadow-sm flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-xl">
+            ✨
+          </div>
+          <div>
+            <h3 class="font-bold text-sm">Fresh Baked Crispy Baguettes</h3>
+            <p class="text-xs font-medium text-stone-800">Made daily with authentic Hội An family recipe pâté & pickles</p>
+          </div>
+        </div>
+        <span class="text-xs bg-stone-900 text-amber-300 font-bold px-2.5 py-1 rounded-lg shrink-0">Fresh Daily</span>
       </div>
 
-      <div class="option-group">
-        <label>Add-ons:</label>
-        <div><input type="checkbox" id="addEgg" value="Fried Egg (+S$1.00)" data-price="1.00"> Fried Egg (+S$1.00)</div>
-        <div><input type="checkbox" id="addMeat" value="Extra Meat (+S$2.00)" data-price="2.00"> Extra Meat (+S$2.00)</div>
-        <div><input type="checkbox" id="addPate" value="Extra Pate (+S$1.00)" data-price="1.00"> Extra Pate (+S$1.00)</div>
+      <!-- Category Heading -->
+      <div class="flex items-center justify-between pt-2">
+        <h2 class="text-xl font-bold text-stone-900 flex items-center gap-2">
+          <span>🥖</span> All 6 Banh Mi Options
+        </h2>
       </div>
 
-      <div class="option-group">
-        <label>Special Instructions:</label>
-        <input type="text" id="itemNotes" placeholder="e.g. No coriander, cut in half">
+      <!-- Menu Items List -->
+      <div id="menu-items-list" class="space-y-4"></div>
+
+      <!-- Drinks Section Header -->
+      <div class="flex items-center justify-between pt-6 border-t border-stone-200">
+        <h2 class="text-xl font-bold text-stone-900 flex items-center gap-2">
+          <span>☕</span> Drinks & Coffee
+        </h2>
       </div>
 
-      <div style="display:flex; gap:10px; margin-top:20px;">
-        <button class="btn-add" style="flex:1; background:#ccc; color:#333;" onclick="closeModal()">Cancel</button>
-        <button class="btn-add" style="flex:1;" onclick="confirmAddToCart()">Add to Cart</button>
+      <!-- Drinks Menu List -->
+      <div id="drinks-items-list" class="space-y-4"></div>
+
+    </div>
+
+    <!-- Order Summary / Cart Sidebar (Right Column) -->
+    <div class="hidden lg:block lg:col-span-1">
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-stone-200 sticky top-28">
+        <div class="flex items-center justify-between pb-4 border-b border-stone-100">
+          <h3 class="font-bold text-stone-900 text-lg flex items-center gap-2">
+            <i class="fa-solid fa-basket-shopping text-brand-700"></i> Your Cart
+          </h3>
+          <span id="sidebar-cart-count" class="text-xs font-bold bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full">0 items</span>
+        </div>
+
+        <!-- Cart Items List -->
+        <div id="sidebar-cart-items" class="py-4 space-y-3 max-h-80 overflow-y-auto">
+          <div id="empty-cart-view" class="text-center py-8 text-stone-400">
+            <div class="text-4xl mb-2">🥖</div>
+            <p class="text-sm font-medium">Your basket is empty</p>
+            <p class="text-xs text-stone-400 mt-1">Select a Banh Mi to customize and order</p>
+          </div>
+        </div>
+
+        <!-- Cart Summary Footer -->
+        <div id="cart-summary-footer" class="pt-4 border-t border-stone-100 space-y-2 text-sm hidden">
+          <div class="flex justify-between text-stone-600">
+            <span>Subtotal</span>
+            <span id="cart-subtotal" class="font-semibold text-stone-900">S$0.00</span>
+          </div>
+          <div class="flex justify-between text-base font-extrabold text-stone-900 pt-2 border-t border-stone-100">
+            <span>Total</span>
+            <span id="cart-total" class="text-brand-700">S$0.00</span>
+          </div>
+
+          <!-- Customer details inputs -->
+          <div class="space-y-2 pt-3 border-t border-stone-100">
+            <input type="text" id="custName" placeholder="Your Name *" class="w-full p-2.5 text-xs border border-stone-200 rounded-lg outline-none focus:ring-1 focus:ring-brand-500">
+            <textarea id="custAddress" rows="2" placeholder="Delivery Address / Pickup Info *" class="w-full p-2.5 text-xs border border-stone-200 rounded-lg outline-none focus:ring-1 focus:ring-brand-500"></textarea>
+          </div>
+
+          <button onclick="sendWhatsAppOrder()" class="w-full mt-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl shadow-sm transition flex items-center justify-center gap-2">
+            <i class="fa-brands fa-whatsapp text-lg"></i>
+            <span>Send Order via WhatsApp</span>
+          </button>
+        </div>
       </div>
+    </div>
+  </main>
+
+  <!-- Mobile Sticky Cart Bar -->
+  <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 p-3 z-30 shadow-2xl">
+    <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
+      <div>
+        <div class="text-xs text-stone-500">Total (<span id="mobile-cart-qty">0</span> items)</div>
+        <div id="mobile-cart-total" class="text-lg font-extrabold text-stone-900">S$0.00</div>
+      </div>
+      <button onclick="toggleCartDrawer()" class="flex-1 bg-brand-700 hover:bg-brand-800 text-white font-bold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2">
+        <i class="fa-solid fa-basket-shopping"></i> View Cart
+      </button>
     </div>
   </div>
 
-  <script>
-    let cart = [];
-    let currentItem = { name: '', basePrice: 0 };
+  <!-- Customization Modal -->
+  <div id="customize-modal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center hidden">
+    <div onclick="closeCustomizeModal()" class="modal-backdrop absolute inset-0"></div>
 
-    function openCustomizeModal(name, basePrice) {
-      currentItem = { name, basePrice };
-      document.getElementById('modalTitle').innerText = `Customize ${name}`;
-      document.getElementById('itemNotes').value = '';
-      document.getElementById('addEgg').checked = false;
-      document.getElementById('addMeat').checked = false;
-      document.getElementById('addPate').checked = false;
-      document.getElementById('customModal').style.display = 'flex';
+    <div class="relative bg-white w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col z-10">
+      
+      <!-- Modal Header -->
+      <div class="p-5 bg-stone-900 text-white relative shrink-0">
+        <button onclick="closeCustomizeModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Customization</span>
+        <h3 id="modal-item-title" class="text-xl font-bold mt-0.5 text-white pr-8">Traditional Pork Banh Mi</h3>
+        <p id="modal-item-desc" class="text-xs text-stone-300 mt-1 line-clamp-2"></p>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-5 overflow-y-auto space-y-6 flex-1 text-sm">
+        
+        <!-- Quantity Selector with Quick Adder (+1, +2, +3, +5) -->
+        <div>
+          <label class="block font-bold text-stone-900 mb-2.5 flex items-center justify-between">
+            <span><i class="fa-solid fa-layer-group text-brand-700 mr-1.5"></i> Quantity</span>
+          </label>
+          <div class="flex items-center justify-between bg-stone-50 p-3 rounded-2xl border border-stone-200">
+            <div class="flex items-center space-x-3 bg-white border border-stone-200 p-1 rounded-xl shadow-sm">
+              <button onclick="adjustModalQty(-1)" class="w-9 h-9 rounded-lg bg-stone-100 text-stone-800 font-bold hover:bg-stone-200 flex items-center justify-center transition text-base">-</button>
+              <span id="modal-qty" class="font-extrabold text-stone-900 w-8 text-center text-lg">1</span>
+              <button onclick="adjustModalQty(1)" class="w-9 h-9 rounded-lg bg-stone-100 text-stone-800 font-bold hover:bg-stone-200 flex items-center justify-center transition text-base">+</button>
+            </div>
+
+            <!-- Quick Add Pill Buttons -->
+            <div class="flex items-center gap-1.5">
+              <button type="button" onclick="setModalQty(1)" class="text-xs font-bold bg-stone-200 hover:bg-stone-300 text-stone-800 px-3 py-2 rounded-xl transition">1</button>
+              <button type="button" onclick="setModalQty(2)" class="text-xs font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-2 rounded-xl transition">+2</button>
+              <button type="button" onclick="setModalQty(3)" class="text-xs font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-2 rounded-xl transition">+3</button>
+              <button type="button" onclick="setModalQty(5)" class="text-xs font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-2 rounded-xl transition">+5</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add-ons (Checkboxes) -->
+        <div>
+          <label class="block font-bold text-stone-900 mb-2.5 flex items-center justify-between">
+            <span><i class="fa-solid fa-plus-circle text-amber-600 mr-1.5"></i> Extra Add-ons</span>
+            <span class="text-xs text-stone-400 font-normal">Optional</span>
+          </label>
+          <div class="space-y-2">
+            <label class="flex items-center justify-between p-3 rounded-xl border border-stone-200 hover:border-stone-300 cursor-pointer bg-stone-50/50 transition">
+              <div class="flex items-center gap-3">
+                <input type="checkbox" onchange="toggleAddon('egg')" id="addon-egg" class="w-4 h-4 text-brand-700 rounded border-stone-300 focus:ring-brand-500">
+                <span class="font-medium text-stone-800">🍳 Fried Egg</span>
+              </div>
+              <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-1 rounded-md">+S$1.00</span>
+            </label>
+
+            <label class="flex items-center justify-between p-3 rounded-xl border border-stone-200 hover:border-stone-300 cursor-pointer bg-stone-50/50 transition">
+              <div class="flex items-center gap-3">
+                <input type="checkbox" onchange="toggleAddon('meat')" id="addon-meat" class="w-4 h-4 text-brand-700 rounded border-stone-300 focus:ring-brand-500">
+                <span class="font-medium text-stone-800">🥩 Extra Meat</span>
+              </div>
+              <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-1 rounded-md">+S$2.00</span>
+            </label>
+
+            <label class="flex items-center justify-between p-3 rounded-xl border border-stone-200 hover:border-stone-300 cursor-pointer bg-stone-50/50 transition">
+              <div class="flex items-center gap-3">
+                <input type="checkbox" onchange="toggleAddon('pickles')" id="addon-pickles" class="w-4 h-4 text-brand-700 rounded border-stone-300 focus:ring-brand-500">
+                <span class="font-medium text-stone-800">🥕 Extra Pickled Veg</span>
+              </div>
+              <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-1 rounded-md">+S$1.00</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Special Instructions -->
+        <div>
+          <label class="block font-bold text-stone-900 mb-1.5 flex items-center justify-between">
+            <span><i class="fa-solid fa-pen-to-square text-stone-600 mr-1.5"></i> Special Instructions</span>
+          </label>
+          
+          <!-- Quick Preset Chips including No Peanuts -->
+          <div class="flex flex-wrap gap-1.5 mb-2">
+            <button type="button" onclick="appendInstruction('No peanuts')" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-900 font-semibold px-2.5 py-1 rounded-lg transition">🥜 No peanuts</button>
+            <button type="button" onclick="appendInstruction('No coriander')" class="text-xs bg-stone-100 hover:bg-stone-200 text-stone-700 px-2.5 py-1 rounded-lg transition">🌿 No coriander</button>
+            <button type="button" onclick="appendInstruction('Cut in half')" class="text-xs bg-stone-100 hover:bg-stone-200 text-stone-700 px-2.5 py-1 rounded-lg transition">✂️ Cut in half</button>
+          </div>
+
+          <textarea id="modal-instructions" rows="2" placeholder="e.g. No peanuts, cut in half, extra crispy..." class="w-full p-3 border border-stone-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-xs text-stone-800"></textarea>
+        </div>
+
+      </div>
+
+      <!-- Modal Sticky Footer -->
+      <div class="p-4 bg-stone-50 border-t border-stone-200 shrink-0 flex items-center gap-3">
+        <button onclick="closeCustomizeModal()" class="w-1/3 bg-stone-200 hover:bg-stone-300 text-stone-800 font-bold py-3 px-4 rounded-xl transition text-center text-sm">
+          Cancel
+        </button>
+        <button onclick="confirmAddToCart()" class="w-2/3 bg-brand-700 hover:bg-brand-800 text-white font-bold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-between text-sm">
+          <span>Add to Cart</span>
+          <span id="modal-calculated-price" class="bg-brand-800 px-2.5 py-1 rounded-lg text-xs font-extrabold">S$7.50</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Mobile Slide-over Drawer for Cart -->
+  <div id="cart-drawer" class="fixed inset-0 z-50 flex justify-end hidden">
+    <div onclick="toggleCartDrawer()" class="modal-backdrop absolute inset-0"></div>
+    <div class="relative bg-white w-full max-w-md h-full shadow-2xl flex flex-col z-10">
+      
+      <div class="p-4 bg-stone-900 text-white flex items-center justify-between">
+        <h3 class="font-bold text-lg flex items-center gap-2">
+          <i class="fa-solid fa-basket-shopping text-amber-400"></i> Your Order
+        </h3>
+        <button onclick="toggleCartDrawer()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div id="drawer-cart-items" class="p-4 overflow-y-auto flex-1 space-y-3"></div>
+
+      <div id="drawer-cart-footer" class="p-4 border-t border-stone-200 bg-stone-50 space-y-3">
+        <div class="flex justify-between text-stone-600 text-sm">
+          <span>Subtotal</span>
+          <span id="drawer-subtotal" class="font-bold text-stone-900">S$0.00</span>
+        </div>
+
+        <div class="space-y-2">
+          <input type="text" id="custNameMobile" placeholder="Your Name *" class="w-full p-2.5 text-xs border border-stone-200 rounded-lg outline-none">
+          <textarea id="custAddressMobile" rows="2" placeholder="Delivery Address / Pickup Info *" class="w-full p-2.5 text-xs border border-stone-200 rounded-lg outline-none"></textarea>
+        </div>
+
+        <button onclick="sendWhatsAppOrder()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-md transition flex items-center justify-center gap-2">
+          <i class="fa-brands fa-whatsapp text-lg"></i>
+          <span>Send Order via WhatsApp</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JavaScript Application Logic -->
+  <script>
+    const whatsappNumber = "65XXXXXXXX"; // Replace with your actual WhatsApp phone number
+
+    const menuItems = [
+      {
+        id: 'bm-1',
+        title: 'Traditional Pork Banh Mi',
+        vnName: 'Bánh Mì Thịt Nguội',
+        desc: 'Signature Vietnamese pâté, savory cold cuts, pork sausage, fresh pickled radish & carrot, cucumber, spring onion & coriander.',
+        price: 7.50,
+        badge: 'Best Seller',
+        badgeColor: 'bg-amber-100 text-amber-800 border-amber-200',
+        image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=400&q=80'
+      },
+      {
+        id: 'bm-2',
+        title: 'Grilled Chicken Banh Mi',
+        vnName: 'Bánh Mì Gà Nướng',
+        desc: 'Juicy lemongrass grilled chicken thigh marinated with honey & oyster sauce, crisp cucumber, pickles & scallion oil.',
+        price: 7.00,
+        badge: 'Popular',
+        badgeColor: 'bg-blue-100 text-blue-800 border-blue-200',
+        image: 'https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=400&q=80'
+      },
+      {
+        id: 'bm-3',
+        title: 'Crispy Roast Pork Belly Banh Mi',
+        vnName: 'Bánh Mì Heo Quay',
+        desc: 'Golden crackling roasted pork belly topped with secret store trademark savory glaze, chili sauce & house pickles.',
+        price: 8.50,
+        badge: "Chef's Choice",
+        badgeColor: 'bg-red-100 text-red-800 border-red-200',
+        image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=400&q=80'
+      },
+      {
+        id: 'bm-4',
+        title: 'Lemongrass Beef Banh Mi',
+        vnName: 'Bánh Mì Bò Xào',
+        desc: 'Sautéed tender beef cooked with piper leaves, fragrant lemongrass, black pepper sauce & store-made pickles.',
+        price: 8.00,
+        badge: 'New',
+        badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        image: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=400&q=80'
+      },
+      {
+        id: 'bm-5',
+        title: 'Vegetarian Tofu & Mushroom Banh Mi',
+        vnName: 'Bánh Mì Chay',
+        desc: 'Pan-seared lemongrass organic tofu, sautéed shiitake mushrooms, plant-based pâté, fresh herbs & pickles.',
+        price: 7.00,
+        badge: 'Vegan / Healthy',
+        badgeColor: 'bg-green-100 text-green-800 border-green-200',
+        image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=80'
+      },
+      {
+        id: 'bm-6',
+        title: 'Meatball (Xiu Mai) Banh Mi',
+        vnName: 'Bánh Mì Xíu Mại',
+        desc: 'Juicy pork meatballs simmered in rich tomato stew, topped with egg butter, melted pâté & crunchy cilantro.',
+        price: 7.50,
+        badge: 'Authentic',
+        badgeColor: 'bg-purple-100 text-purple-800 border-purple-200',
+        image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80'
+      }
+    ];
+
+    const drinkItems = [
+      {
+        id: 'dr-1',
+        title: 'Vietnamese Iced Milk Coffee',
+        vnName: 'Cà Phê Sữa Đá',
+        desc: 'Traditional slow-drip dark roast espresso with sweet condensed milk over crushed ice.',
+        price: 4.50,
+        image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=400&q=80'
+      },
+      {
+        id: 'dr-2',
+        title: 'Salted Cream Iced Coffee',
+        vnName: 'Cà Phê Muối',
+        desc: 'Rich drip coffee crowned with velvety sea-salt whipped cream foam.',
+        price: 5.20,
+        image: 'https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=400&q=80'
+      },
+      {
+        id: 'dr-3',
+        title: 'Iced Coconut Matcha',
+        vnName: 'Matcha Dừa',
+        desc: 'Japanese Uji matcha layered over fresh organic coconut water & ice.',
+        price: 5.50,
+        image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=400&q=80'
+      }
+    ];
+
+    let cart = [];
+    let currentCustomizingItem = null;
+    let selectedAddons = { egg: false, meat: false, pickles: false };
+    let modalQty = 1;
+
+    window.onload = function() {
+      renderMenuItems(menuItems);
+      renderDrinksItems(drinkItems);
+      updateCartUI();
+    };
+
+    function renderMenuItems(items) {
+      const container = document.getElementById('menu-items-list');
+      container.innerHTML = '';
+
+      items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-2xl p-4 border border-stone-200 shadow-sm hover:shadow-md transition flex gap-4 items-center group';
+        card.innerHTML = `
+          <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden shrink-0 bg-stone-100">
+            <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+            ${item.badge ? `<span class="absolute top-1.5 left-1.5 text-[10px] font-extrabold px-2 py-0.5 rounded-md border ${item.badgeColor}">${item.badge}</span>` : ''}
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <h3 class="font-bold text-stone-900 text-base leading-snug group-hover:text-brand-700 transition">${item.title}</h3>
+                <p class="text-[11px] text-stone-400 font-medium italic">${item.vnName}</p>
+              </div>
+              <span class="font-extrabold text-stone-900 text-base">S$${item.price.toFixed(2)}</span>
+            </div>
+            <p class="text-xs text-stone-500 mt-1 line-clamp-2 leading-relaxed">${item.desc}</p>
+            <div class="mt-3 flex items-center justify-between">
+              <!-- Quick Add Direct Button -->
+              <button onclick="quickAddDirect('${item.id}')" class="text-xs font-semibold bg-stone-100 hover:bg-stone-200 text-stone-700 px-3 py-1.5 rounded-xl transition flex items-center gap-1">
+                <i class="fa-solid fa-plus text-[10px]"></i> Quick Add
+              </button>
+              
+              <!-- Customize Button -->
+              <button onclick="openCustomizeModal('${item.id}')" class="bg-brand-700 hover:bg-brand-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl shadow-sm transition flex items-center gap-1.5">
+                <i class="fa-solid fa-sliders text-[10px]"></i> Customize
+              </button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
     }
 
-    function closeModal() {
-      document.getElementById('customModal').style.display = 'none';
+    function renderDrinksItems(drinks) {
+      const container = document.getElementById('drinks-items-list');
+      container.innerHTML = '';
+
+      drinks.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'bg-white rounded-2xl p-4 border border-stone-200 shadow-sm hover:shadow-md transition flex gap-4 items-center group';
+        card.innerHTML = `
+          <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shrink-0 bg-stone-100">
+            <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-start justify-between gap-2">
+              <div>
+                <h3 class="font-bold text-stone-900 text-sm sm:text-base group-hover:text-brand-700 transition">${item.title}</h3>
+                <p class="text-[11px] text-stone-400 font-medium italic">${item.vnName}</p>
+              </div>
+              <span class="font-extrabold text-stone-900 text-sm sm:text-base">S$${item.price.toFixed(2)}</span>
+            </div>
+            <p class="text-xs text-stone-500 mt-1 line-clamp-1">${item.desc}</p>
+            <div class="mt-2.5 flex justify-end">
+              <button onclick="quickAddDrink('${item.id}')" class="bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5">
+                <i class="fa-solid fa-plus text-[10px]"></i> Add Drink
+              </button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Quick Add Direct without opening modal
+    function quickAddDirect(itemId) {
+      const item = menuItems.find(i => i.id === itemId);
+      if (!item) return;
+
+      cart.push({
+        cartId: Date.now() + Math.random().toString(36).substr(2, 4),
+        title: item.title,
+        unitPrice: item.price,
+        qty: 1,
+        addons: [],
+        instructions: ''
+      });
+
+      updateCartUI();
+    }
+
+    function openCustomizeModal(itemId) {
+      const allItems = [...menuItems, ...drinkItems];
+      currentCustomizingItem = allItems.find(i => i.id === itemId);
+      if (!currentCustomizingItem) return;
+
+      selectedAddons = { egg: false, meat: false, pickles: false };
+      modalQty = 1;
+      document.getElementById('modal-instructions').value = '';
+      document.getElementById('addon-egg').checked = false;
+      document.getElementById('addon-meat').checked = false;
+      document.getElementById('addon-pickles').checked = false;
+      document.getElementById('modal-qty').innerText = '1';
+
+      document.getElementById('modal-item-title').innerText = currentCustomizingItem.title;
+      document.getElementById('modal-item-desc').innerText = currentCustomizingItem.desc;
+
+      calculateModalPrice();
+      document.getElementById('customize-modal').classList.remove('hidden');
+    }
+
+    function closeCustomizeModal() {
+      document.getElementById('customize-modal').classList.add('hidden');
+    }
+
+    function toggleAddon(type) {
+      if (type === 'egg') selectedAddons.egg = document.getElementById('addon-egg').checked;
+      if (type === 'meat') selectedAddons.meat = document.getElementById('addon-meat').checked;
+      if (type === 'pickles') selectedAddons.pickles = document.getElementById('addon-pickles').checked;
+      calculateModalPrice();
+    }
+
+    function appendInstruction(text) {
+      const textarea = document.getElementById('modal-instructions');
+      if (textarea.value.includes(text)) return;
+      textarea.value = textarea.value ? `${textarea.value}, ${text}` : text;
+    }
+
+    function adjustModalQty(delta) {
+      modalQty = Math.max(1, modalQty + delta);
+      document.getElementById('modal-qty').innerText = modalQty;
+      calculateModalPrice();
+    }
+
+    function setModalQty(qty) {
+      modalQty = qty;
+      document.getElementById('modal-qty').innerText = modalQty;
+      calculateModalPrice();
+    }
+
+    function calculateModalPrice() {
+      if (!currentCustomizingItem) return;
+      let base = currentCustomizingItem.price;
+      if (selectedAddons.egg) base += 1.00;
+      if (selectedAddons.meat) base += 2.00;
+      if (selectedAddons.pickles) base += 1.00;
+
+      const total = base * modalQty;
+      document.getElementById('modal-calculated-price').innerText = `S$${total.toFixed(2)}`;
     }
 
     function confirmAddToCart() {
-      const chili = document.querySelector('input[name="chili"]:checked').value;
-      
-      let addons = [];
-      let extraPrice = 0;
+      if (!currentCustomizingItem) return;
 
-      ['addEgg', 'addMeat', 'addPate'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el.checked) {
-          addons.push(el.value);
-          extraPrice += parseFloat(el.getAttribute('data-price'));
-        }
-      });
+      const instructions = document.getElementById('modal-instructions').value.trim();
+      const addonsList = [];
+      if (selectedAddons.egg) addonsList.push('Fried Egg (+S$1.00)');
+      if (selectedAddons.meat) addonsList.push('Extra Meat (+S$2.00)');
+      if (selectedAddons.pickles) addonsList.push('Extra Pickled Veg (+S$1.00)');
 
-      const notes = document.getElementById('itemNotes').value.trim();
-      const totalPrice = currentItem.basePrice + extraPrice;
+      let itemUnitPrice = currentCustomizingItem.price;
+      if (selectedAddons.egg) itemUnitPrice += 1.00;
+      if (selectedAddons.meat) itemUnitPrice += 2.00;
+      if (selectedAddons.pickles) itemUnitPrice += 1.00;
 
       cart.push({
-        name: currentItem.name,
-        chili,
-        addons,
-        notes,
-        price: totalPrice
+        cartId: Date.now() + Math.random().toString(36).substr(2, 4),
+        title: currentCustomizingItem.title,
+        unitPrice: itemUnitPrice,
+        qty: modalQty,
+        addons: addonsList,
+        instructions: instructions
       });
 
-      closeModal();
-      renderCart();
+      closeCustomizeModal();
+      updateCartUI();
     }
 
-    function removeFromCart(index) {
-      cart.splice(index, 1);
-      renderCart();
+    function quickAddDrink(drinkId) {
+      const drink = drinkItems.find(d => d.id === drinkId);
+      if (!drink) return;
+
+      cart.push({
+        cartId: Date.now() + Math.random().toString(36).substr(2, 4),
+        title: drink.title,
+        unitPrice: drink.price,
+        qty: 1,
+        addons: [],
+        instructions: ''
+      });
+
+      updateCartUI();
     }
 
-    function renderCart() {
-      const listEl = document.getElementById('cartList');
-      const totalEl = document.getElementById('cartTotal');
+    function updateCartUI() {
+      const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
+      const subtotal = cart.reduce((sum, item) => sum + (item.unitPrice * item.qty), 0);
+
+      document.getElementById('cart-badge-count').innerText = totalCount;
+      document.getElementById('sidebar-cart-count').innerText = `${totalCount} item${totalCount !== 1 ? 's' : ''}`;
+      document.getElementById('mobile-cart-qty').innerText = totalCount;
+      document.getElementById('mobile-cart-total').innerText = `S$${subtotal.toFixed(2)}`;
+
+      const sidebarItemsContainer = document.getElementById('sidebar-cart-items');
+      const drawerItemsContainer = document.getElementById('drawer-cart-items');
+      const cartFooter = document.getElementById('cart-summary-footer');
 
       if (cart.length === 0) {
-        listEl.innerHTML = '<p style="color:#888; font-size:14px;">No items added yet.</p>';
-        totalEl.innerText = 'Total: S$0.00';
+        sidebarItemsContainer.innerHTML = `
+          <div class="text-center py-8 text-stone-400">
+            <div class="text-4xl mb-2">🥖</div>
+            <p class="text-sm font-medium text-stone-600">Your basket is empty</p>
+            <p class="text-xs text-stone-400 mt-1">Select a Banh Mi to customize</p>
+          </div>
+        `;
+        drawerItemsContainer.innerHTML = sidebarItemsContainer.innerHTML;
+        cartFooter.classList.add('hidden');
         return;
       }
 
+      cartFooter.classList.remove('hidden');
+      document.getElementById('cart-subtotal').innerText = `S$${subtotal.toFixed(2)}`;
+      document.getElementById('cart-total').innerText = `S$${subtotal.toFixed(2)}`;
+      document.getElementById('drawer-subtotal').innerText = `S$${subtotal.toFixed(2)}`;
+
       let html = '';
-      let grandTotal = 0;
-
       cart.forEach((item, index) => {
-        grandTotal += item.price;
-        let details = [item.chili, ...item.addons];
-        if (item.notes) details.push(`"${item.notes}"`);
-
         html += `
-          <div class="cart-item">
-            <div class="cart-item-details">
-              <strong>${item.name}</strong> - S$${item.price.toFixed(2)}
-              <div class="cart-item-sub">${details.join(', ')}</div>
+          <div class="bg-stone-50 p-3 rounded-xl border border-stone-200 text-xs space-y-1.5 relative">
+            <div class="flex justify-between items-start">
+              <span class="font-bold text-stone-900 text-sm">${item.title}</span>
+              <span class="font-extrabold text-stone-900">S$${(item.unitPrice * item.qty).toFixed(2)}</span>
             </div>
-            <span class="btn-remove" onclick="removeFromCart(${index})">Remove</span>
+            
+            ${item.addons.length > 0 ? `<div class="text-amber-800 font-medium"><i class="fa-solid fa-plus text-amber-600 mr-1"></i>${item.addons.join(', ')}</div>` : ''}
+            
+            ${item.instructions ? `<div class="text-stone-500 italic"><i class="fa-solid fa-note-sticky text-stone-400 mr-1"></i>"${item.instructions}"</div>` : ''}
+
+            <!-- In-cart quantity stepper (+1 / -1) -->
+            <div class="flex items-center justify-between pt-1 mt-1 border-t border-stone-200/60">
+              <div class="flex items-center gap-2">
+                <button onclick="changeCartQty(${index}, -1)" class="w-6 h-6 bg-white border border-stone-300 rounded-md flex items-center justify-center text-stone-700 font-bold hover:bg-stone-200">-</button>
+                <span class="font-extrabold text-stone-900 text-xs px-1">${item.qty}</span>
+                <button onclick="changeCartQty(${index}, 1)" class="w-6 h-6 bg-white border border-stone-300 rounded-md flex items-center justify-center text-stone-700 font-bold hover:bg-stone-200">+</button>
+              </div>
+              <button onclick="removeCartItem(${index})" class="text-red-500 hover:text-red-700 text-xs font-semibold">
+                <i class="fa-solid fa-trash-can"></i> Remove
+              </button>
+            </div>
           </div>
         `;
       });
 
-      listEl.innerHTML = html;
-      totalEl.innerText = `Total: S$${grandTotal.toFixed(2)}`;
+      sidebarItemsContainer.innerHTML = html;
+      drawerItemsContainer.innerHTML = html;
+    }
+
+    function changeCartQty(index, delta) {
+      if (cart[index]) {
+        cart[index].qty += delta;
+        if (cart[index].qty <= 0) {
+          cart.splice(index, 1);
+        }
+        updateCartUI();
+      }
+    }
+
+    function removeCartItem(index) {
+      cart.splice(index, 1);
+      updateCartUI();
+    }
+
+    function toggleCartDrawer() {
+      document.getElementById('cart-drawer').classList.toggle('hidden');
     }
 
     function sendWhatsAppOrder() {
-      const phoneNumber = "65XXXXXXXX"; 
-      const name = document.getElementById("custName").value.trim();
-      const address = document.getElementById("custAddress").value.trim();
+      const name = (document.getElementById("custName").value || document.getElementById("custNameMobile").value).trim();
+      const address = (document.getElementById("custAddress").value || document.getElementById("custAddressMobile").value).trim();
 
       if (!name || !address) {
         alert("Please enter your name and delivery/pickup information.");
@@ -287,17 +714,17 @@
 
       let grandTotal = 0;
       cart.forEach((item, i) => {
-        grandTotal += item.price;
-        summary += `${i + 1}. *${item.name}* (S$${item.price.toFixed(2)})\n`;
-        summary += `   - Spice: ${item.chili}\n`;
+        const itemTotal = item.unitPrice * item.qty;
+        grandTotal += itemTotal;
+        summary += `${i + 1}. *${item.title}* (x${item.qty}) - S$${itemTotal.toFixed(2)}\n`;
         if (item.addons.length > 0) summary += `   - Addons: ${item.addons.join(', ')}\n`;
-        if (item.notes) summary += `   - Note: ${item.notes}\n`;
+        if (item.instructions) summary += `   - Note: ${item.instructions}\n`;
       });
 
       summary += `\n*Grand Total:* S$${grandTotal.toFixed(2)}`;
 
       const encodedMsg = encodeURIComponent(summary);
-      window.open(`https://wa.me/${phoneNumber}?text=${encodedMsg}`, '_blank');
+      window.open(`https://wa.me/${whatsappNumber}?text=${encodedMsg}`, '_blank');
     }
   </script>
 </body>
