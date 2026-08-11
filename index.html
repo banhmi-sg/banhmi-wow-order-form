@@ -1,1062 +1,605 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vietnamese Delights - Order</title>
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vietnamese Delights - Order</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; background:#f3f4f6; color:#1f2937; font-family:Arial,Helvetica,sans-serif; padding-bottom:110px; }
+  button,input,textarea { font:inherit; }
+  button { cursor:pointer; }
+  .container { max-width:720px; margin:auto; padding:16px; }
+  .hero { background:#047857; color:white; border-radius:10px 10px 0 0; padding:24px; border-top:8px solid #064e3b; }
+  .hero h1 { margin:0; font-size:28px; }
+  .hero p { color:#d1fae5; margin:7px 0 0; font-size:14px; }
+  .hero-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:16px; }
+  .hero-box { background:#065f46; border-radius:6px; padding:12px; font-size:12px; }
+  .card { background:white; border:1px solid #e5e7eb; border-radius:9px; padding:20px; margin-top:16px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+  .card h2 { margin:0 0 14px; font-size:19px; border-bottom:1px solid #e5e7eb; padding-bottom:10px; }
+  label { display:block; font-size:14px; font-weight:600; color:#4b5563; margin-bottom:5px; }
+  input,textarea { width:100%; border:1px solid #d1d5db; border-radius:6px; padding:10px; outline:none; }
+  input:focus,textarea:focus { border-color:#10b981; box-shadow:0 0 0 2px rgba(16,185,129,.15); }
+  .field { margin-bottom:12px; }
+  .product { border:1px solid #f0f0f0; border-radius:9px; margin-bottom:10px; overflow:hidden; }
+  .product-inner { display:flex; gap:12px; padding:12px; }
+  .photo { width:92px; height:92px; flex:none; border-radius:8px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; overflow:hidden; color:#9ca3af; font-size:11px; text-align:center; }
+  .photo img { width:100%; height:100%; object-fit:cover; }
+  .product-info { flex:1; min-width:0; }
+  .product-name { font-weight:600; }
+  .note { color:#b45309; font-size:12px; margin-top:5px; }
+  .price { color:#047857; font-weight:700; margin-top:6px; }
+  .actions { margin-top:9px; }
+  .btn { border:0; border-radius:7px; padding:9px 13px; font-weight:700; }
+  .btn-green { background:#059669; color:white; }
+  .btn-green:hover { background:#047857; }
+  .btn-gray { background:#e5e7eb; color:#374151; }
+  .btn-red { background:#fee2e2; color:#b91c1c; }
+  .closed { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+  .closed-card { max-width:520px; width:100%; background:white; padding:32px; border-radius:12px; text-align:center; box-shadow:0 2px 12px rgba(0,0,0,.1); }
+  .closed-card h1 { margin:8px 0; }
+  .next { background:#ecfdf5; border:1px solid #d1fae5; padding:14px; border-radius:8px; text-align:left; margin-top:18px; }
+  .sticky { position:fixed; left:0; right:0; bottom:0; background:white; border-top:1px solid #d1d5db; box-shadow:0 -2px 10px rgba(0,0,0,.08); z-index:50; }
+  .sticky-inner { max-width:720px; margin:auto; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .total { font-size:22px; font-weight:800; color:#065f46; }
+  .small { font-size:12px; color:#6b7280; }
+  .review { color:#047857; font-size:12px; text-decoration:underline; background:none; border:0; padding:0; }
+  .cart-panel { max-width:720px; max-height:300px; overflow:auto; margin:auto; padding:14px 16px; background:#f9fafb; border-bottom:1px solid #e5e7eb; }
+  .cart-line { background:white; border:1px solid #e5e7eb; border-radius:8px; padding:12px; margin-bottom:9px; }
+  .cart-line-top { display:flex; justify-content:space-between; gap:12px; }
+  .cart-detail { font-size:12px; color:#6b7280; margin-top:4px; }
+  .qty { display:flex; align-items:center; gap:8px; margin-top:9px; }
+  .qty button { width:30px; height:30px; border:0; border-radius:50%; background:#e5e7eb; font-weight:800; }
+  .qty button.plus { background:#059669; color:white; }
+  .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:100; display:flex; align-items:center; justify-content:center; padding:16px; }
+  .modal { width:100%; max-width:540px; max-height:90vh; overflow:auto; background:white; border-radius:12px; }
+  .modal-head { padding:18px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; gap:15px; }
+  .modal-body { padding:18px; }
+  .option { width:100%; text-align:left; padding:12px; border:1px solid #e5e7eb; background:white; border-radius:8px; margin-bottom:8px; }
+  .option.selected { border-color:#10b981; background:#ecfdf5; }
+  .summary { background:#f9fafb; border-radius:8px; padding:13px; margin:15px 0; }
+  .error { max-width:640px; margin:40px auto; padding:24px; font-family:Arial,sans-serif; background:white; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,.12); }
+  @media (max-width:560px) {
+    .hero-grid { grid-template-columns:1fr; }
+    .product-inner { padding:10px; }
+    .photo { width:76px; height:76px; }
+    .sticky-inner { padding:10px 12px; }
+    .sticky .btn { padding:10px 12px; font-size:13px; }
+  }
+</style>
 </head>
+<body>
+<div id="app"></div>
 
-<body class="bg-gray-100 min-h-screen text-gray-800 pb-32">
-  <div id="root"></div>
-  <script>
-    window.addEventListener("error", function (event) {
-      const root = document.getElementById("root");
-      if (root && !root.innerHTML.trim()) {
-        root.innerHTML = `
-          <div style="max-width:640px;margin:40px auto;padding:24px;font-family:Arial,sans-serif;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.12)">
-            <h1 style="font-size:24px;margin:0 0 12px">The order page could not load</h1>
-            <p style="color:#555">Please check that the file is being opened as an HTML page and that JavaScript is enabled.</p>
-          </div>`;
+<script>
+/* ============================================================
+   VIETNAMESE DELIGHTS - CONFIGURATION
+   Edit only this section for normal menu/date changes.
+   Times are Singapore time (+08:00).
+   ============================================================ */
+
+const STORE_CONFIG = {
+  storeName: "Vietnamese Delights",
+  whatsappNumber: "6591234567",
+  paynowDetails: "PayNow UEN / Phone: +65 9123 4567 (Food Store Name)",
+  currency: "$"
+};
+
+const MENU_SCHEDULE = [
+  {
+    id: "banh-mi-aug-15",
+    menuId: "banh-mi",
+    orderOpens: "2026-08-10T09:00:00+08:00",
+    orderCloses: "2026-08-14T23:59:00+08:00",
+    fulfilmentDate: "2026-08-15"
+  },
+  {
+    id: "bowls-aug-22",
+    menuId: "bowls",
+    orderOpens: "2026-08-17T09:00:00+08:00",
+    orderCloses: "2026-08-21T23:59:00+08:00",
+    fulfilmentDate: "2026-08-22"
+  }
+];
+
+const MENUS = {
+  "banh-mi": {
+    title: "Banh Mi",
+    emoji: "🥖",
+    description: "Fresh Vietnamese baguettes with your choice of filling.",
+    products: [
+      { id:"banh-mi-chicken", name:"Banh Mi - Grilled Chicken", price:8, note:"Contains pork pate & pickled vegs", image:"" },
+      { id:"banh-mi-pork", name:"Banh Mi - Grilled Pork", price:8, note:"Contains pork pate & pickled vegs", image:"" },
+      { id:"banh-mi-meatball", name:"Banh Mi - Pork Meatball", price:8, note:"Contains pork pate & pickled vegs", image:"" },
+      { id:"banh-mi-duck", name:"Banh Mi - Smoked Duck", price:8, note:"Contains pork pate & pickled vegs", image:"" },
+      { id:"banh-mi-veg", name:"Banh Mi - Vegetarian", price:5.5, note:"Eggs, vegetables, no pate, beancurd skin", image:"" },
+      { id:"banh-mi-trad", name:"Banh Mi - Traditional", price:8, note:"Braised pork, ham, pate, pickled vegetables", image:"" }
+    ],
+    addOns: [
+      { id:"addon-meat", name:"Extra Meat", price:2 },
+      { id:"addon-egg", name:"Egg", price:1 },
+      { id:"addon-chilli", name:"Our Spicy Chilli Bottle", price:8, standalone:true }
+    ]
+  },
+
+  "bowls": {
+    title: "Bowls & Sides",
+    emoji: "🍜",
+    description: "Vietnamese noodles, rice dishes, spring rolls and sides.",
+    products: [
+      { id:"bun-pork", name:"Bun Thit Nuong - Vietnamese Dry Vermicelli (Pork)", price:9.5, note:"⚠️ Contains peanuts & basil", image:"" },
+      { id:"bun-chicken", name:"Bun Thit Nuong - Vietnamese Dry Vermicelli (Chicken)", price:9.5, note:"⚠️ Contains peanuts & basil", image:"" },
+      { id:"com-tam-chicken", name:"Com Tam - Vietnamese Grilled Chicken Rice", price:9.5, image:"" },
+      { id:"com-tam-pork", name:"Com Tam - Vietnamese Grilled Pork Rice", price:9.5, image:"" },
+      { id:"spring-pork", name:"Fried Spring Rolls - Pork (5 pcs)", price:4.5, image:"" },
+      { id:"spring-fresh", name:"Fresh Spring Rolls - Pork / Prawn (5 pcs)", price:11, note:"⚠️ Contains basil", image:"" },
+      { id:"bowls-addon-meat", name:"Extra Meat", price:2, image:"" },
+      { id:"bowls-addon-egg", name:"Extra Egg", price:1, image:"" },
+      { id:"bowls-addon-chilli", name:"Our Spicy Chilli Bottle", price:8, image:"", standalone:true }
+    ],
+    addOns: []
+  }
+};
+
+/* ============================================================
+   APPLICATION
+   ============================================================ */
+
+let state = {
+  scheduleInfo: getScheduleInfo(),
+  customer: { name:"", phone:"", address:"", notes:"" },
+  cart: [],
+  cartOpen: false,
+  customizeProduct: null,
+  selectedProteins: [],
+  selectedAddOns: []
+};
+
+try {
+  const saved = localStorage.getItem("vietnameseDelightsCustomer");
+  if (saved) state.customer = JSON.parse(saved);
+} catch(e) {}
+
+function getScheduleInfo() {
+  const now = new Date();
+
+  const open = MENU_SCHEDULE.find(s =>
+    now >= new Date(s.orderOpens) && now <= new Date(s.orderCloses)
+  );
+
+  if (open) return { status:"open", schedule:open };
+
+  const next = MENU_SCHEDULE
+    .filter(s => new Date(s.orderOpens) > now)
+    .sort((a,b) => new Date(a.orderOpens) - new Date(b.orderOpens))[0];
+
+  return next ? { status:"upcoming", schedule:next } : { status:"closed", schedule:null };
+}
+
+function money(n) {
+  return STORE_CONFIG.currency + Number(n).toFixed(2);
+}
+
+function formatDateTime(value) {
+  return new Intl.DateTimeFormat("en-SG", {
+    dateStyle:"medium", timeStyle:"short", timeZone:"Asia/Singapore"
+  }).format(new Date(value));
+}
+
+function formatDate(value) {
+  return new Intl.DateTimeFormat("en-SG", {
+    dateStyle:"full", timeZone:"Asia/Singapore"
+  }).format(new Date(value + "T12:00:00+08:00"));
+}
+
+function saveCustomer() {
+  try {
+    localStorage.setItem("vietnameseDelightsCustomer", JSON.stringify(state.customer));
+  } catch(e) {}
+}
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function render() {
+  state.scheduleInfo = getScheduleInfo();
+  const root = document.getElementById("app");
+
+  if (!state.scheduleInfo.schedule) {
+    root.innerHTML = closedPage(null);
+    return;
+  }
+
+  const schedule = state.scheduleInfo.schedule;
+  const menu = MENUS[schedule.menuId];
+
+  if (!menu) {
+    root.innerHTML = errorPage("Menu configuration error", "The scheduled menu could not be found.");
+    return;
+  }
+
+  const isOpen = state.scheduleInfo.status === "open";
+  const isBanhMi = menu.title === "Banh Mi";
+
+  root.innerHTML = `
+    <div class="container">
+      <div class="hero">
+        <div style="font-size:40px;margin-bottom:6px">${menu.emoji}</div>
+        <h1>${esc(menu.title)}</h1>
+        <p>${esc(menu.description)}</p>
+        <div class="hero-grid">
+          <div class="hero-box"><strong>📅 Fulfilment</strong><br>${esc(formatDate(schedule.fulfilmentDate))}</div>
+          <div class="hero-box"><strong>⏰ Orders close</strong><br>${esc(formatDateTime(schedule.orderCloses))}</div>
+        </div>
+        <div class="hero-box" style="margin-top:8px"><strong>💳 PayNow</strong><br>Payment details will be included in your WhatsApp order.</div>
+      </div>
+
+      ${!isOpen ? `
+        <div class="card" style="background:#fffbeb;border-color:#fde68a">
+          <strong>⏳ Ordering is not open yet</strong>
+          <div class="small" style="margin-top:5px">Orders open on ${esc(formatDateTime(schedule.orderOpens))}.</div>
+        </div>
+      ` : ""}
+
+      ${customerForm()}
+      ${menuSection(menu, isOpen, isBanhMi)}
+
+      <div class="card">
+        <label>General Remarks / Special Requests</label>
+        <input id="notes" value="${esc(state.customer.notes)}" placeholder="Less spicy, no peanuts, separate sauce, etc.">
+      </div>
+    </div>
+
+    ${cartBar(isOpen)}
+    ${state.customizeProduct ? customizeModal(menu) : ""}
+  `;
+
+  bindEvents(menu, isOpen);
+}
+
+function customerForm() {
+  return `
+    <div class="card">
+      <h2>Customer Details</h2>
+      <div class="field"><label>Full Name *</label><input id="name" required value="${esc(state.customer.name)}" placeholder="John Doe"></div>
+      <div class="field"><label>Phone Number *</label><input id="phone" required value="${esc(state.customer.phone)}" placeholder="9123 4567"></div>
+      <div><label>Delivery Address / Pickup Note</label><textarea id="address" rows="2" placeholder="Block/Street or Self-Pickup time">${esc(state.customer.address)}</textarea></div>
+    </div>
+  `;
+}
+
+function menuSection(menu, isOpen, isBanhMi) {
+  return `
+    <div class="card">
+      <h2>${esc(menu.title)} ${isBanhMi ? '<span style="font-size:12px;color:#047857;font-weight:normal">Customise each Banh Mi</span>' : ""}</h2>
+      ${menu.products.map(p => productCard(p, isOpen, isBanhMi)).join("")}
+    </div>
+  `;
+}
+
+function productCard(product, isOpen, isBanhMi) {
+  const photo = product.image
+    ? `<img src="${esc(product.image)}" alt="${esc(product.name)}">`
+    : `<span>📷<br>Add photo later</span>`;
+
+  return `
+    <div class="product">
+      <div class="product-inner">
+        <div class="photo">${photo}</div>
+        <div class="product-info">
+          <div class="product-name">${esc(product.name)}</div>
+          ${product.note ? `<div class="note">${esc(product.note)}</div>` : ""}
+          <div class="price">${money(product.price)}</div>
+          ${isOpen ? `<div class="actions">
+            <button class="btn btn-green" data-action="${(isBanhMi && !product.standalone) ? "customize" : "simple"}" data-id="${esc(product.id)}">
+              ${(isBanhMi && !product.standalone) ? "Customise & Add" : "+ Add"}
+            </button>
+          </div>` : ""}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function cartBar(isOpen) {
+  const total = state.cart.reduce((s,l) => s + l.total, 0);
+  const count = state.cart.reduce((s,l) => s + l.quantity, 0);
+
+  return `
+    <div class="sticky">
+      ${state.cartOpen && state.cart.length ? `
+        <div class="cart-panel">
+          <strong>Your Order</strong>
+          <div style="margin-top:10px">
+            ${state.cart.map(line => `
+              <div class="cart-line">
+                <div class="cart-line-top">
+                  <div>
+                    <strong>${esc(line.productName)}</strong>
+                    ${line.proteins.length ? `<div class="cart-detail">Protein: ${esc(line.proteins.map(x=>x.name).join(" + "))}</div>` : ""}
+                    ${line.addOns.length ? `<div class="cart-detail">Add-ons: ${esc(line.addOns.map(x=>x.name).join(", "))}</div>` : ""}
+                    <div class="cart-detail">${money(line.unitPrice)} each</div>
+                  </div>
+                  <button class="btn btn-red" data-action="remove" data-line="${esc(line.lineId)}">Remove</button>
+                </div>
+                <div class="qty">
+                  <button data-action="qty" data-delta="-1" data-line="${esc(line.lineId)}">−</button>
+                  <strong>${line.quantity}</strong>
+                  <button class="plus" data-action="qty" data-delta="1" data-line="${esc(line.lineId)}">+</button>
+                  <strong style="margin-left:auto">${money(line.total)}</strong>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      ` : ""}
+      <div class="sticky-inner">
+        <button class="review" data-action="toggle-cart">
+          <div class="small">${count} item(s) selected</div>
+          <div class="total">${money(total)}</div>
+          ${state.cart.length ? (state.cartOpen ? "Hide order" : "Review order") : ""}
+        </button>
+        <button class="btn btn-green" data-action="submit" ${!isOpen || total === 0 ? "disabled style='background:#d1d5db;cursor:not-allowed'" : ""}>
+          ${isOpen ? "Order via WhatsApp" : "Ordering Closed"}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function customizeModal(menu) {
+  const product = state.customizeProduct;
+  const proteins = [
+    {id:"pork",name:"Grilled Pork",price:0},
+    {id:"chicken",name:"Grilled Chicken",price:0},
+    {id:"meatball",name:"Pork Meatball",price:0},
+    {id:"duck",name:"Smoked Duck",price:0}
+  ];
+
+  const extras = state.selectedAddOns.reduce((s,x)=>s+x.price,0);
+  const proteinTotal = state.selectedProteins.reduce((s,x)=>s+x.price,0);
+  const final = product.price + extras + proteinTotal;
+
+  return `
+    <div class="modal-backdrop">
+      <div class="modal">
+        <div class="modal-head">
+          <div><h2 style="margin:0">Customise Banh Mi</h2><div class="small">${esc(product.name)}</div></div>
+          <button class="btn btn-gray" data-action="close-modal">×</button>
+        </div>
+        <div class="modal-body">
+          <strong>Protein mix</strong>
+          <div class="small" style="margin:5px 0 10px">Select another protein for a mix, e.g. Chicken + Pork.</div>
+          ${proteins.map(p => {
+            const selected = state.selectedProteins.some(x=>x.id===p.id);
+            return `<button class="option ${selected ? "selected":""}" data-action="protein" data-id="${p.id}">
+              ${selected ? "✓ " : ""}${esc(p.name)} <span class="small">— no extra charge</span>
+            </button>`;
+          }).join("")}
+
+          <div style="margin-top:18px"><strong>Add-ons</strong></div>
+          <div style="margin-top:8px">
+            ${menu.addOns.filter(a => !a.standalone).map(a => {
+              const selected = state.selectedAddOns.some(x=>x.id===a.id);
+              return `<button class="option ${selected ? "selected":""}" data-action="addon" data-id="${a.id}">
+                ${selected ? "✓ " : ""}${esc(a.name)} <span style="float:right">+${money(a.price)}</span>
+              </button>`;
+            }).join("")}
+          </div>
+
+          <div class="summary">
+            <div>${esc(product.name)} — ${money(product.price)}</div>
+            ${state.selectedProteins.length ? `<div class="small">Protein mix: ${esc(state.selectedProteins.map(x=>x.name).join(" + "))}</div>` : ""}
+            ${state.selectedAddOns.length ? `<div class="small">Add-ons: ${esc(state.selectedAddOns.map(x=>x.name).join(", "))}</div>` : ""}
+            <div style="border-top:1px solid #e5e7eb;margin-top:10px;padding-top:10px;display:flex;justify-content:space-between;font-weight:800">
+              <span>Total</span><span style="color:#047857">${money(final)}</span>
+            </div>
+          </div>
+
+          <button class="btn btn-green" style="width:100%" data-action="confirm-custom">
+            Add to Order — ${money(final)}
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function closedPage(next) {
+  return `
+    <div class="closed">
+      <div class="closed-card">
+        <div style="font-size:50px">🔒</div>
+        <h1>Ordering is currently closed</h1>
+        <p style="color:#6b7280">There are no menus available for ordering right now.</p>
+        ${next ? `
+          <div class="next">
+            <strong>Next: ${MENUS[next.menuId].emoji} ${esc(MENUS[next.menuId].title)}</strong>
+            <div class="small" style="margin-top:7px">Orders open: ${esc(formatDateTime(next.orderOpens))}</div>
+            <div class="small">Fulfilment: ${esc(formatDate(next.fulfilmentDate))}</div>
+          </div>
+        ` : ""}
+      </div>
+    </div>
+  `;
+}
+
+function errorPage(title, message) {
+  return `<div class="error"><h1>${esc(title)}</h1><p>${esc(message)}</p></div>`;
+}
+
+function addSimple(product) {
+  state.cart.push({
+    lineId: Date.now()+"-"+Math.random(),
+    productName: product.name,
+    basePrice: product.price,
+    proteins: [],
+    addOns: [],
+    quantity: 1,
+    unitPrice: product.price,
+    total: product.price
+  });
+  render();
+}
+
+function openCustomize(product) {
+  state.customizeProduct = product;
+  state.selectedProteins = [];
+  state.selectedAddOns = [];
+  render();
+}
+
+function confirmCustomize() {
+  const product = state.customizeProduct;
+  const unit = product.price
+    + state.selectedProteins.reduce((s,x)=>s+x.price,0)
+    + state.selectedAddOns.reduce((s,x)=>s+x.price,0);
+
+  state.cart.push({
+    lineId: Date.now()+"-"+Math.random(),
+    productName: product.name,
+    basePrice: product.price,
+    proteins: [...state.selectedProteins],
+    addOns: [...state.selectedAddOns],
+    quantity: 1,
+    unitPrice: unit,
+    total: unit
+  });
+
+  state.customizeProduct = null;
+  state.selectedProteins = [];
+  state.selectedAddOns = [];
+  state.cartOpen = true;
+  render();
+}
+
+function toggleChoice(collection, item) {
+  const exists = collection.some(x=>x.id===item.id);
+  return exists ? collection.filter(x=>x.id!==item.id) : [...collection,item];
+}
+
+function updateQuantity(lineId, delta) {
+  state.cart = state.cart.map(line => {
+    if (line.lineId !== lineId) return line;
+    const quantity = Math.max(0, line.quantity + delta);
+    return {...line, quantity, total:quantity*line.unitPrice};
+  }).filter(line=>line.quantity>0);
+  render();
+}
+
+function submitOrder() {
+  state.customer.name = document.getElementById("name")?.value.trim() || "";
+  state.customer.phone = document.getElementById("phone")?.value.trim() || "";
+  state.customer.address = document.getElementById("address")?.value.trim() || "";
+  state.customer.notes = document.getElementById("notes")?.value.trim() || "";
+  saveCustomer();
+
+  const info = getScheduleInfo();
+  if (info.status !== "open") { alert("Ordering is currently closed."); render(); return; }
+  if (!state.cart.length) { alert("Please add at least one item."); return; }
+  if (!state.customer.name || !state.customer.phone) { alert("Please enter your name and phone number."); return; }
+
+  const schedule = info.schedule;
+  const menu = MENUS[schedule.menuId];
+  const total = state.cart.reduce((s,l)=>s+l.total,0);
+
+  let text = `*NEW ORDER - ${menu.title.toUpperCase()}*\\n\\n`;
+  text += `*Fulfilment Date:* ${formatDate(schedule.fulfilmentDate)}\\n`;
+  text += `*Customer:* ${state.customer.name}\\n`;
+  text += `*Phone:* ${state.customer.phone}\\n`;
+  text += `*Delivery / Pickup:* ${state.customer.address || "N/A"}\\n`;
+  if (state.customer.notes) text += `*General Notes:* ${state.customer.notes}\\n`;
+
+  text += `\\n*--- ORDER ITEMS ---*\\n`;
+  state.cart.forEach(line => {
+    text += `• ${line.productName} x${line.quantity} - ${money(line.total)}\\n`;
+    if (line.proteins.length) text += `   Protein mix: ${line.proteins.map(x=>x.name).join(" + ")}\\n`;
+    if (line.addOns.length) text += `   Add-ons: ${line.addOns.map(x=>x.name).join(", ")}\\n`;
+  });
+
+  text += `\\n*TOTAL:* ${money(total)}\\n`;
+  text += `*Payment via PayNow:* ${STORE_CONFIG.paynowDetails}\\n`;
+
+  window.open(`https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(text)}`, "_blank");
+}
+
+function bindEvents(menu, isOpen) {
+  document.querySelectorAll("[data-action]").forEach(el => {
+    el.addEventListener("click", () => {
+      const action = el.dataset.action;
+
+      if (action === "simple") {
+        const p = menu.products.find(x=>x.id===el.dataset.id);
+        if (p && isOpen) addSimple(p);
       }
+
+      if (action === "customize") {
+        const p = menu.products.find(x=>x.id===el.dataset.id);
+        if (p && isOpen) openCustomize(p);
+      }
+
+      if (action === "close-modal") {
+        state.customizeProduct = null;
+        render();
+      }
+
+      if (action === "protein") {
+        const p = [
+          {id:"pork",name:"Grilled Pork",price:0},
+          {id:"chicken",name:"Grilled Chicken",price:0},
+          {id:"meatball",name:"Pork Meatball",price:0},
+          {id:"duck",name:"Smoked Duck",price:0}
+        ].find(x=>x.id===el.dataset.id);
+        if (p) { state.selectedProteins = toggleChoice(state.selectedProteins,p); render(); }
+      }
+
+      if (action === "addon") {
+        const a = menu.addOns.find(x=>x.id===el.dataset.id);
+        if (a) { state.selectedAddOns = toggleChoice(state.selectedAddOns,a); render(); }
+      }
+
+      if (action === "confirm-custom") confirmCustomize();
+
+      if (action === "toggle-cart") {
+        state.cartOpen = !state.cartOpen;
+        render();
+      }
+
+      if (action === "remove") {
+        state.cart = state.cart.filter(x=>x.lineId!==el.dataset.line);
+        render();
+      }
+
+      if (action === "qty") {
+        updateQuantity(el.dataset.line, Number(el.dataset.delta));
+      }
+
+      if (action === "submit") submitOrder();
     });
-  </script>
-
-  <script type="text/babel">
-    const { useState, useMemo, useEffect } = React;
-
-    /* ============================================================
-       STORE CONFIGURATION
-       ------------------------------------------------------------
-       This is the main area you will edit later.
-
-       1. Put your WhatsApp number here.
-       2. Put your PayNow details here.
-       3. Add/change menu dates in MENU_SCHEDULE.
-       4. Add pictures later by changing image: "" to a file path,
-          e.g. image: "images/banh-mi-chicken.jpg"
-
-       IMPORTANT:
-       - orderOpens / orderCloses control when customers can order.
-       - fulfilmentDate is the day customers receive/collect the food.
-       - Times use Singapore time.
-       ============================================================ */
-
-    const STORE_CONFIG = {
-      storeName: "Vietnamese Delights",
-      whatsappNumber: "6591234567",
-      paynowDetails: "PayNow UEN / Phone: +65 9123 4567 (Food Store Name)",
-      currency: "$"
-    };
-
-    /*
-      EXAMPLE SCHEDULE — CHANGE THESE DATES/TIMES TO YOUR REAL DATES.
-
-      You can have as many menu periods as you want.
-
-      Example:
-      Banh Mi ordering: 10 Aug 9:00am → 14 Aug 11:59pm
-      Fulfilment:        15 Aug
-
-      Bowls ordering:    17 Aug 9:00am → 21 Aug 11:59pm
-      Fulfilment:        22 Aug
-    */
-    const MENU_SCHEDULE = [
-      {
-        id: "banh-mi-aug-15",
-        menuId: "banh-mi",
-        orderOpens: "2026-08-10T09:00:00+08:00",
-        orderCloses: "2026-08-14T23:59:00+08:00",
-        fulfilmentDate: "2026-08-15",
-      },
-      {
-        id: "bowls-aug-22",
-        menuId: "bowls",
-        orderOpens: "2026-08-17T09:00:00+08:00",
-        orderCloses: "2026-08-21T23:59:00+08:00",
-        fulfilmentDate: "2026-08-22",
-      }
-    ];
-
-    /* ============================================================
-       MENU DATA
-       ============================================================ */
-
-    const MENUS = {
-      "banh-mi": {
-        id: "banh-mi",
-        title: "Banh Mi",
-        emoji: "🥖",
-        description: "Fresh Vietnamese baguettes with your choice of filling.",
-        products: [
-          {
-            id: "banh-mi-chicken",
-            name: "Banh Mi - Grilled Chicken",
-            price: 8.00,
-            note: "Contains pork pate & pickled vegs",
-            image: ""
-          },
-          {
-            id: "banh-mi-pork",
-            name: "Banh Mi - Grilled Pork",
-            price: 8.00,
-            note: "Contains pork pate & pickled vegs",
-            image: ""
-          },
-          {
-            id: "banh-mi-meatball",
-            name: "Banh Mi - Pork Meatball",
-            price: 8.00,
-            note: "Contains pork pate & pickled vegs",
-            image: ""
-          },
-          {
-            id: "banh-mi-duck",
-            name: "Banh Mi - Smoked Duck",
-            price: 8.00,
-            note: "Contains pork pate & pickled vegs",
-            image: ""
-          },
-          {
-            id: "banh-mi-veg",
-            name: "Banh Mi - Vegetarian",
-            price: 5.50,
-            note: "Eggs, vegetables, no pate, beancurd skin",
-            image: ""
-          },
-          {
-            id: "banh-mi-trad",
-            name: "Banh Mi - Traditional",
-            price: 8.00,
-            note: "Braised pork, ham, pate, pickled vegetables",
-            image: ""
-          }
-        ],
-        addOns: [
-          {
-            id: "addon-meat",
-            name: "Extra Meat",
-            price: 2.00
-          },
-          {
-            id: "addon-egg",
-            name: "Egg",
-            price: 1.00
-          },
-          {
-            id: "addon-chilli",
-            name: "Our Spicy Chilli",
-            price: 8.00
-          }
-        ]
-      },
-
-      "bowls": {
-        id: "bowls",
-        title: "Bowls & Sides",
-        emoji: "🍜",
-        description: "Vietnamese noodles, rice dishes, spring rolls and sides.",
-        products: [
-          {
-            id: "bun-pork",
-            name: "Bun Thit Nuong - Vietnamese Dry Vermicelli (Pork)",
-            price: 9.50,
-            note: "⚠️ Contains peanuts & basil",
-            image: ""
-          },
-          {
-            id: "bun-chicken",
-            name: "Bun Thit Nuong - Vietnamese Dry Vermicelli (Chicken)",
-            price: 9.50,
-            note: "⚠️ Contains peanuts & basil",
-            image: ""
-          },
-          {
-            id: "com-tam-chicken",
-            name: "Com Tam - Vietnamese Grilled Chicken Rice",
-            price: 9.50,
-            image: ""
-          },
-          {
-            id: "com-tam-pork",
-            name: "Com Tam - Vietnamese Grilled Pork Rice",
-            price: 9.50,
-            image: ""
-          },
-          {
-            id: "spring-pork",
-            name: "Fried Spring Rolls - Pork (5 pcs)",
-            price: 4.50,
-            image: ""
-          },
-          {
-            id: "spring-fresh",
-            name: "Fresh Spring Rolls - Pork / Prawn (5 pcs)",
-            price: 11.00,
-            note: "⚠️ Contains basil",
-            image: ""
-          },
-          {
-            id: "addon-meat",
-            name: "Extra Meat",
-            price: 2.00,
-            image: ""
-          },
-          {
-            id: "addon-egg",
-            name: "Extra Egg",
-            price: 1.00,
-            image: ""
-          },
-          {
-            id: "addon-chilli",
-            name: "Our Spicy Chilli Bottle",
-            price: 8.00,
-            image: ""
-          }
-        ],
-        addOns: []
-      }
-    };
-
-    /* ============================================================
-       HELPERS
-       ============================================================ */
-
-    function getCurrentSchedule() {
-      const now = new Date();
-
-      // Prefer an actively open menu.
-      const openMenu = MENU_SCHEDULE.find(schedule => {
-        const opens = new Date(schedule.orderOpens);
-        const closes = new Date(schedule.orderCloses);
-        return now >= opens && now <= closes;
-      });
-
-      if (openMenu) {
-        return { status: "open", schedule: openMenu };
-      }
-
-      // Otherwise show the next scheduled menu.
-      const upcoming = MENU_SCHEDULE
-        .filter(schedule => new Date(schedule.orderOpens) > now)
-        .sort((a, b) => new Date(a.orderOpens) - new Date(b.orderOpens))[0];
-
-      if (upcoming) {
-        return { status: "upcoming", schedule: upcoming };
-      }
-
-      return { status: "closed", schedule: null };
-    }
-
-    function formatDateTime(value) {
-      return new Intl.DateTimeFormat("en-SG", {
-        dateStyle: "medium",
-        timeStyle: "short",
-        timeZone: "Asia/Singapore"
-      }).format(new Date(value));
-    }
-
-    function formatDate(value) {
-      return new Intl.DateTimeFormat("en-SG", {
-        dateStyle: "full",
-        timeZone: "Asia/Singapore"
-      }).format(new Date(value + "T12:00:00+08:00"));
-    }
-
-    function money(value) {
-      return `${STORE_CONFIG.currency}${value.toFixed(2)}`;
-    }
-
-    function getProduct(menu, productId) {
-      return menu.products.find(product => product.id === productId);
-    }
-
-    /*
-      A cart item is a CONFIGURED LINE.
-
-      This is deliberate:
-      - Chicken Banh Mi + Egg can be one line.
-      - Chicken Banh Mi + Extra Pork can be another line.
-      - Chicken + Pork mixed can be another line.
-      - Customers can have several different configurations
-        of the same base Banh Mi in one order.
-    */
-
-    function createLineId() {
-      return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-    }
-
-    function App() {
-      const [scheduleInfo, setScheduleInfo] = useState(getCurrentSchedule());
-      const [customerInfo, setCustomerInfo] = useState({
-        name: "",
-        phone: "",
-        address: "",
-        notes: ""
-      });
-      const [cart, setCart] = useState([]);
-      const [customizingProduct, setCustomizingProduct] = useState(null);
-
-      // Re-check the schedule every 30 seconds.
-      useEffect(() => {
-        const timer = setInterval(() => {
-          setScheduleInfo(getCurrentSchedule());
-        }, 30000);
-
-        return () => clearInterval(timer);
-      }, []);
-
-      // Remember basic customer details on this device.
-      useEffect(() => {
-        try {
-          const saved = localStorage.getItem("vietnameseDelightsCustomer");
-          if (saved) {
-            setCustomerInfo(JSON.parse(saved));
-          }
-        } catch (error) {
-          console.warn("Could not restore customer details.", error);
-        }
-      }, []);
-
-      useEffect(() => {
-        try {
-          localStorage.setItem(
-            "vietnameseDelightsCustomer",
-            JSON.stringify(customerInfo)
-          );
-        } catch (error) {
-          console.warn("Could not save customer details.", error);
-        }
-      }, [customerInfo]);
-
-      const schedule = scheduleInfo.schedule;
-      const menu = schedule ? MENUS[schedule.menuId] : null;
-      const isOpen = scheduleInfo.status === "open";
-
-      const totalAmount = useMemo(() => {
-        return cart.reduce((sum, line) => sum + line.total, 0);
-      }, [cart]);
-
-      const totalItemsCount = useMemo(() => {
-        return cart.reduce((sum, line) => sum + line.quantity, 0);
-      }, [cart]);
-
-      const addConfiguredItem = (product, options = {}) => {
-        const basePrice = product.price;
-        const proteinExtrasTotal = (options.proteinExtras || []).reduce(
-          (sum, item) => sum + item.price,
-          0
-        );
-        const addOnsTotal = (options.addOns || []).reduce(
-          (sum, item) => sum + item.price,
-          0
-        );
-
-        const unitPrice = basePrice + proteinExtrasTotal + addOnsTotal;
-
-        const line = {
-          lineId: createLineId(),
-          productId: product.id,
-          productName: product.name,
-          basePrice,
-          quantity: 1,
-          proteinExtras: options.proteinExtras || [],
-          addOns: options.addOns || [],
-          unitPrice,
-          total: unitPrice
-        };
-
-        setCart(prev => [...prev, line]);
-        setCustomizingProduct(null);
-      };
-
-      const addSimpleItem = (product) => {
-        addConfiguredItem(product);
-      };
-
-      const changeLineQuantity = (lineId, delta) => {
-        setCart(prev =>
-          prev
-            .map(line => {
-              if (line.lineId !== lineId) return line;
-
-              const quantity = Math.max(0, line.quantity + delta);
-
-              return {
-                ...line,
-                quantity,
-                total: quantity * line.unitPrice
-              };
-            })
-            .filter(line => line.quantity > 0)
-        );
-      };
-
-      const removeLine = (lineId) => {
-        setCart(prev => prev.filter(line => line.lineId !== lineId));
-      };
-
-      const handleWhatsAppSubmit = (e) => {
-        e.preventDefault();
-
-        if (!isOpen || !schedule || !menu) {
-          alert("Ordering is currently closed.");
-          return;
-        }
-
-        if (cart.length === 0) {
-          alert("Please add at least one item.");
-          return;
-        }
-
-        if (!customerInfo.name.trim() || !customerInfo.phone.trim()) {
-          alert("Please enter your name and phone number.");
-          return;
-        }
-
-        let orderText = `*NEW ORDER - ${menu.title.toUpperCase()}*\n\n`;
-        orderText += `*Fulfilment Date:* ${formatDate(schedule.fulfilmentDate)}\n`;
-        orderText += `*Customer:* ${customerInfo.name}\n`;
-        orderText += `*Phone:* ${customerInfo.phone}\n`;
-        orderText += `*Delivery / Pickup:* ${customerInfo.address || "N/A"}\n`;
-
-        if (customerInfo.notes) {
-          orderText += `*General Notes:* ${customerInfo.notes}\n`;
-        }
-
-        orderText += `\n*--- ORDER ITEMS ---*\n`;
-
-        cart.forEach(line => {
-          orderText += `• ${line.productName} x${line.quantity} - ${money(line.unitPrice * line.quantity)}\n`;
-
-          if (line.proteinExtras.length) {
-            orderText += `   Protein mix: ${line.proteinExtras.map(x => x.name).join(", ")}\n`;
-          }
-
-          if (line.addOns.length) {
-            orderText += `   Add-ons: ${line.addOns.map(x => x.name).join(", ")}\n`;
-          }
-        });
-
-        orderText += `\n*TOTAL:* ${money(totalAmount)}\n`;
-        orderText += `*Payment via PayNow:* ${STORE_CONFIG.paynowDetails}\n`;
-
-        const encodedText = encodeURIComponent(orderText);
-        window.open(
-          `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodedText}`,
-          "_blank"
-        );
-      };
-
-      if (!schedule) {
-        return (
-          <ClosedScreen
-            scheduleInfo={scheduleInfo}
-            onRefresh={() => setScheduleInfo(getCurrentSchedule())}
-          />
-        );
-      }
-
-      return (
-        <>
-          <div className="max-w-2xl mx-auto p-4 sm:p-6">
-            <Header menu={menu} schedule={schedule} />
-
-            {!isOpen && (
-              <div className="mt-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg p-4">
-                <div className="font-bold">⏳ Ordering is not open yet</div>
-                <div className="text-sm mt-1">
-                  Orders open on {formatDateTime(schedule.orderOpens)}.
-                </div>
-              </div>
-            )}
-
-            <form onSubmit={handleWhatsAppSubmit} className="space-y-4 mt-4">
-              <CustomerDetails
-                customerInfo={customerInfo}
-                setCustomerInfo={setCustomerInfo}
-              />
-
-              <MenuSection
-                menu={menu}
-                isOpen={isOpen}
-                onAdd={addSimpleItem}
-                onCustomize={setCustomizingProduct}
-              />
-
-              <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
-                <label className="block text-sm font-medium text-gray-600 mb-1">
-                  General Remarks / Special Requests
-                </label>
-                <input
-                  type="text"
-                  value={customerInfo.notes}
-                  onChange={(e) =>
-                    setCustomerInfo({ ...customerInfo, notes: e.target.value })
-                  }
-                  className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-emerald-500 outline-none"
-                  placeholder="Less spicy, no peanuts, separate sauce, etc."
-                />
-              </div>
-            </form>
-          </div>
-
-          <CartBar
-            cart={cart}
-            totalAmount={totalAmount}
-            totalItemsCount={totalItemsCount}
-            isOpen={isOpen}
-            onChangeQuantity={changeLineQuantity}
-            onRemove={removeLine}
-            onSubmit={handleWhatsAppSubmit}
-          />
-
-          {customizingProduct && (
-            <CustomizeModal
-              product={customizingProduct}
-              menu={menu}
-              onClose={() => setCustomizingProduct(null)}
-              onAdd={addConfiguredItem}
-            />
-          )}
-        </>
-      );
-    }
-
-    function Header({ menu, schedule }) {
-      return (
-        <div className="bg-emerald-700 text-white rounded-t-lg p-6 shadow-md border-t-8 border-emerald-900">
-          <div className="text-4xl mb-2">{menu.emoji}</div>
-          <h1 className="text-2xl font-bold">{menu.title}</h1>
-          <p className="text-emerald-100 mt-1 text-sm">{menu.description}</p>
-
-          <div className="mt-4 grid gap-2 sm:grid-cols-2">
-            <div className="p-3 bg-emerald-800 rounded text-xs leading-relaxed">
-              <strong>📅 Fulfilment</strong>
-              <div className="mt-1">{formatDate(schedule.fulfilmentDate)}</div>
-            </div>
-
-            <div className="p-3 bg-emerald-800 rounded text-xs leading-relaxed">
-              <strong>⏰ Orders close</strong>
-              <div className="mt-1">{formatDateTime(schedule.orderCloses)}</div>
-            </div>
-          </div>
-
-          <div className="mt-3 p-3 bg-emerald-800 rounded text-xs leading-relaxed">
-            <strong>💳 PayNow Payment:</strong> Payment details will be included
-            in your WhatsApp order.
-          </div>
-        </div>
-      );
-    }
-
-    function CustomerDetails({ customerInfo, setCustomerInfo }) {
-      return (
-        <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
-          <h2 className="text-lg font-semibold mb-3 text-gray-700 border-b pb-2">
-            Customer Details
-          </h2>
-
-          <div className="space-y-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">
-                Full Name *
-              </label>
-              <input
-                type="text"
-                required
-                value={customerInfo.name}
-                onChange={(e) =>
-                  setCustomerInfo({ ...customerInfo, name: e.target.value })
-                }
-                className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-emerald-500 outline-none"
-                placeholder="John Doe"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">
-                Phone Number *
-              </label>
-              <input
-                type="tel"
-                required
-                value={customerInfo.phone}
-                onChange={(e) =>
-                  setCustomerInfo({ ...customerInfo, phone: e.target.value })
-                }
-                className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-emerald-500 outline-none"
-                placeholder="9123 4567"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">
-                Delivery Address / Pickup Note
-              </label>
-              <textarea
-                rows="2"
-                value={customerInfo.address}
-                onChange={(e) =>
-                  setCustomerInfo({ ...customerInfo, address: e.target.value })
-                }
-                className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-emerald-500 outline-none"
-                placeholder="Block/Street or Self-Pickup time"
-              />
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    function MenuSection({ menu, isOpen, onAdd, onCustomize }) {
-      const isBanhMi = menu.id === "banh-mi";
-
-      return (
-        <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
-          <div className="flex items-center justify-between gap-3 mb-4 border-b pb-2">
-            <h2 className="text-lg font-semibold text-gray-700">
-              {menu.title}
-            </h2>
-            {isBanhMi && (
-              <span className="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded-full">
-                Customise your Banh Mi
-              </span>
-            )}
-          </div>
-
-          <div className="space-y-3">
-            {menu.products.map(product => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                isOpen={isOpen}
-                isBanhMi={isBanhMi}
-                onAdd={onAdd}
-                onCustomize={onCustomize}
-              />
-            ))}
-          </div>
-        </div>
-      );
-    }
-
-    function ProductCard({ product, isOpen, isBanhMi, onAdd, onCustomize }) {
-      return (
-        <div className="border border-gray-100 rounded-lg overflow-hidden">
-          <div className="flex gap-3 p-3">
-            <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
-              {product.image ? (
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="text-gray-400 text-xs text-center px-2">
-                  📷 Add photo later
-                </div>
-              )}
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <div className="font-medium text-gray-800">{product.name}</div>
-
-              {product.note && (
-                <div className="text-xs text-amber-600 mt-1">
-                  {product.note}
-                </div>
-              )}
-
-              <div className="text-sm font-semibold text-emerald-700 mt-2">
-                {money(product.price)}
-              </div>
-
-              {isOpen && (
-                <div className="mt-2 flex gap-2">
-                  {isBanhMi ? (
-                    <button
-                      type="button"
-                      onClick={() => onCustomize(product)}
-                      className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold"
-                    >
-                      Customise & Add
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => onAdd(product)}
-                      className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold"
-                    >
-                      + Add
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    function CustomizeModal({ product, menu, onClose, onAdd }) {
-      const [selectedProteins, setSelectedProteins] = useState([]);
-      const [selectedAddOns, setSelectedAddOns] = useState([]);
-
-      const proteinOptions = [
-        { id: "pork", name: "Grilled Pork", price: 0 },
-        { id: "chicken", name: "Grilled Chicken", price: 0 },
-        { id: "meatball", name: "Pork Meatball", price: 0 },
-        { id: "duck", name: "Smoked Duck", price: 0 }
-      ];
-
-      const toggleProtein = (protein) => {
-        setSelectedProteins(prev => {
-          const exists = prev.some(x => x.id === protein.id);
-
-          if (exists) {
-            return prev.filter(x => x.id !== protein.id);
-          }
-
-          return [...prev, protein];
-        });
-      };
-
-      const toggleAddOn = (addOn) => {
-        setSelectedAddOns(prev => {
-          const exists = prev.some(x => x.id === addOn.id);
-
-          if (exists) {
-            return prev.filter(x => x.id !== addOn.id);
-          }
-
-          return [...prev, addOn];
-        });
-      };
-
-      const extraPrice =
-        selectedProteins.reduce((sum, item) => sum + item.price, 0) +
-        selectedAddOns.reduce((sum, item) => sum + item.price, 0);
-
-      const finalPrice = product.price + extraPrice;
-
-      return (
-        <div className="fixed inset-0 z-[100] bg-black/50 flex items-end sm:items-center justify-center p-0 sm:p-4">
-          <div className="bg-white w-full sm:max-w-lg sm:rounded-xl max-h-[90vh] overflow-y-auto shadow-2xl">
-            <div className="p-5 border-b flex items-start justify-between gap-4">
-              <div>
-                <h3 className="text-xl font-bold text-gray-800">
-                  Customise Banh Mi
-                </h3>
-                <p className="text-sm text-gray-500 mt-1">{product.name}</p>
-              </div>
-
-              <button
-                type="button"
-                onClick={onClose}
-                className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 font-bold"
-              >
-                ×
-              </button>
-            </div>
-
-            <div className="p-5 space-y-6">
-              <div>
-                <div className="font-semibold text-gray-800 mb-2">
-                  Protein mix
-                </div>
-
-                <p className="text-xs text-gray-500 mb-3">
-                  Select another protein if you want a mixed Banh Mi, e.g.
-                  Chicken + Pork.
-                </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {proteinOptions.map(protein => {
-                    const selected = selectedProteins.some(
-                      x => x.id === protein.id
-                    );
-
-                    return (
-                      <button
-                        type="button"
-                        key={protein.id}
-                        onClick={() => toggleProtein(protein)}
-                        className={`text-left p-3 rounded-lg border ${
-                          selected
-                            ? "border-emerald-500 bg-emerald-50"
-                            : "border-gray-200 bg-white"
-                        }`}
-                      >
-                        <div className="font-medium text-sm">
-                          {selected ? "✓ " : ""}
-                          {protein.name}
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          No extra charge
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div>
-                <div className="font-semibold text-gray-800 mb-2">
-                  Add-ons
-                </div>
-
-                <div className="space-y-2">
-                  {menu.addOns.map(addOn => {
-                    const selected = selectedAddOns.some(
-                      x => x.id === addOn.id
-                    );
-
-                    return (
-                      <button
-                        type="button"
-                        key={addOn.id}
-                        onClick={() => toggleAddOn(addOn)}
-                        className={`w-full flex items-center justify-between p-3 rounded-lg border text-left ${
-                          selected
-                            ? "border-emerald-500 bg-emerald-50"
-                            : "border-gray-200 bg-white"
-                        }`}
-                      >
-                        <span className="font-medium text-sm">
-                          {selected ? "✓ " : ""}
-                          {addOn.name}
-                        </span>
-                        <span className="text-sm font-semibold">
-                          +{money(addOn.price)}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="bg-gray-50 rounded-lg p-4">
-                <div className="flex justify-between">
-                  <span>{product.name}</span>
-                  <span>{money(product.price)}</span>
-                </div>
-
-                {selectedProteins.length > 0 && (
-                  <div className="text-sm text-gray-600 mt-2">
-                    Protein mix:{" "}
-                    {selectedProteins.map(x => x.name).join(" + ")}
-                  </div>
-                )}
-
-                {selectedAddOns.length > 0 && (
-                  <div className="text-sm text-gray-600 mt-1">
-                    Add-ons:{" "}
-                    {selectedAddOns.map(x => x.name).join(", ")}
-                  </div>
-                )}
-
-                <div className="border-t mt-3 pt-3 flex justify-between font-bold">
-                  <span>Total</span>
-                  <span className="text-emerald-700">
-                    {money(finalPrice)}
-                  </span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() =>
-                  onAdd(product, {
-                    proteinExtras: selectedProteins,
-                    addOns: selectedAddOns
-                  })
-                }
-                className="w-full py-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
-              >
-                Add to Order — {money(finalPrice)}
-              </button>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    function CartBar({
-      cart,
-      totalAmount,
-      totalItemsCount,
-      isOpen,
-      onChangeQuantity,
-      onRemove,
-      onSubmit
-    }) {
-      const [expanded, setExpanded] = useState(false);
-
-      return (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 shadow-lg z-50">
-          {expanded && cart.length > 0 && (
-            <div className="max-w-2xl mx-auto max-h-72 overflow-y-auto p-4 border-b bg-gray-50">
-              <div className="font-semibold mb-3">Your Order</div>
-
-              <div className="space-y-3">
-                {cart.map(line => (
-                  <div
-                    key={line.lineId}
-                    className="bg-white border rounded-lg p-3"
-                  >
-                    <div className="flex justify-between gap-3">
-                      <div className="flex-1">
-                        <div className="font-medium text-sm">
-                          {line.productName}
-                        </div>
-
-                        {line.proteinExtras.length > 0 && (
-                          <div className="text-xs text-gray-500 mt-1">
-                            Protein:{" "}
-                            {line.proteinExtras.map(x => x.name).join(" + ")}
-                          </div>
-                        )}
-
-                        {line.addOns.length > 0 && (
-                          <div className="text-xs text-gray-500 mt-1">
-                            Add-ons:{" "}
-                            {line.addOns.map(x => x.name).join(", ")}
-                          </div>
-                        )}
-
-                        <div className="text-sm font-semibold text-emerald-700 mt-1">
-                          {money(line.unitPrice)} each
-                        </div>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => onRemove(line.lineId)}
-                        className="text-xs text-red-600 h-fit"
-                      >
-                        Remove
-                      </button>
-                    </div>
-
-                    <div className="flex items-center justify-between mt-2">
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => onChangeQuantity(line.lineId, -1)}
-                          className="w-8 h-8 rounded-full bg-gray-200 font-bold"
-                        >
-                          −
-                        </button>
-
-                        <span className="w-6 text-center font-semibold">
-                          {line.quantity}
-                        </span>
-
-                        <button
-                          type="button"
-                          onClick={() => onChangeQuantity(line.lineId, 1)}
-                          className="w-8 h-8 rounded-full bg-emerald-600 text-white font-bold"
-                        >
-                          +
-                        </button>
-                      </div>
-
-                      <div className="font-bold">
-                        {money(line.total)}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="max-w-2xl mx-auto p-3 sm:p-4 flex items-center justify-between gap-3">
-            <button
-              type="button"
-              onClick={() => setExpanded(!expanded)}
-              className="text-left min-w-0"
-            >
-              <div className="text-xs text-gray-500">
-                {totalItemsCount} item(s) selected
-              </div>
-              <div className="text-xl font-bold text-emerald-800">
-                {money(totalAmount)}
-              </div>
-              <div className="text-xs text-emerald-700 underline">
-                {cart.length ? (expanded ? "Hide order" : "Review order") : ""}
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={onSubmit}
-              disabled={!isOpen || totalAmount === 0}
-              className={`px-5 py-3 rounded-lg font-bold text-white shadow transition ${
-                isOpen && totalAmount > 0
-                  ? "bg-emerald-600 hover:bg-emerald-700"
-                  : "bg-gray-300 cursor-not-allowed"
-              }`}
-            >
-              {isOpen ? "Order via WhatsApp" : "Ordering Closed"}
-            </button>
-          </div>
-        </div>
-      );
-    }
-
-    function ClosedScreen({ scheduleInfo, onRefresh }) {
-      const upcoming = scheduleInfo.schedule;
-
-      return (
-        <div className="min-h-screen flex items-center justify-center p-6">
-          <div className="max-w-lg w-full bg-white rounded-xl shadow-md p-8 text-center">
-            <div className="text-5xl mb-4">🔒</div>
-
-            <h1 className="text-2xl font-bold text-gray-800">
-              Ordering is currently closed
-            </h1>
-
-            <p className="text-gray-600 mt-3">
-              There are no scheduled menus available at the moment.
-            </p>
-
-            {upcoming && (
-              <div className="mt-6 bg-emerald-50 border border-emerald-100 rounded-lg p-4 text-left">
-                <div className="font-bold text-emerald-800">
-                  Next: {MENUS[upcoming.menuId].emoji}{" "}
-                  {MENUS[upcoming.menuId].title}
-                </div>
-
-                <div className="text-sm text-gray-600 mt-2">
-                  Orders open: {formatDateTime(upcoming.orderOpens)}
-                </div>
-
-                <div className="text-sm text-gray-600">
-                  Fulfilment: {formatDate(upcoming.fulfilmentDate)}
-                </div>
-              </div>
-            )}
-
-            <button
-              type="button"
-              onClick={onRefresh}
-              className="mt-6 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
-            >
-              Check Again
-            </button>
-          </div>
-        </div>
-      );
-    }
-
-    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
-  </script>
+  });
+
+  ["name","phone","address","notes"].forEach(id => {
+    const input = document.getElementById(id);
+    if (!input) return;
+    input.addEventListener("input", () => {
+      state.customer[id] = input.value;
+      saveCustomer();
+    });
+  });
+}
+
+window.addEventListener("error", function(e) {
+  const app = document.getElementById("app");
+  if (app && !app.innerHTML.trim()) {
+    app.innerHTML = errorPage("The order page could not load", e.message || "A JavaScript error occurred.");
+  }
+});
+
+render();
+setInterval(render, 30000);
+</script>
 </body>
 </html>
