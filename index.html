@@ -13,6 +13,18 @@
 
 <body class="bg-gray-100 min-h-screen text-gray-800 pb-32">
   <div id="root"></div>
+  <script>
+    window.addEventListener("error", function (event) {
+      const root = document.getElementById("root");
+      if (root && !root.innerHTML.trim()) {
+        root.innerHTML = `
+          <div style="max-width:640px;margin:40px auto;padding:24px;font-family:Arial,sans-serif;background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.12)">
+            <h1 style="font-size:24px;margin:0 0 12px">The order page could not load</h1>
+            <p style="color:#555">Please check that the file is being opened as an HTML page and that JavaScript is enabled.</p>
+          </div>`;
+      }
+    });
+  </script>
 
   <script type="text/babel">
     const { useState, useMemo, useEffect } = React;
@@ -407,32 +419,32 @@
           return;
         }
 
-        let orderText = `*NEW ORDER - ${menu.title.toUpperCase()}*\\n\\n`;
-        orderText += `*Fulfilment Date:* ${formatDate(schedule.fulfilmentDate)}\\n`;
-        orderText += `*Customer:* ${customerInfo.name}\\n`;
-        orderText += `*Phone:* ${customerInfo.phone}\\n`;
-        orderText += `*Delivery / Pickup:* ${customerInfo.address || "N/A"}\\n`;
+        let orderText = `*NEW ORDER - ${menu.title.toUpperCase()}*\n\n`;
+        orderText += `*Fulfilment Date:* ${formatDate(schedule.fulfilmentDate)}\n`;
+        orderText += `*Customer:* ${customerInfo.name}\n`;
+        orderText += `*Phone:* ${customerInfo.phone}\n`;
+        orderText += `*Delivery / Pickup:* ${customerInfo.address || "N/A"}\n`;
 
         if (customerInfo.notes) {
-          orderText += `*General Notes:* ${customerInfo.notes}\\n`;
+          orderText += `*General Notes:* ${customerInfo.notes}\n`;
         }
 
-        orderText += `\\n*--- ORDER ITEMS ---*\\n`;
+        orderText += `\n*--- ORDER ITEMS ---*\n`;
 
         cart.forEach(line => {
-          orderText += `• ${line.productName} x${line.quantity} - ${money(line.unitPrice * line.quantity)}\\n`;
+          orderText += `• ${line.productName} x${line.quantity} - ${money(line.unitPrice * line.quantity)}\n`;
 
           if (line.proteinExtras.length) {
-            orderText += `   Protein mix: ${line.proteinExtras.map(x => x.name).join(", ")}\\n`;
+            orderText += `   Protein mix: ${line.proteinExtras.map(x => x.name).join(", ")}\n`;
           }
 
           if (line.addOns.length) {
-            orderText += `   Add-ons: ${line.addOns.map(x => x.name).join(", ")}\\n`;
+            orderText += `   Add-ons: ${line.addOns.map(x => x.name).join(", ")}\n`;
           }
         });
 
-        orderText += `\\n*TOTAL:* ${money(totalAmount)}\\n`;
-        orderText += `*Payment via PayNow:* ${STORE_CONFIG.paynowDetails}\\n`;
+        orderText += `\n*TOTAL:* ${money(totalAmount)}\n`;
+        orderText += `*Payment via PayNow:* ${STORE_CONFIG.paynowDetails}\n`;
 
         const encodedText = encodeURIComponent(orderText);
         window.open(
