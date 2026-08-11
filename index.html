@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Banh Mi Wow - Authentic Vietnamese Street Food</title>
+  <title>Banh Mi Wow - Authentic Saigon Street Food</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome Icons -->
@@ -54,10 +54,16 @@
         <div>
           <h1 class="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
             Banh Mi Wow
-            <span class="text-xs bg-amber-400 text-stone-900 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Hội An Style</span>
+            <span class="text-xs bg-amber-400 text-stone-900 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Saigon Style</span>
           </h1>
           <p class="text-xs text-stone-300 flex items-center gap-2 mt-0.5">
-            <span class="inline-flex items-center text-amber-400"><i class="fa-solid fa-star text-xs mr-1"></i>4.9 (1.2k)</span>
+            <span class="inline-flex items-center text-amber-400">
+              <i class="fa-solid fa-star text-xs"></i>
+              <i class="fa-solid fa-star text-xs"></i>
+              <i class="fa-solid fa-star text-xs"></i>
+              <i class="fa-solid fa-star text-xs"></i>
+              <i class="fa-solid fa-star text-xs"></i>
+            </span>
             <span>•</span>
             <a href="https://instagram.com/banhmiwowsg" target="_blank" class="hover:text-amber-300 transition flex items-center gap-1">
               <i class="fa-brands fa-instagram"></i> @banhmiwowsg
@@ -81,15 +87,15 @@
     <!-- Menu Grid (Left / Main Column) -->
     <div class="lg:col-span-2 space-y-6">
       
-      <!-- Announcement -->
+      <!-- Tagline Announcement -->
       <div class="bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl p-4 text-stone-900 shadow-sm flex items-center justify-between">
         <div class="flex items-center space-x-3">
           <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-xl">
             ✨
           </div>
           <div>
-            <h3 class="font-bold text-sm">Fresh Baked Crispy Baguettes</h3>
-            <p class="text-xs font-medium text-stone-800">Made daily with authentic Hội An family recipe pâté & pickles</p>
+            <h3 class="font-bold text-sm">Everything is made fresh including our homemade pâté</h3>
+            <p class="text-xs font-medium text-stone-800">Authentic Saigon recipes & house-made ingredients</p>
           </div>
         </div>
         <span class="text-xs bg-stone-900 text-amber-300 font-bold px-2.5 py-1 rounded-lg shrink-0">Fresh Daily</span>
@@ -98,22 +104,22 @@
       <!-- Category Heading -->
       <div class="flex items-center justify-between pt-2">
         <h2 class="text-xl font-bold text-stone-900 flex items-center gap-2">
-          <span>🥖</span> All 6 Banh Mi Options
+          <span>🥖</span> Banh Mi Options
         </h2>
       </div>
 
       <!-- Menu Items List -->
       <div id="menu-items-list" class="space-y-4"></div>
 
-      <!-- Drinks Section Header -->
+      <!-- Extras Section Header -->
       <div class="flex items-center justify-between pt-6 border-t border-stone-200">
         <h2 class="text-xl font-bold text-stone-900 flex items-center gap-2">
-          <span>☕</span> Drinks & Coffee
+          <span>🌶️</span> Extras
         </h2>
       </div>
 
-      <!-- Drinks Menu List -->
-      <div id="drinks-items-list" class="space-y-4"></div>
+      <!-- Extras Menu List -->
+      <div id="extras-items-list" class="space-y-4"></div>
 
     </div>
 
@@ -187,14 +193,14 @@
           <i class="fa-solid fa-xmark"></i>
         </button>
         <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Customization</span>
-        <h3 id="modal-item-title" class="text-xl font-bold mt-0.5 text-white pr-8">Traditional Pork Banh Mi</h3>
+        <h3 id="modal-item-title" class="text-xl font-bold mt-0.5 text-white pr-8">Item Name</h3>
         <p id="modal-item-desc" class="text-xs text-stone-300 mt-1 line-clamp-2"></p>
       </div>
 
       <!-- Modal Body -->
       <div class="p-5 overflow-y-auto space-y-6 flex-1 text-sm">
         
-        <!-- Quantity Selector with Quick Adder (+1, +2, +3, +5) -->
+        <!-- Quantity Selector with Quick Adder -->
         <div>
           <label class="block font-bold text-stone-900 mb-2.5 flex items-center justify-between">
             <span><i class="fa-solid fa-layer-group text-brand-700 mr-1.5"></i> Quantity</span>
@@ -216,8 +222,8 @@
           </div>
         </div>
 
-        <!-- Add-ons (Checkboxes) -->
-        <div>
+        <!-- Add-ons -->
+        <div id="addons-container">
           <label class="block font-bold text-stone-900 mb-2.5 flex items-center justify-between">
             <span><i class="fa-solid fa-plus-circle text-amber-600 mr-1.5"></i> Extra Add-ons</span>
             <span class="text-xs text-stone-400 font-normal">Optional</span>
@@ -255,33 +261,33 @@
             <span><i class="fa-solid fa-pen-to-square text-stone-600 mr-1.5"></i> Special Instructions</span>
           </label>
           
-          <!-- Quick Preset Chips including No Peanuts -->
+          <!-- Quick Preset Chips -->
           <div class="flex flex-wrap gap-1.5 mb-2">
             <button type="button" onclick="appendInstruction('No peanuts')" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-900 font-semibold px-2.5 py-1 rounded-lg transition">🥜 No peanuts</button>
-            <button type="button" onclick="appendInstruction('No coriander')" class="text-xs bg-stone-100 hover:bg-stone-200 text-stone-700 px-2.5 py-1 rounded-lg transition">🌿 No coriander</button>
+            <button type="button" onclick="appendInstruction('No spring onion')" class="text-xs bg-stone-100 hover:bg-stone-200 text-stone-700 px-2.5 py-1 rounded-lg transition">🌱 No spring onion</button>
             <button type="button" onclick="appendInstruction('Cut in half')" class="text-xs bg-stone-100 hover:bg-stone-200 text-stone-700 px-2.5 py-1 rounded-lg transition">✂️ Cut in half</button>
           </div>
 
-          <textarea id="modal-instructions" rows="2" placeholder="e.g. No peanuts, cut in half, extra crispy..." class="w-full p-3 border border-stone-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-xs text-stone-800"></textarea>
+          <textarea id="modal-instructions" rows="2" placeholder="e.g. No peanuts, cut in half..." class="w-full p-3 border border-stone-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-xs text-stone-800"></textarea>
         </div>
 
       </div>
 
-      <!-- Modal Sticky Footer -->
+      <!-- Modal Footer -->
       <div class="p-4 bg-stone-50 border-t border-stone-200 shrink-0 flex items-center gap-3">
         <button onclick="closeCustomizeModal()" class="w-1/3 bg-stone-200 hover:bg-stone-300 text-stone-800 font-bold py-3 px-4 rounded-xl transition text-center text-sm">
           Cancel
         </button>
         <button onclick="confirmAddToCart()" class="w-2/3 bg-brand-700 hover:bg-brand-800 text-white font-bold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-between text-sm">
           <span>Add to Cart</span>
-          <span id="modal-calculated-price" class="bg-brand-800 px-2.5 py-1 rounded-lg text-xs font-extrabold">S$7.50</span>
+          <span id="modal-calculated-price" class="bg-brand-800 px-2.5 py-1 rounded-lg text-xs font-extrabold">S$8.00</span>
         </button>
       </div>
 
     </div>
   </div>
 
-  <!-- Mobile Slide-over Drawer for Cart -->
+  <!-- Mobile Drawer -->
   <div id="cart-drawer" class="fixed inset-0 z-50 flex justify-end hidden">
     <div onclick="toggleCartDrawer()" class="modal-backdrop absolute inset-0"></div>
     <div class="relative bg-white w-full max-w-md h-full shadow-2xl flex flex-col z-10">
@@ -317,97 +323,67 @@
     </div>
   </div>
 
-  <!-- JavaScript Application Logic -->
+  <!-- Application Logic -->
   <script>
-    const whatsappNumber = "65XXXXXXXX"; // Replace with your actual WhatsApp phone number
+    const whatsappNumber = "65XXXXXXXX"; // Replace with your phone number
 
     const menuItems = [
       {
         id: 'bm-1',
-        title: 'Traditional Pork Banh Mi',
-        vnName: 'Bánh Mì Thịt Nguội',
-        desc: 'Signature Vietnamese pâté, savory cold cuts, pork sausage, fresh pickled radish & carrot, cucumber, spring onion & coriander.',
-        price: 7.50,
-        badge: 'Best Seller',
-        badgeColor: 'bg-amber-100 text-amber-800 border-amber-200',
-        image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=400&q=80'
-      },
-      {
-        id: 'bm-2',
-        title: 'Grilled Chicken Banh Mi',
-        vnName: 'Bánh Mì Gà Nướng',
-        desc: 'Juicy lemongrass grilled chicken thigh marinated with honey & oyster sauce, crisp cucumber, pickles & scallion oil.',
-        price: 7.00,
-        badge: 'Popular',
-        badgeColor: 'bg-blue-100 text-blue-800 border-blue-200',
+        title: 'Grilled Chicken',
+        desc: 'Grilled chicken, pate, pickled veg, spring onion. Contains peanuts.',
+        price: 8.00,
+        allergenNotice: '🥜 Contains Peanuts',
         image: 'https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=400&q=80'
       },
       {
-        id: 'bm-3',
-        title: 'Crispy Roast Pork Belly Banh Mi',
-        vnName: 'Bánh Mì Heo Quay',
-        desc: 'Golden crackling roasted pork belly topped with secret store trademark savory glaze, chili sauce & house pickles.',
-        price: 8.50,
-        badge: "Chef's Choice",
-        badgeColor: 'bg-red-100 text-red-800 border-red-200',
+        id: 'bm-2',
+        title: 'Grilled Pork',
+        desc: 'Grilled pork, pate, pickled veg, spring onion. Contains peanuts.',
+        price: 8.00,
+        allergenNotice: '🥜 Contains Peanuts',
         image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=400&q=80'
       },
       {
-        id: 'bm-4',
-        title: 'Lemongrass Beef Banh Mi',
-        vnName: 'Bánh Mì Bò Xào',
-        desc: 'Sautéed tender beef cooked with piper leaves, fragrant lemongrass, black pepper sauce & store-made pickles.',
+        id: 'bm-3',
+        title: 'Pork Meatball',
+        desc: 'Pork meatball, pate, pickled veg, spring onion.',
         price: 8.00,
-        badge: 'New',
-        badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80'
+      },
+      {
+        id: 'bm-4',
+        title: 'Smoked Duck',
+        desc: 'Smoked duck, pate, pickled veg, spring onion.',
+        price: 8.00,
         image: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=400&q=80'
       },
       {
         id: 'bm-5',
-        title: 'Vegetarian Tofu & Mushroom Banh Mi',
-        vnName: 'Bánh Mì Chay',
-        desc: 'Pan-seared lemongrass organic tofu, sautéed shiitake mushrooms, plant-based pâté, fresh herbs & pickles.',
-        price: 7.00,
-        badge: 'Vegan / Healthy',
-        badgeColor: 'bg-green-100 text-green-800 border-green-200',
+        title: 'Vegetarian',
+        desc: 'Eggs, vegetables, no pate, beancurd skin.',
+        price: 5.50,
         image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=80'
       },
       {
         id: 'bm-6',
-        title: 'Meatball (Xiu Mai) Banh Mi',
-        vnName: 'Bánh Mì Xíu Mại',
-        desc: 'Juicy pork meatballs simmered in rich tomato stew, topped with egg butter, melted pâté & crunchy cilantro.',
-        price: 7.50,
-        badge: 'Authentic',
-        badgeColor: 'bg-purple-100 text-purple-800 border-purple-200',
-        image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80'
+        title: 'Traditional Banh mi',
+        desc: 'Braised pork, ham, pate, pickled vegetables, spring onion.',
+        price: 8.00,
+        badge: 'Classic',
+        badgeColor: 'bg-amber-100 text-amber-800 border-amber-200',
+        image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=400&q=80'
       }
     ];
 
-    const drinkItems = [
+    const extrasItems = [
       {
-        id: 'dr-1',
-        title: 'Vietnamese Iced Milk Coffee',
-        vnName: 'Cà Phê Sữa Đá',
-        desc: 'Traditional slow-drip dark roast espresso with sweet condensed milk over crushed ice.',
-        price: 4.50,
-        image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=400&q=80'
-      },
-      {
-        id: 'dr-2',
-        title: 'Salted Cream Iced Coffee',
-        vnName: 'Cà Phê Muối',
-        desc: 'Rich drip coffee crowned with velvety sea-salt whipped cream foam.',
-        price: 5.20,
-        image: 'https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=400&q=80'
-      },
-      {
-        id: 'dr-3',
-        title: 'Iced Coconut Matcha',
-        vnName: 'Matcha Dừa',
-        desc: 'Japanese Uji matcha layered over fresh organic coconut water & ice.',
-        price: 5.50,
-        image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=400&q=80'
+        id: 'ex-1',
+        title: 'Chilli Bottle',
+        desc: 'House-made signature chilli bottle.',
+        price: 8.00,
+        isExtraOnly: true,
+        image: 'https://images.unsplash.com/photo-1588880331179-bc9b93a8cb5e?auto=format&fit=crop&w=400&q=80'
       }
     ];
 
@@ -418,7 +394,7 @@
 
     window.onload = function() {
       renderMenuItems(menuItems);
-      renderDrinksItems(drinkItems);
+      renderExtrasItems(extrasItems);
       updateCartUI();
     };
 
@@ -438,18 +414,16 @@
             <div class="flex items-start justify-between gap-2">
               <div>
                 <h3 class="font-bold text-stone-900 text-base leading-snug group-hover:text-brand-700 transition">${item.title}</h3>
-                <p class="text-[11px] text-stone-400 font-medium italic">${item.vnName}</p>
+                ${item.allergenNotice ? `<span class="inline-block text-[10px] font-extrabold text-amber-900 bg-amber-100 px-2 py-0.5 rounded mt-0.5">${item.allergenNotice}</span>` : ''}
               </div>
               <span class="font-extrabold text-stone-900 text-base">S$${item.price.toFixed(2)}</span>
             </div>
             <p class="text-xs text-stone-500 mt-1 line-clamp-2 leading-relaxed">${item.desc}</p>
             <div class="mt-3 flex items-center justify-between">
-              <!-- Quick Add Direct Button -->
               <button onclick="quickAddDirect('${item.id}')" class="text-xs font-semibold bg-stone-100 hover:bg-stone-200 text-stone-700 px-3 py-1.5 rounded-xl transition flex items-center gap-1">
                 <i class="fa-solid fa-plus text-[10px]"></i> Quick Add
               </button>
               
-              <!-- Customize Button -->
               <button onclick="openCustomizeModal('${item.id}')" class="bg-brand-700 hover:bg-brand-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl shadow-sm transition flex items-center gap-1.5">
                 <i class="fa-solid fa-sliders text-[10px]"></i> Customize
               </button>
@@ -460,11 +434,11 @@
       });
     }
 
-    function renderDrinksItems(drinks) {
-      const container = document.getElementById('drinks-items-list');
+    function renderExtrasItems(extras) {
+      const container = document.getElementById('extras-items-list');
       container.innerHTML = '';
 
-      drinks.forEach(item => {
+      extras.forEach(item => {
         const card = document.createElement('div');
         card.className = 'bg-white rounded-2xl p-4 border border-stone-200 shadow-sm hover:shadow-md transition flex gap-4 items-center group';
         card.innerHTML = `
@@ -475,14 +449,13 @@
             <div class="flex items-start justify-between gap-2">
               <div>
                 <h3 class="font-bold text-stone-900 text-sm sm:text-base group-hover:text-brand-700 transition">${item.title}</h3>
-                <p class="text-[11px] text-stone-400 font-medium italic">${item.vnName}</p>
               </div>
               <span class="font-extrabold text-stone-900 text-sm sm:text-base">S$${item.price.toFixed(2)}</span>
             </div>
             <p class="text-xs text-stone-500 mt-1 line-clamp-1">${item.desc}</p>
             <div class="mt-2.5 flex justify-end">
-              <button onclick="quickAddDrink('${item.id}')" class="bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5">
-                <i class="fa-solid fa-plus text-[10px]"></i> Add Drink
+              <button onclick="quickAddExtra('${item.id}')" class="bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5">
+                <i class="fa-solid fa-plus text-[10px]"></i> Add to Cart
               </button>
             </div>
           </div>
@@ -491,7 +464,6 @@
       });
     }
 
-    // Quick Add Direct without opening modal
     function quickAddDirect(itemId) {
       const item = menuItems.find(i => i.id === itemId);
       if (!item) return;
@@ -509,7 +481,7 @@
     }
 
     function openCustomizeModal(itemId) {
-      const allItems = [...menuItems, ...drinkItems];
+      const allItems = [...menuItems, ...extrasItems];
       currentCustomizingItem = allItems.find(i => i.id === itemId);
       if (!currentCustomizingItem) return;
 
@@ -523,6 +495,13 @@
 
       document.getElementById('modal-item-title').innerText = currentCustomizingItem.title;
       document.getElementById('modal-item-desc').innerText = currentCustomizingItem.desc;
+
+      const addonsContainer = document.getElementById('addons-container');
+      if (currentCustomizingItem.isExtraOnly) {
+        addonsContainer.classList.add('hidden');
+      } else {
+        addonsContainer.classList.remove('hidden');
+      }
 
       calculateModalPrice();
       document.getElementById('customize-modal').classList.remove('hidden');
@@ -560,9 +539,11 @@
     function calculateModalPrice() {
       if (!currentCustomizingItem) return;
       let base = currentCustomizingItem.price;
-      if (selectedAddons.egg) base += 1.00;
-      if (selectedAddons.meat) base += 2.00;
-      if (selectedAddons.pickles) base += 1.00;
+      if (!currentCustomizingItem.isExtraOnly) {
+        if (selectedAddons.egg) base += 1.00;
+        if (selectedAddons.meat) base += 2.00;
+        if (selectedAddons.pickles) base += 1.00;
+      }
 
       const total = base * modalQty;
       document.getElementById('modal-calculated-price').innerText = `S$${total.toFixed(2)}`;
@@ -573,14 +554,17 @@
 
       const instructions = document.getElementById('modal-instructions').value.trim();
       const addonsList = [];
-      if (selectedAddons.egg) addonsList.push('Fried Egg (+S$1.00)');
-      if (selectedAddons.meat) addonsList.push('Extra Meat (+S$2.00)');
-      if (selectedAddons.pickles) addonsList.push('Extra Pickled Veg (+S$1.00)');
-
       let itemUnitPrice = currentCustomizingItem.price;
-      if (selectedAddons.egg) itemUnitPrice += 1.00;
-      if (selectedAddons.meat) itemUnitPrice += 2.00;
-      if (selectedAddons.pickles) itemUnitPrice += 1.00;
+
+      if (!currentCustomizingItem.isExtraOnly) {
+        if (selectedAddons.egg) addonsList.push('Fried Egg (+S$1.00)');
+        if (selectedAddons.meat) addonsList.push('Extra Meat (+S$2.00)');
+        if (selectedAddons.pickles) addonsList.push('Extra Pickled Veg (+S$1.00)');
+
+        if (selectedAddons.egg) itemUnitPrice += 1.00;
+        if (selectedAddons.meat) itemUnitPrice += 2.00;
+        if (selectedAddons.pickles) itemUnitPrice += 1.00;
+      }
 
       cart.push({
         cartId: Date.now() + Math.random().toString(36).substr(2, 4),
@@ -595,14 +579,14 @@
       updateCartUI();
     }
 
-    function quickAddDrink(drinkId) {
-      const drink = drinkItems.find(d => d.id === drinkId);
-      if (!drink) return;
+    function quickAddExtra(extraId) {
+      const extra = extrasItems.find(e => e.id === extraId);
+      if (!extra) return;
 
       cart.push({
         cartId: Date.now() + Math.random().toString(36).substr(2, 4),
-        title: drink.title,
-        unitPrice: drink.price,
+        title: extra.title,
+        unitPrice: extra.price,
         qty: 1,
         addons: [],
         instructions: ''
@@ -655,7 +639,6 @@
             
             ${item.instructions ? `<div class="text-stone-500 italic"><i class="fa-solid fa-note-sticky text-stone-400 mr-1"></i>"${item.instructions}"</div>` : ''}
 
-            <!-- In-cart quantity stepper (+1 / -1) -->
             <div class="flex items-center justify-between pt-1 mt-1 border-t border-stone-200/60">
               <div class="flex items-center gap-2">
                 <button onclick="changeCartQty(${index}, -1)" class="w-6 h-6 bg-white border border-stone-300 rounded-md flex items-center justify-center text-stone-700 font-bold hover:bg-stone-200">-</button>
