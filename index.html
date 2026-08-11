@@ -3,712 +3,1048 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Banh Mi Wow - Authentic Saigon Street Food</title>
-  <!-- Tailwind CSS -->
+  <title>Vietnamese Delights - Order</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-          },
-          colors: {
-            brand: {
-              50: '#fff1f2',
-              100: '#ffe4e6',
-              500: '#e11d48',
-              600: '#be123c',
-              700: '#9f1239',
-              800: '#881337',
-              dark: '#1c1917',
-            }
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    body { background-color: #f7f5f0; }
-    .hide-scrollbar::-webkit-scrollbar { display: none; }
-    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .modal-backdrop { background-color: rgba(15, 23, 42, 0.65); backdrop-filter: blur(4px); }
-  </style>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="font-sans text-stone-800 antialiased min-h-screen pb-24 md:pb-12">
 
-  <!-- Header Banner & Branding -->
-  <header class="bg-gradient-to-r from-stone-900 via-brand-800 to-stone-900 text-white shadow-lg sticky top-0 z-30">
-    <div class="max-w-4xl mx-auto px-4 py-4 sm:px-6 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center text-stone-900 text-2xl font-black shadow-md border-2 border-amber-300">
-          🥖
-        </div>
-        <div>
-          <h1 class="text-2xl font-extrabold tracking-tight text-white flex items-center gap-2">
-            Banh Mi Wow
-            <span class="text-xs bg-amber-400 text-stone-900 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Saigon Style</span>
-          </h1>
-          <p class="text-xs text-stone-300 flex items-center gap-2 mt-0.5">
-            <span class="inline-flex items-center text-amber-400">
-              <i class="fa-solid fa-star text-xs"></i>
-              <i class="fa-solid fa-star text-xs"></i>
-              <i class="fa-solid fa-star text-xs"></i>
-              <i class="fa-solid fa-star text-xs"></i>
-              <i class="fa-solid fa-star text-xs"></i>
-            </span>
-            <span>•</span>
-            <a href="https://instagram.com/banhmiwowsg" target="_blank" class="hover:text-amber-300 transition flex items-center gap-1">
-              <i class="fa-brands fa-instagram"></i> @banhmiwowsg
-            </a>
-          </p>
-        </div>
-      </div>
+<body class="bg-gray-100 min-h-screen text-gray-800 pb-32">
+  <div id="root"></div>
 
-      <!-- Quick Cart Button Header -->
-      <button onclick="toggleCartDrawer()" class="relative bg-white/10 hover:bg-white/20 text-white px-4 py-2.5 rounded-xl transition flex items-center gap-2.5 font-semibold text-sm border border-white/10">
-        <i class="fa-solid fa-basket-shopping text-amber-400 text-base"></i>
-        <span class="hidden sm:inline">Your Order</span>
-        <span id="cart-badge-count" class="bg-amber-400 text-stone-900 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">0</span>
-      </button>
-    </div>
-  </header>
+  <script type="text/babel">
+    const { useState, useMemo, useEffect } = React;
 
-  <!-- Main Content Container -->
-  <main class="max-w-4xl mx-auto px-4 py-6 sm:px-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
-    
-    <!-- Menu Grid (Left / Main Column) -->
-    <div class="lg:col-span-2 space-y-6">
-      
-      <!-- Tagline Announcement -->
-      <div class="bg-gradient-to-r from-amber-500 to-amber-600 rounded-2xl p-4 text-stone-900 shadow-sm flex items-center justify-between">
-        <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-xl">
-            ✨
-          </div>
-          <div>
-            <h3 class="font-bold text-sm">Everything is made fresh including our homemade pâté</h3>
-            <p class="text-xs font-medium text-stone-800">Authentic Saigon recipes & house-made ingredients</p>
-          </div>
-        </div>
-        <span class="text-xs bg-stone-900 text-amber-300 font-bold px-2.5 py-1 rounded-lg shrink-0">Fresh Daily</span>
-      </div>
+    /* ============================================================
+       STORE CONFIGURATION
+       ------------------------------------------------------------
+       This is the main area you will edit later.
 
-      <!-- Category Heading -->
-      <div class="flex items-center justify-between pt-2">
-        <h2 class="text-xl font-bold text-stone-900 flex items-center gap-2">
-          <span>🥖</span> Banh Mi Options
-        </h2>
-      </div>
+       1. Put your WhatsApp number here.
+       2. Put your PayNow details here.
+       3. Add/change menu dates in MENU_SCHEDULE.
+       4. Add pictures later by changing image: "" to a file path,
+          e.g. image: "images/banh-mi-chicken.jpg"
 
-      <!-- Menu Items List -->
-      <div id="menu-items-list" class="space-y-4"></div>
+       IMPORTANT:
+       - orderOpens / orderCloses control when customers can order.
+       - fulfilmentDate is the day customers receive/collect the food.
+       - Times use Singapore time.
+       ============================================================ */
 
-      <!-- Extras Section Header -->
-      <div class="flex items-center justify-between pt-6 border-t border-stone-200">
-        <h2 class="text-xl font-bold text-stone-900 flex items-center gap-2">
-          <span>🌶️</span> Extras
-        </h2>
-      </div>
-
-      <!-- Extras Menu List -->
-      <div id="extras-items-list" class="space-y-4"></div>
-
-    </div>
-
-    <!-- Order Summary / Cart Sidebar (Right Column) -->
-    <div class="hidden lg:block lg:col-span-1">
-      <div class="bg-white rounded-2xl p-5 shadow-sm border border-stone-200 sticky top-28">
-        <div class="flex items-center justify-between pb-4 border-b border-stone-100">
-          <h3 class="font-bold text-stone-900 text-lg flex items-center gap-2">
-            <i class="fa-solid fa-basket-shopping text-brand-700"></i> Your Cart
-          </h3>
-          <span id="sidebar-cart-count" class="text-xs font-bold bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full">0 items</span>
-        </div>
-
-        <!-- Cart Items List -->
-        <div id="sidebar-cart-items" class="py-4 space-y-3 max-h-80 overflow-y-auto">
-          <div id="empty-cart-view" class="text-center py-8 text-stone-400">
-            <div class="text-4xl mb-2">🥖</div>
-            <p class="text-sm font-medium">Your basket is empty</p>
-            <p class="text-xs text-stone-400 mt-1">Select a Banh Mi to customize and order</p>
-          </div>
-        </div>
-
-        <!-- Cart Summary Footer -->
-        <div id="cart-summary-footer" class="pt-4 border-t border-stone-100 space-y-2 text-sm hidden">
-          <div class="flex justify-between text-stone-600">
-            <span>Subtotal</span>
-            <span id="cart-subtotal" class="font-semibold text-stone-900">S$0.00</span>
-          </div>
-          <div class="flex justify-between text-base font-extrabold text-stone-900 pt-2 border-t border-stone-100">
-            <span>Total</span>
-            <span id="cart-total" class="text-brand-700">S$0.00</span>
-          </div>
-
-          <!-- Customer details inputs -->
-          <div class="space-y-2 pt-3 border-t border-stone-100">
-            <input type="text" id="custName" placeholder="Your Name *" class="w-full p-2.5 text-xs border border-stone-200 rounded-lg outline-none focus:ring-1 focus:ring-brand-500">
-            <textarea id="custAddress" rows="2" placeholder="Delivery Address / Pickup Info *" class="w-full p-2.5 text-xs border border-stone-200 rounded-lg outline-none focus:ring-1 focus:ring-brand-500"></textarea>
-          </div>
-
-          <button onclick="sendWhatsAppOrder()" class="w-full mt-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl shadow-sm transition flex items-center justify-center gap-2">
-            <i class="fa-brands fa-whatsapp text-lg"></i>
-            <span>Send Order via WhatsApp</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- Mobile Sticky Cart Bar -->
-  <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-stone-200 p-3 z-30 shadow-2xl">
-    <div class="max-w-4xl mx-auto flex items-center justify-between gap-3">
-      <div>
-        <div class="text-xs text-stone-500">Total (<span id="mobile-cart-qty">0</span> items)</div>
-        <div id="mobile-cart-total" class="text-lg font-extrabold text-stone-900">S$0.00</div>
-      </div>
-      <button onclick="toggleCartDrawer()" class="flex-1 bg-brand-700 hover:bg-brand-800 text-white font-bold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2">
-        <i class="fa-solid fa-basket-shopping"></i> View Cart
-      </button>
-    </div>
-  </div>
-
-  <!-- Customization Modal -->
-  <div id="customize-modal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center hidden">
-    <div onclick="closeCustomizeModal()" class="modal-backdrop absolute inset-0"></div>
-
-    <div class="relative bg-white w-full sm:max-w-lg rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col z-10">
-      
-      <!-- Modal Header -->
-      <div class="p-5 bg-stone-900 text-white relative shrink-0">
-        <button onclick="closeCustomizeModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-        <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Customization</span>
-        <h3 id="modal-item-title" class="text-xl font-bold mt-0.5 text-white pr-8">Item Name</h3>
-        <p id="modal-item-desc" class="text-xs text-stone-300 mt-1 line-clamp-2"></p>
-      </div>
-
-      <!-- Modal Body -->
-      <div class="p-5 overflow-y-auto space-y-6 flex-1 text-sm">
-        
-        <!-- Quantity Selector with Quick Adder -->
-        <div>
-          <label class="block font-bold text-stone-900 mb-2.5 flex items-center justify-between">
-            <span><i class="fa-solid fa-layer-group text-brand-700 mr-1.5"></i> Quantity</span>
-          </label>
-          <div class="flex items-center justify-between bg-stone-50 p-3 rounded-2xl border border-stone-200">
-            <div class="flex items-center space-x-3 bg-white border border-stone-200 p-1 rounded-xl shadow-sm">
-              <button onclick="adjustModalQty(-1)" class="w-9 h-9 rounded-lg bg-stone-100 text-stone-800 font-bold hover:bg-stone-200 flex items-center justify-center transition text-base">-</button>
-              <span id="modal-qty" class="font-extrabold text-stone-900 w-8 text-center text-lg">1</span>
-              <button onclick="adjustModalQty(1)" class="w-9 h-9 rounded-lg bg-stone-100 text-stone-800 font-bold hover:bg-stone-200 flex items-center justify-center transition text-base">+</button>
-            </div>
-
-            <!-- Quick Add Pill Buttons -->
-            <div class="flex items-center gap-1.5">
-              <button type="button" onclick="setModalQty(1)" class="text-xs font-bold bg-stone-200 hover:bg-stone-300 text-stone-800 px-3 py-2 rounded-xl transition">1</button>
-              <button type="button" onclick="setModalQty(2)" class="text-xs font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-2 rounded-xl transition">+2</button>
-              <button type="button" onclick="setModalQty(3)" class="text-xs font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-2 rounded-xl transition">+3</button>
-              <button type="button" onclick="setModalQty(5)" class="text-xs font-bold bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-2 rounded-xl transition">+5</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Add-ons -->
-        <div id="addons-container">
-          <label class="block font-bold text-stone-900 mb-2.5 flex items-center justify-between">
-            <span><i class="fa-solid fa-plus-circle text-amber-600 mr-1.5"></i> Extra Add-ons</span>
-            <span class="text-xs text-stone-400 font-normal">Optional</span>
-          </label>
-          <div class="space-y-2">
-            <label class="flex items-center justify-between p-3 rounded-xl border border-stone-200 hover:border-stone-300 cursor-pointer bg-stone-50/50 transition">
-              <div class="flex items-center gap-3">
-                <input type="checkbox" onchange="toggleAddon('egg')" id="addon-egg" class="w-4 h-4 text-brand-700 rounded border-stone-300 focus:ring-brand-500">
-                <span class="font-medium text-stone-800">🍳 Fried Egg</span>
-              </div>
-              <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-1 rounded-md">+S$1.00</span>
-            </label>
-
-            <label class="flex items-center justify-between p-3 rounded-xl border border-stone-200 hover:border-stone-300 cursor-pointer bg-stone-50/50 transition">
-              <div class="flex items-center gap-3">
-                <input type="checkbox" onchange="toggleAddon('meat')" id="addon-meat" class="w-4 h-4 text-brand-700 rounded border-stone-300 focus:ring-brand-500">
-                <span class="font-medium text-stone-800">🥩 Extra Meat</span>
-              </div>
-              <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-1 rounded-md">+S$2.00</span>
-            </label>
-
-            <label class="flex items-center justify-between p-3 rounded-xl border border-stone-200 hover:border-stone-300 cursor-pointer bg-stone-50/50 transition">
-              <div class="flex items-center gap-3">
-                <input type="checkbox" onchange="toggleAddon('pickles')" id="addon-pickles" class="w-4 h-4 text-brand-700 rounded border-stone-300 focus:ring-brand-500">
-                <span class="font-medium text-stone-800">🥕 Extra Pickled Veg</span>
-              </div>
-              <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-1 rounded-md">+S$1.00</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- Special Instructions -->
-        <div>
-          <label class="block font-bold text-stone-900 mb-1.5 flex items-center justify-between">
-            <span><i class="fa-solid fa-pen-to-square text-stone-600 mr-1.5"></i> Special Instructions</span>
-          </label>
-          
-          <!-- Quick Preset Chips -->
-          <div class="flex flex-wrap gap-1.5 mb-2">
-            <button type="button" onclick="appendInstruction('No peanuts')" class="text-xs bg-amber-100 hover:bg-amber-200 text-amber-900 font-semibold px-2.5 py-1 rounded-lg transition">🥜 No peanuts</button>
-            <button type="button" onclick="appendInstruction('No spring onion')" class="text-xs bg-stone-100 hover:bg-stone-200 text-stone-700 px-2.5 py-1 rounded-lg transition">🌱 No spring onion</button>
-            <button type="button" onclick="appendInstruction('Cut in half')" class="text-xs bg-stone-100 hover:bg-stone-200 text-stone-700 px-2.5 py-1 rounded-lg transition">✂️ Cut in half</button>
-          </div>
-
-          <textarea id="modal-instructions" rows="2" placeholder="e.g. No peanuts, cut in half..." class="w-full p-3 border border-stone-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none text-xs text-stone-800"></textarea>
-        </div>
-
-      </div>
-
-      <!-- Modal Footer -->
-      <div class="p-4 bg-stone-50 border-t border-stone-200 shrink-0 flex items-center gap-3">
-        <button onclick="closeCustomizeModal()" class="w-1/3 bg-stone-200 hover:bg-stone-300 text-stone-800 font-bold py-3 px-4 rounded-xl transition text-center text-sm">
-          Cancel
-        </button>
-        <button onclick="confirmAddToCart()" class="w-2/3 bg-brand-700 hover:bg-brand-800 text-white font-bold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-between text-sm">
-          <span>Add to Cart</span>
-          <span id="modal-calculated-price" class="bg-brand-800 px-2.5 py-1 rounded-lg text-xs font-extrabold">S$8.00</span>
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Mobile Drawer -->
-  <div id="cart-drawer" class="fixed inset-0 z-50 flex justify-end hidden">
-    <div onclick="toggleCartDrawer()" class="modal-backdrop absolute inset-0"></div>
-    <div class="relative bg-white w-full max-w-md h-full shadow-2xl flex flex-col z-10">
-      
-      <div class="p-4 bg-stone-900 text-white flex items-center justify-between">
-        <h3 class="font-bold text-lg flex items-center gap-2">
-          <i class="fa-solid fa-basket-shopping text-amber-400"></i> Your Order
-        </h3>
-        <button onclick="toggleCartDrawer()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <div id="drawer-cart-items" class="p-4 overflow-y-auto flex-1 space-y-3"></div>
-
-      <div id="drawer-cart-footer" class="p-4 border-t border-stone-200 bg-stone-50 space-y-3">
-        <div class="flex justify-between text-stone-600 text-sm">
-          <span>Subtotal</span>
-          <span id="drawer-subtotal" class="font-bold text-stone-900">S$0.00</span>
-        </div>
-
-        <div class="space-y-2">
-          <input type="text" id="custNameMobile" placeholder="Your Name *" class="w-full p-2.5 text-xs border border-stone-200 rounded-lg outline-none">
-          <textarea id="custAddressMobile" rows="2" placeholder="Delivery Address / Pickup Info *" class="w-full p-2.5 text-xs border border-stone-200 rounded-lg outline-none"></textarea>
-        </div>
-
-        <button onclick="sendWhatsAppOrder()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-md transition flex items-center justify-center gap-2">
-          <i class="fa-brands fa-whatsapp text-lg"></i>
-          <span>Send Order via WhatsApp</span>
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Application Logic -->
-  <script>
-    const whatsappNumber = "65XXXXXXXX"; // Replace with your phone number
-
-    const menuItems = [
-      {
-        id: 'bm-1',
-        title: 'Grilled Chicken',
-        desc: 'Grilled chicken, pate, pickled veg, spring onion. Contains peanuts.',
-        price: 8.00,
-        allergenNotice: '🥜 Contains Peanuts',
-        image: 'https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=400&q=80'
-      },
-      {
-        id: 'bm-2',
-        title: 'Grilled Pork',
-        desc: 'Grilled pork, pate, pickled veg, spring onion. Contains peanuts.',
-        price: 8.00,
-        allergenNotice: '🥜 Contains Peanuts',
-        image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=400&q=80'
-      },
-      {
-        id: 'bm-3',
-        title: 'Pork Meatball',
-        desc: 'Pork meatball, pate, pickled veg, spring onion.',
-        price: 8.00,
-        image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80'
-      },
-      {
-        id: 'bm-4',
-        title: 'Smoked Duck',
-        desc: 'Smoked duck, pate, pickled veg, spring onion.',
-        price: 8.00,
-        image: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=400&q=80'
-      },
-      {
-        id: 'bm-5',
-        title: 'Vegetarian',
-        desc: 'Eggs, vegetables, no pate, beancurd skin.',
-        price: 5.50,
-        image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=80'
-      },
-      {
-        id: 'bm-6',
-        title: 'Traditional Banh mi',
-        desc: 'Braised pork, ham, pate, pickled vegetables, spring onion.',
-        price: 8.00,
-        badge: 'Classic',
-        badgeColor: 'bg-amber-100 text-amber-800 border-amber-200',
-        image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=400&q=80'
-      }
-    ];
-
-    const extrasItems = [
-      {
-        id: 'ex-1',
-        title: 'Chilli Bottle',
-        desc: 'House-made signature chilli bottle.',
-        price: 8.00,
-        isExtraOnly: true,
-        image: 'https://images.unsplash.com/photo-1588880331179-bc9b93a8cb5e?auto=format&fit=crop&w=400&q=80'
-      }
-    ];
-
-    let cart = [];
-    let currentCustomizingItem = null;
-    let selectedAddons = { egg: false, meat: false, pickles: false };
-    let modalQty = 1;
-
-    window.onload = function() {
-      renderMenuItems(menuItems);
-      renderExtrasItems(extrasItems);
-      updateCartUI();
+    const STORE_CONFIG = {
+      storeName: "Vietnamese Delights",
+      whatsappNumber: "6591234567",
+      paynowDetails: "PayNow UEN / Phone: +65 9123 4567 (Food Store Name)",
+      currency: "$"
     };
 
-    function renderMenuItems(items) {
-      const container = document.getElementById('menu-items-list');
-      container.innerHTML = '';
+    /*
+      EXAMPLE SCHEDULE — CHANGE THESE DATES/TIMES TO YOUR REAL DATES.
 
-      items.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'bg-white rounded-2xl p-4 border border-stone-200 shadow-sm hover:shadow-md transition flex gap-4 items-center group';
-        card.innerHTML = `
-          <div class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl overflow-hidden shrink-0 bg-stone-100">
-            <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-            ${item.badge ? `<span class="absolute top-1.5 left-1.5 text-[10px] font-extrabold px-2 py-0.5 rounded-md border ${item.badgeColor}">${item.badge}</span>` : ''}
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-start justify-between gap-2">
-              <div>
-                <h3 class="font-bold text-stone-900 text-base leading-snug group-hover:text-brand-700 transition">${item.title}</h3>
-                ${item.allergenNotice ? `<span class="inline-block text-[10px] font-extrabold text-amber-900 bg-amber-100 px-2 py-0.5 rounded mt-0.5">${item.allergenNotice}</span>` : ''}
-              </div>
-              <span class="font-extrabold text-stone-900 text-base">S$${item.price.toFixed(2)}</span>
-            </div>
-            <p class="text-xs text-stone-500 mt-1 line-clamp-2 leading-relaxed">${item.desc}</p>
-            <div class="mt-3 flex items-center justify-between">
-              <button onclick="quickAddDirect('${item.id}')" class="text-xs font-semibold bg-stone-100 hover:bg-stone-200 text-stone-700 px-3 py-1.5 rounded-xl transition flex items-center gap-1">
-                <i class="fa-solid fa-plus text-[10px]"></i> Quick Add
-              </button>
-              
-              <button onclick="openCustomizeModal('${item.id}')" class="bg-brand-700 hover:bg-brand-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl shadow-sm transition flex items-center gap-1.5">
-                <i class="fa-solid fa-sliders text-[10px]"></i> Customize
-              </button>
-            </div>
-          </div>
-        `;
-        container.appendChild(card);
+      You can have as many menu periods as you want.
+
+      Example:
+      Banh Mi ordering: 10 Aug 9:00am → 14 Aug 11:59pm
+      Fulfilment:        15 Aug
+
+      Bowls ordering:    17 Aug 9:00am → 21 Aug 11:59pm
+      Fulfilment:        22 Aug
+    */
+    const MENU_SCHEDULE = [
+      {
+        id: "banh-mi-aug-15",
+        menuId: "banh-mi",
+        orderOpens: "2026-08-10T09:00:00+08:00",
+        orderCloses: "2026-08-14T23:59:00+08:00",
+        fulfilmentDate: "2026-08-15",
+      },
+      {
+        id: "bowls-aug-22",
+        menuId: "bowls",
+        orderOpens: "2026-08-17T09:00:00+08:00",
+        orderCloses: "2026-08-21T23:59:00+08:00",
+        fulfilmentDate: "2026-08-22",
+      }
+    ];
+
+    /* ============================================================
+       MENU DATA
+       ============================================================ */
+
+    const MENUS = {
+      "banh-mi": {
+        id: "banh-mi",
+        title: "Banh Mi",
+        emoji: "🥖",
+        description: "Fresh Vietnamese baguettes with your choice of filling.",
+        products: [
+          {
+            id: "banh-mi-chicken",
+            name: "Banh Mi - Grilled Chicken",
+            price: 8.00,
+            note: "Contains pork pate & pickled vegs",
+            image: ""
+          },
+          {
+            id: "banh-mi-pork",
+            name: "Banh Mi - Grilled Pork",
+            price: 8.00,
+            note: "Contains pork pate & pickled vegs",
+            image: ""
+          },
+          {
+            id: "banh-mi-meatball",
+            name: "Banh Mi - Pork Meatball",
+            price: 8.00,
+            note: "Contains pork pate & pickled vegs",
+            image: ""
+          },
+          {
+            id: "banh-mi-duck",
+            name: "Banh Mi - Smoked Duck",
+            price: 8.00,
+            note: "Contains pork pate & pickled vegs",
+            image: ""
+          },
+          {
+            id: "banh-mi-veg",
+            name: "Banh Mi - Vegetarian",
+            price: 5.50,
+            note: "Eggs, vegetables, no pate, beancurd skin",
+            image: ""
+          },
+          {
+            id: "banh-mi-trad",
+            name: "Banh Mi - Traditional",
+            price: 8.00,
+            note: "Braised pork, ham, pate, pickled vegetables",
+            image: ""
+          }
+        ],
+        addOns: [
+          {
+            id: "addon-meat",
+            name: "Extra Meat",
+            price: 2.00
+          },
+          {
+            id: "addon-egg",
+            name: "Egg",
+            price: 1.00
+          },
+          {
+            id: "addon-chilli",
+            name: "Our Spicy Chilli",
+            price: 8.00
+          }
+        ]
+      },
+
+      "bowls": {
+        id: "bowls",
+        title: "Bowls & Sides",
+        emoji: "🍜",
+        description: "Vietnamese noodles, rice dishes, spring rolls and sides.",
+        products: [
+          {
+            id: "bun-pork",
+            name: "Bun Thit Nuong - Vietnamese Dry Vermicelli (Pork)",
+            price: 9.50,
+            note: "⚠️ Contains peanuts & basil",
+            image: ""
+          },
+          {
+            id: "bun-chicken",
+            name: "Bun Thit Nuong - Vietnamese Dry Vermicelli (Chicken)",
+            price: 9.50,
+            note: "⚠️ Contains peanuts & basil",
+            image: ""
+          },
+          {
+            id: "com-tam-chicken",
+            name: "Com Tam - Vietnamese Grilled Chicken Rice",
+            price: 9.50,
+            image: ""
+          },
+          {
+            id: "com-tam-pork",
+            name: "Com Tam - Vietnamese Grilled Pork Rice",
+            price: 9.50,
+            image: ""
+          },
+          {
+            id: "spring-pork",
+            name: "Fried Spring Rolls - Pork (5 pcs)",
+            price: 4.50,
+            image: ""
+          },
+          {
+            id: "spring-fresh",
+            name: "Fresh Spring Rolls - Pork / Prawn (5 pcs)",
+            price: 11.00,
+            note: "⚠️ Contains basil",
+            image: ""
+          },
+          {
+            id: "addon-meat",
+            name: "Extra Meat",
+            price: 2.00,
+            image: ""
+          },
+          {
+            id: "addon-egg",
+            name: "Extra Egg",
+            price: 1.00,
+            image: ""
+          },
+          {
+            id: "addon-chilli",
+            name: "Our Spicy Chilli Bottle",
+            price: 8.00,
+            image: ""
+          }
+        ],
+        addOns: []
+      }
+    };
+
+    /* ============================================================
+       HELPERS
+       ============================================================ */
+
+    function getCurrentSchedule() {
+      const now = new Date();
+
+      // Prefer an actively open menu.
+      const openMenu = MENU_SCHEDULE.find(schedule => {
+        const opens = new Date(schedule.orderOpens);
+        const closes = new Date(schedule.orderCloses);
+        return now >= opens && now <= closes;
       });
-    }
 
-    function renderExtrasItems(extras) {
-      const container = document.getElementById('extras-items-list');
-      container.innerHTML = '';
-
-      extras.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'bg-white rounded-2xl p-4 border border-stone-200 shadow-sm hover:shadow-md transition flex gap-4 items-center group';
-        card.innerHTML = `
-          <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden shrink-0 bg-stone-100">
-            <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-start justify-between gap-2">
-              <div>
-                <h3 class="font-bold text-stone-900 text-sm sm:text-base group-hover:text-brand-700 transition">${item.title}</h3>
-              </div>
-              <span class="font-extrabold text-stone-900 text-sm sm:text-base">S$${item.price.toFixed(2)}</span>
-            </div>
-            <p class="text-xs text-stone-500 mt-1 line-clamp-1">${item.desc}</p>
-            <div class="mt-2.5 flex justify-end">
-              <button onclick="quickAddExtra('${item.id}')" class="bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5">
-                <i class="fa-solid fa-plus text-[10px]"></i> Add to Cart
-              </button>
-            </div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function quickAddDirect(itemId) {
-      const item = menuItems.find(i => i.id === itemId);
-      if (!item) return;
-
-      cart.push({
-        cartId: Date.now() + Math.random().toString(36).substr(2, 4),
-        title: item.title,
-        unitPrice: item.price,
-        qty: 1,
-        addons: [],
-        instructions: ''
-      });
-
-      updateCartUI();
-    }
-
-    function openCustomizeModal(itemId) {
-      const allItems = [...menuItems, ...extrasItems];
-      currentCustomizingItem = allItems.find(i => i.id === itemId);
-      if (!currentCustomizingItem) return;
-
-      selectedAddons = { egg: false, meat: false, pickles: false };
-      modalQty = 1;
-      document.getElementById('modal-instructions').value = '';
-      document.getElementById('addon-egg').checked = false;
-      document.getElementById('addon-meat').checked = false;
-      document.getElementById('addon-pickles').checked = false;
-      document.getElementById('modal-qty').innerText = '1';
-
-      document.getElementById('modal-item-title').innerText = currentCustomizingItem.title;
-      document.getElementById('modal-item-desc').innerText = currentCustomizingItem.desc;
-
-      const addonsContainer = document.getElementById('addons-container');
-      if (currentCustomizingItem.isExtraOnly) {
-        addonsContainer.classList.add('hidden');
-      } else {
-        addonsContainer.classList.remove('hidden');
+      if (openMenu) {
+        return { status: "open", schedule: openMenu };
       }
 
-      calculateModalPrice();
-      document.getElementById('customize-modal').classList.remove('hidden');
-    }
+      // Otherwise show the next scheduled menu.
+      const upcoming = MENU_SCHEDULE
+        .filter(schedule => new Date(schedule.orderOpens) > now)
+        .sort((a, b) => new Date(a.orderOpens) - new Date(b.orderOpens))[0];
 
-    function closeCustomizeModal() {
-      document.getElementById('customize-modal').classList.add('hidden');
-    }
-
-    function toggleAddon(type) {
-      if (type === 'egg') selectedAddons.egg = document.getElementById('addon-egg').checked;
-      if (type === 'meat') selectedAddons.meat = document.getElementById('addon-meat').checked;
-      if (type === 'pickles') selectedAddons.pickles = document.getElementById('addon-pickles').checked;
-      calculateModalPrice();
-    }
-
-    function appendInstruction(text) {
-      const textarea = document.getElementById('modal-instructions');
-      if (textarea.value.includes(text)) return;
-      textarea.value = textarea.value ? `${textarea.value}, ${text}` : text;
-    }
-
-    function adjustModalQty(delta) {
-      modalQty = Math.max(1, modalQty + delta);
-      document.getElementById('modal-qty').innerText = modalQty;
-      calculateModalPrice();
-    }
-
-    function setModalQty(qty) {
-      modalQty = qty;
-      document.getElementById('modal-qty').innerText = modalQty;
-      calculateModalPrice();
-    }
-
-    function calculateModalPrice() {
-      if (!currentCustomizingItem) return;
-      let base = currentCustomizingItem.price;
-      if (!currentCustomizingItem.isExtraOnly) {
-        if (selectedAddons.egg) base += 1.00;
-        if (selectedAddons.meat) base += 2.00;
-        if (selectedAddons.pickles) base += 1.00;
+      if (upcoming) {
+        return { status: "upcoming", schedule: upcoming };
       }
 
-      const total = base * modalQty;
-      document.getElementById('modal-calculated-price').innerText = `S$${total.toFixed(2)}`;
+      return { status: "closed", schedule: null };
     }
 
-    function confirmAddToCart() {
-      if (!currentCustomizingItem) return;
+    function formatDateTime(value) {
+      return new Intl.DateTimeFormat("en-SG", {
+        dateStyle: "medium",
+        timeStyle: "short",
+        timeZone: "Asia/Singapore"
+      }).format(new Date(value));
+    }
 
-      const instructions = document.getElementById('modal-instructions').value.trim();
-      const addonsList = [];
-      let itemUnitPrice = currentCustomizingItem.price;
+    function formatDate(value) {
+      return new Intl.DateTimeFormat("en-SG", {
+        dateStyle: "full",
+        timeZone: "Asia/Singapore"
+      }).format(new Date(value + "T12:00:00+08:00"));
+    }
 
-      if (!currentCustomizingItem.isExtraOnly) {
-        if (selectedAddons.egg) addonsList.push('Fried Egg (+S$1.00)');
-        if (selectedAddons.meat) addonsList.push('Extra Meat (+S$2.00)');
-        if (selectedAddons.pickles) addonsList.push('Extra Pickled Veg (+S$1.00)');
+    function money(value) {
+      return `${STORE_CONFIG.currency}${value.toFixed(2)}`;
+    }
 
-        if (selectedAddons.egg) itemUnitPrice += 1.00;
-        if (selectedAddons.meat) itemUnitPrice += 2.00;
-        if (selectedAddons.pickles) itemUnitPrice += 1.00;
-      }
+    function getProduct(menu, productId) {
+      return menu.products.find(product => product.id === productId);
+    }
 
-      cart.push({
-        cartId: Date.now() + Math.random().toString(36).substr(2, 4),
-        title: currentCustomizingItem.title,
-        unitPrice: itemUnitPrice,
-        qty: modalQty,
-        addons: addonsList,
-        instructions: instructions
+    /*
+      A cart item is a CONFIGURED LINE.
+
+      This is deliberate:
+      - Chicken Banh Mi + Egg can be one line.
+      - Chicken Banh Mi + Extra Pork can be another line.
+      - Chicken + Pork mixed can be another line.
+      - Customers can have several different configurations
+        of the same base Banh Mi in one order.
+    */
+
+    function createLineId() {
+      return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    }
+
+    function App() {
+      const [scheduleInfo, setScheduleInfo] = useState(getCurrentSchedule());
+      const [customerInfo, setCustomerInfo] = useState({
+        name: "",
+        phone: "",
+        address: "",
+        notes: ""
       });
+      const [cart, setCart] = useState([]);
+      const [customizingProduct, setCustomizingProduct] = useState(null);
 
-      closeCustomizeModal();
-      updateCartUI();
-    }
+      // Re-check the schedule every 30 seconds.
+      useEffect(() => {
+        const timer = setInterval(() => {
+          setScheduleInfo(getCurrentSchedule());
+        }, 30000);
 
-    function quickAddExtra(extraId) {
-      const extra = extrasItems.find(e => e.id === extraId);
-      if (!extra) return;
+        return () => clearInterval(timer);
+      }, []);
 
-      cart.push({
-        cartId: Date.now() + Math.random().toString(36).substr(2, 4),
-        title: extra.title,
-        unitPrice: extra.price,
-        qty: 1,
-        addons: [],
-        instructions: ''
-      });
-
-      updateCartUI();
-    }
-
-    function updateCartUI() {
-      const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
-      const subtotal = cart.reduce((sum, item) => sum + (item.unitPrice * item.qty), 0);
-
-      document.getElementById('cart-badge-count').innerText = totalCount;
-      document.getElementById('sidebar-cart-count').innerText = `${totalCount} item${totalCount !== 1 ? 's' : ''}`;
-      document.getElementById('mobile-cart-qty').innerText = totalCount;
-      document.getElementById('mobile-cart-total').innerText = `S$${subtotal.toFixed(2)}`;
-
-      const sidebarItemsContainer = document.getElementById('sidebar-cart-items');
-      const drawerItemsContainer = document.getElementById('drawer-cart-items');
-      const cartFooter = document.getElementById('cart-summary-footer');
-
-      if (cart.length === 0) {
-        sidebarItemsContainer.innerHTML = `
-          <div class="text-center py-8 text-stone-400">
-            <div class="text-4xl mb-2">🥖</div>
-            <p class="text-sm font-medium text-stone-600">Your basket is empty</p>
-            <p class="text-xs text-stone-400 mt-1">Select a Banh Mi to customize</p>
-          </div>
-        `;
-        drawerItemsContainer.innerHTML = sidebarItemsContainer.innerHTML;
-        cartFooter.classList.add('hidden');
-        return;
-      }
-
-      cartFooter.classList.remove('hidden');
-      document.getElementById('cart-subtotal').innerText = `S$${subtotal.toFixed(2)}`;
-      document.getElementById('cart-total').innerText = `S$${subtotal.toFixed(2)}`;
-      document.getElementById('drawer-subtotal').innerText = `S$${subtotal.toFixed(2)}`;
-
-      let html = '';
-      cart.forEach((item, index) => {
-        html += `
-          <div class="bg-stone-50 p-3 rounded-xl border border-stone-200 text-xs space-y-1.5 relative">
-            <div class="flex justify-between items-start">
-              <span class="font-bold text-stone-900 text-sm">${item.title}</span>
-              <span class="font-extrabold text-stone-900">S$${(item.unitPrice * item.qty).toFixed(2)}</span>
-            </div>
-            
-            ${item.addons.length > 0 ? `<div class="text-amber-800 font-medium"><i class="fa-solid fa-plus text-amber-600 mr-1"></i>${item.addons.join(', ')}</div>` : ''}
-            
-            ${item.instructions ? `<div class="text-stone-500 italic"><i class="fa-solid fa-note-sticky text-stone-400 mr-1"></i>"${item.instructions}"</div>` : ''}
-
-            <div class="flex items-center justify-between pt-1 mt-1 border-t border-stone-200/60">
-              <div class="flex items-center gap-2">
-                <button onclick="changeCartQty(${index}, -1)" class="w-6 h-6 bg-white border border-stone-300 rounded-md flex items-center justify-center text-stone-700 font-bold hover:bg-stone-200">-</button>
-                <span class="font-extrabold text-stone-900 text-xs px-1">${item.qty}</span>
-                <button onclick="changeCartQty(${index}, 1)" class="w-6 h-6 bg-white border border-stone-300 rounded-md flex items-center justify-center text-stone-700 font-bold hover:bg-stone-200">+</button>
-              </div>
-              <button onclick="removeCartItem(${index})" class="text-red-500 hover:text-red-700 text-xs font-semibold">
-                <i class="fa-solid fa-trash-can"></i> Remove
-              </button>
-            </div>
-          </div>
-        `;
-      });
-
-      sidebarItemsContainer.innerHTML = html;
-      drawerItemsContainer.innerHTML = html;
-    }
-
-    function changeCartQty(index, delta) {
-      if (cart[index]) {
-        cart[index].qty += delta;
-        if (cart[index].qty <= 0) {
-          cart.splice(index, 1);
+      // Remember basic customer details on this device.
+      useEffect(() => {
+        try {
+          const saved = localStorage.getItem("vietnameseDelightsCustomer");
+          if (saved) {
+            setCustomerInfo(JSON.parse(saved));
+          }
+        } catch (error) {
+          console.warn("Could not restore customer details.", error);
         }
-        updateCartUI();
+      }, []);
+
+      useEffect(() => {
+        try {
+          localStorage.setItem(
+            "vietnameseDelightsCustomer",
+            JSON.stringify(customerInfo)
+          );
+        } catch (error) {
+          console.warn("Could not save customer details.", error);
+        }
+      }, [customerInfo]);
+
+      const schedule = scheduleInfo.schedule;
+      const menu = schedule ? MENUS[schedule.menuId] : null;
+      const isOpen = scheduleInfo.status === "open";
+
+      const totalAmount = useMemo(() => {
+        return cart.reduce((sum, line) => sum + line.total, 0);
+      }, [cart]);
+
+      const totalItemsCount = useMemo(() => {
+        return cart.reduce((sum, line) => sum + line.quantity, 0);
+      }, [cart]);
+
+      const addConfiguredItem = (product, options = {}) => {
+        const basePrice = product.price;
+        const proteinExtrasTotal = (options.proteinExtras || []).reduce(
+          (sum, item) => sum + item.price,
+          0
+        );
+        const addOnsTotal = (options.addOns || []).reduce(
+          (sum, item) => sum + item.price,
+          0
+        );
+
+        const unitPrice = basePrice + proteinExtrasTotal + addOnsTotal;
+
+        const line = {
+          lineId: createLineId(),
+          productId: product.id,
+          productName: product.name,
+          basePrice,
+          quantity: 1,
+          proteinExtras: options.proteinExtras || [],
+          addOns: options.addOns || [],
+          unitPrice,
+          total: unitPrice
+        };
+
+        setCart(prev => [...prev, line]);
+        setCustomizingProduct(null);
+      };
+
+      const addSimpleItem = (product) => {
+        addConfiguredItem(product);
+      };
+
+      const changeLineQuantity = (lineId, delta) => {
+        setCart(prev =>
+          prev
+            .map(line => {
+              if (line.lineId !== lineId) return line;
+
+              const quantity = Math.max(0, line.quantity + delta);
+
+              return {
+                ...line,
+                quantity,
+                total: quantity * line.unitPrice
+              };
+            })
+            .filter(line => line.quantity > 0)
+        );
+      };
+
+      const removeLine = (lineId) => {
+        setCart(prev => prev.filter(line => line.lineId !== lineId));
+      };
+
+      const handleWhatsAppSubmit = (e) => {
+        e.preventDefault();
+
+        if (!isOpen || !schedule || !menu) {
+          alert("Ordering is currently closed.");
+          return;
+        }
+
+        if (cart.length === 0) {
+          alert("Please add at least one item.");
+          return;
+        }
+
+        if (!customerInfo.name.trim() || !customerInfo.phone.trim()) {
+          alert("Please enter your name and phone number.");
+          return;
+        }
+
+        let orderText = `*NEW ORDER - ${menu.title.toUpperCase()}*\\n\\n`;
+        orderText += `*Fulfilment Date:* ${formatDate(schedule.fulfilmentDate)}\\n`;
+        orderText += `*Customer:* ${customerInfo.name}\\n`;
+        orderText += `*Phone:* ${customerInfo.phone}\\n`;
+        orderText += `*Delivery / Pickup:* ${customerInfo.address || "N/A"}\\n`;
+
+        if (customerInfo.notes) {
+          orderText += `*General Notes:* ${customerInfo.notes}\\n`;
+        }
+
+        orderText += `\\n*--- ORDER ITEMS ---*\\n`;
+
+        cart.forEach(line => {
+          orderText += `• ${line.productName} x${line.quantity} - ${money(line.unitPrice * line.quantity)}\\n`;
+
+          if (line.proteinExtras.length) {
+            orderText += `   Protein mix: ${line.proteinExtras.map(x => x.name).join(", ")}\\n`;
+          }
+
+          if (line.addOns.length) {
+            orderText += `   Add-ons: ${line.addOns.map(x => x.name).join(", ")}\\n`;
+          }
+        });
+
+        orderText += `\\n*TOTAL:* ${money(totalAmount)}\\n`;
+        orderText += `*Payment via PayNow:* ${STORE_CONFIG.paynowDetails}\\n`;
+
+        const encodedText = encodeURIComponent(orderText);
+        window.open(
+          `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodedText}`,
+          "_blank"
+        );
+      };
+
+      if (!schedule) {
+        return (
+          <ClosedScreen
+            scheduleInfo={scheduleInfo}
+            onRefresh={() => setScheduleInfo(getCurrentSchedule())}
+          />
+        );
       }
+
+      return (
+        <>
+          <div className="max-w-2xl mx-auto p-4 sm:p-6">
+            <Header menu={menu} schedule={schedule} />
+
+            {!isOpen && (
+              <div className="mt-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg p-4">
+                <div className="font-bold">⏳ Ordering is not open yet</div>
+                <div className="text-sm mt-1">
+                  Orders open on {formatDateTime(schedule.orderOpens)}.
+                </div>
+              </div>
+            )}
+
+            <form onSubmit={handleWhatsAppSubmit} className="space-y-4 mt-4">
+              <CustomerDetails
+                customerInfo={customerInfo}
+                setCustomerInfo={setCustomerInfo}
+              />
+
+              <MenuSection
+                menu={menu}
+                isOpen={isOpen}
+                onAdd={addSimpleItem}
+                onCustomize={setCustomizingProduct}
+              />
+
+              <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  General Remarks / Special Requests
+                </label>
+                <input
+                  type="text"
+                  value={customerInfo.notes}
+                  onChange={(e) =>
+                    setCustomerInfo({ ...customerInfo, notes: e.target.value })
+                  }
+                  className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-emerald-500 outline-none"
+                  placeholder="Less spicy, no peanuts, separate sauce, etc."
+                />
+              </div>
+            </form>
+          </div>
+
+          <CartBar
+            cart={cart}
+            totalAmount={totalAmount}
+            totalItemsCount={totalItemsCount}
+            isOpen={isOpen}
+            onChangeQuantity={changeLineQuantity}
+            onRemove={removeLine}
+            onSubmit={handleWhatsAppSubmit}
+          />
+
+          {customizingProduct && (
+            <CustomizeModal
+              product={customizingProduct}
+              menu={menu}
+              onClose={() => setCustomizingProduct(null)}
+              onAdd={addConfiguredItem}
+            />
+          )}
+        </>
+      );
     }
 
-    function removeCartItem(index) {
-      cart.splice(index, 1);
-      updateCartUI();
+    function Header({ menu, schedule }) {
+      return (
+        <div className="bg-emerald-700 text-white rounded-t-lg p-6 shadow-md border-t-8 border-emerald-900">
+          <div className="text-4xl mb-2">{menu.emoji}</div>
+          <h1 className="text-2xl font-bold">{menu.title}</h1>
+          <p className="text-emerald-100 mt-1 text-sm">{menu.description}</p>
+
+          <div className="mt-4 grid gap-2 sm:grid-cols-2">
+            <div className="p-3 bg-emerald-800 rounded text-xs leading-relaxed">
+              <strong>📅 Fulfilment</strong>
+              <div className="mt-1">{formatDate(schedule.fulfilmentDate)}</div>
+            </div>
+
+            <div className="p-3 bg-emerald-800 rounded text-xs leading-relaxed">
+              <strong>⏰ Orders close</strong>
+              <div className="mt-1">{formatDateTime(schedule.orderCloses)}</div>
+            </div>
+          </div>
+
+          <div className="mt-3 p-3 bg-emerald-800 rounded text-xs leading-relaxed">
+            <strong>💳 PayNow Payment:</strong> Payment details will be included
+            in your WhatsApp order.
+          </div>
+        </div>
+      );
     }
 
-    function toggleCartDrawer() {
-      document.getElementById('cart-drawer').classList.toggle('hidden');
+    function CustomerDetails({ customerInfo, setCustomerInfo }) {
+      return (
+        <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
+          <h2 className="text-lg font-semibold mb-3 text-gray-700 border-b pb-2">
+            Customer Details
+          </h2>
+
+          <div className="space-y-3">
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                Full Name *
+              </label>
+              <input
+                type="text"
+                required
+                value={customerInfo.name}
+                onChange={(e) =>
+                  setCustomerInfo({ ...customerInfo, name: e.target.value })
+                }
+                className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-emerald-500 outline-none"
+                placeholder="John Doe"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                Phone Number *
+              </label>
+              <input
+                type="tel"
+                required
+                value={customerInfo.phone}
+                onChange={(e) =>
+                  setCustomerInfo({ ...customerInfo, phone: e.target.value })
+                }
+                className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-emerald-500 outline-none"
+                placeholder="9123 4567"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                Delivery Address / Pickup Note
+              </label>
+              <textarea
+                rows="2"
+                value={customerInfo.address}
+                onChange={(e) =>
+                  setCustomerInfo({ ...customerInfo, address: e.target.value })
+                }
+                className="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-emerald-500 outline-none"
+                placeholder="Block/Street or Self-Pickup time"
+              />
+            </div>
+          </div>
+        </div>
+      );
     }
 
-    function sendWhatsAppOrder() {
-      const name = (document.getElementById("custName").value || document.getElementById("custNameMobile").value).trim();
-      const address = (document.getElementById("custAddress").value || document.getElementById("custAddressMobile").value).trim();
+    function MenuSection({ menu, isOpen, onAdd, onCustomize }) {
+      const isBanhMi = menu.id === "banh-mi";
 
-      if (!name || !address) {
-        alert("Please enter your name and delivery/pickup information.");
-        return;
-      }
+      return (
+        <div className="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
+          <div className="flex items-center justify-between gap-3 mb-4 border-b pb-2">
+            <h2 className="text-lg font-semibold text-gray-700">
+              {menu.title}
+            </h2>
+            {isBanhMi && (
+              <span className="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded-full">
+                Customise your Banh Mi
+              </span>
+            )}
+          </div>
 
-      if (cart.length === 0) {
-        alert("Your cart is empty. Please add at least one item.");
-        return;
-      }
-
-      let summary = `*New Order - Banh Mi Wow*\n\n`;
-      summary += `*Customer:* ${name}\n`;
-      summary += `*Address/Info:* ${address}\n\n`;
-      summary += `*Order Items:*\n`;
-
-      let grandTotal = 0;
-      cart.forEach((item, i) => {
-        const itemTotal = item.unitPrice * item.qty;
-        grandTotal += itemTotal;
-        summary += `${i + 1}. *${item.title}* (x${item.qty}) - S$${itemTotal.toFixed(2)}\n`;
-        if (item.addons.length > 0) summary += `   - Addons: ${item.addons.join(', ')}\n`;
-        if (item.instructions) summary += `   - Note: ${item.instructions}\n`;
-      });
-
-      summary += `\n*Grand Total:* S$${grandTotal.toFixed(2)}`;
-
-      const encodedMsg = encodeURIComponent(summary);
-      window.open(`https://wa.me/${whatsappNumber}?text=${encodedMsg}`, '_blank');
+          <div className="space-y-3">
+            {menu.products.map(product => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                isOpen={isOpen}
+                isBanhMi={isBanhMi}
+                onAdd={onAdd}
+                onCustomize={onCustomize}
+              />
+            ))}
+          </div>
+        </div>
+      );
     }
+
+    function ProductCard({ product, isOpen, isBanhMi, onAdd, onCustomize }) {
+      return (
+        <div className="border border-gray-100 rounded-lg overflow-hidden">
+          <div className="flex gap-3 p-3">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+              {product.image ? (
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="text-gray-400 text-xs text-center px-2">
+                  📷 Add photo later
+                </div>
+              )}
+            </div>
+
+            <div className="flex-1 min-w-0">
+              <div className="font-medium text-gray-800">{product.name}</div>
+
+              {product.note && (
+                <div className="text-xs text-amber-600 mt-1">
+                  {product.note}
+                </div>
+              )}
+
+              <div className="text-sm font-semibold text-emerald-700 mt-2">
+                {money(product.price)}
+              </div>
+
+              {isOpen && (
+                <div className="mt-2 flex gap-2">
+                  {isBanhMi ? (
+                    <button
+                      type="button"
+                      onClick={() => onCustomize(product)}
+                      className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold"
+                    >
+                      Customise & Add
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => onAdd(product)}
+                      className="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold"
+                    >
+                      + Add
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function CustomizeModal({ product, menu, onClose, onAdd }) {
+      const [selectedProteins, setSelectedProteins] = useState([]);
+      const [selectedAddOns, setSelectedAddOns] = useState([]);
+
+      const proteinOptions = [
+        { id: "pork", name: "Grilled Pork", price: 0 },
+        { id: "chicken", name: "Grilled Chicken", price: 0 },
+        { id: "meatball", name: "Pork Meatball", price: 0 },
+        { id: "duck", name: "Smoked Duck", price: 0 }
+      ];
+
+      const toggleProtein = (protein) => {
+        setSelectedProteins(prev => {
+          const exists = prev.some(x => x.id === protein.id);
+
+          if (exists) {
+            return prev.filter(x => x.id !== protein.id);
+          }
+
+          return [...prev, protein];
+        });
+      };
+
+      const toggleAddOn = (addOn) => {
+        setSelectedAddOns(prev => {
+          const exists = prev.some(x => x.id === addOn.id);
+
+          if (exists) {
+            return prev.filter(x => x.id !== addOn.id);
+          }
+
+          return [...prev, addOn];
+        });
+      };
+
+      const extraPrice =
+        selectedProteins.reduce((sum, item) => sum + item.price, 0) +
+        selectedAddOns.reduce((sum, item) => sum + item.price, 0);
+
+      const finalPrice = product.price + extraPrice;
+
+      return (
+        <div className="fixed inset-0 z-[100] bg-black/50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+          <div className="bg-white w-full sm:max-w-lg sm:rounded-xl max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div className="p-5 border-b flex items-start justify-between gap-4">
+              <div>
+                <h3 className="text-xl font-bold text-gray-800">
+                  Customise Banh Mi
+                </h3>
+                <p className="text-sm text-gray-500 mt-1">{product.name}</p>
+              </div>
+
+              <button
+                type="button"
+                onClick={onClose}
+                className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 font-bold"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="p-5 space-y-6">
+              <div>
+                <div className="font-semibold text-gray-800 mb-2">
+                  Protein mix
+                </div>
+
+                <p className="text-xs text-gray-500 mb-3">
+                  Select another protein if you want a mixed Banh Mi, e.g.
+                  Chicken + Pork.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {proteinOptions.map(protein => {
+                    const selected = selectedProteins.some(
+                      x => x.id === protein.id
+                    );
+
+                    return (
+                      <button
+                        type="button"
+                        key={protein.id}
+                        onClick={() => toggleProtein(protein)}
+                        className={`text-left p-3 rounded-lg border ${
+                          selected
+                            ? "border-emerald-500 bg-emerald-50"
+                            : "border-gray-200 bg-white"
+                        }`}
+                      >
+                        <div className="font-medium text-sm">
+                          {selected ? "✓ " : ""}
+                          {protein.name}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          No extra charge
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
+                <div className="font-semibold text-gray-800 mb-2">
+                  Add-ons
+                </div>
+
+                <div className="space-y-2">
+                  {menu.addOns.map(addOn => {
+                    const selected = selectedAddOns.some(
+                      x => x.id === addOn.id
+                    );
+
+                    return (
+                      <button
+                        type="button"
+                        key={addOn.id}
+                        onClick={() => toggleAddOn(addOn)}
+                        className={`w-full flex items-center justify-between p-3 rounded-lg border text-left ${
+                          selected
+                            ? "border-emerald-500 bg-emerald-50"
+                            : "border-gray-200 bg-white"
+                        }`}
+                      >
+                        <span className="font-medium text-sm">
+                          {selected ? "✓ " : ""}
+                          {addOn.name}
+                        </span>
+                        <span className="text-sm font-semibold">
+                          +{money(addOn.price)}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="bg-gray-50 rounded-lg p-4">
+                <div className="flex justify-between">
+                  <span>{product.name}</span>
+                  <span>{money(product.price)}</span>
+                </div>
+
+                {selectedProteins.length > 0 && (
+                  <div className="text-sm text-gray-600 mt-2">
+                    Protein mix:{" "}
+                    {selectedProteins.map(x => x.name).join(" + ")}
+                  </div>
+                )}
+
+                {selectedAddOns.length > 0 && (
+                  <div className="text-sm text-gray-600 mt-1">
+                    Add-ons:{" "}
+                    {selectedAddOns.map(x => x.name).join(", ")}
+                  </div>
+                )}
+
+                <div className="border-t mt-3 pt-3 flex justify-between font-bold">
+                  <span>Total</span>
+                  <span className="text-emerald-700">
+                    {money(finalPrice)}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() =>
+                  onAdd(product, {
+                    proteinExtras: selectedProteins,
+                    addOns: selectedAddOns
+                  })
+                }
+                className="w-full py-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold"
+              >
+                Add to Order — {money(finalPrice)}
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function CartBar({
+      cart,
+      totalAmount,
+      totalItemsCount,
+      isOpen,
+      onChangeQuantity,
+      onRemove,
+      onSubmit
+    }) {
+      const [expanded, setExpanded] = useState(false);
+
+      return (
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 shadow-lg z-50">
+          {expanded && cart.length > 0 && (
+            <div className="max-w-2xl mx-auto max-h-72 overflow-y-auto p-4 border-b bg-gray-50">
+              <div className="font-semibold mb-3">Your Order</div>
+
+              <div className="space-y-3">
+                {cart.map(line => (
+                  <div
+                    key={line.lineId}
+                    className="bg-white border rounded-lg p-3"
+                  >
+                    <div className="flex justify-between gap-3">
+                      <div className="flex-1">
+                        <div className="font-medium text-sm">
+                          {line.productName}
+                        </div>
+
+                        {line.proteinExtras.length > 0 && (
+                          <div className="text-xs text-gray-500 mt-1">
+                            Protein:{" "}
+                            {line.proteinExtras.map(x => x.name).join(" + ")}
+                          </div>
+                        )}
+
+                        {line.addOns.length > 0 && (
+                          <div className="text-xs text-gray-500 mt-1">
+                            Add-ons:{" "}
+                            {line.addOns.map(x => x.name).join(", ")}
+                          </div>
+                        )}
+
+                        <div className="text-sm font-semibold text-emerald-700 mt-1">
+                          {money(line.unitPrice)} each
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => onRemove(line.lineId)}
+                        className="text-xs text-red-600 h-fit"
+                      >
+                        Remove
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between mt-2">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => onChangeQuantity(line.lineId, -1)}
+                          className="w-8 h-8 rounded-full bg-gray-200 font-bold"
+                        >
+                          −
+                        </button>
+
+                        <span className="w-6 text-center font-semibold">
+                          {line.quantity}
+                        </span>
+
+                        <button
+                          type="button"
+                          onClick={() => onChangeQuantity(line.lineId, 1)}
+                          className="w-8 h-8 rounded-full bg-emerald-600 text-white font-bold"
+                        >
+                          +
+                        </button>
+                      </div>
+
+                      <div className="font-bold">
+                        {money(line.total)}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="max-w-2xl mx-auto p-3 sm:p-4 flex items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={() => setExpanded(!expanded)}
+              className="text-left min-w-0"
+            >
+              <div className="text-xs text-gray-500">
+                {totalItemsCount} item(s) selected
+              </div>
+              <div className="text-xl font-bold text-emerald-800">
+                {money(totalAmount)}
+              </div>
+              <div className="text-xs text-emerald-700 underline">
+                {cart.length ? (expanded ? "Hide order" : "Review order") : ""}
+              </div>
+            </button>
+
+            <button
+              type="button"
+              onClick={onSubmit}
+              disabled={!isOpen || totalAmount === 0}
+              className={`px-5 py-3 rounded-lg font-bold text-white shadow transition ${
+                isOpen && totalAmount > 0
+                  ? "bg-emerald-600 hover:bg-emerald-700"
+                  : "bg-gray-300 cursor-not-allowed"
+              }`}
+            >
+              {isOpen ? "Order via WhatsApp" : "Ordering Closed"}
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    function ClosedScreen({ scheduleInfo, onRefresh }) {
+      const upcoming = scheduleInfo.schedule;
+
+      return (
+        <div className="min-h-screen flex items-center justify-center p-6">
+          <div className="max-w-lg w-full bg-white rounded-xl shadow-md p-8 text-center">
+            <div className="text-5xl mb-4">🔒</div>
+
+            <h1 className="text-2xl font-bold text-gray-800">
+              Ordering is currently closed
+            </h1>
+
+            <p className="text-gray-600 mt-3">
+              There are no scheduled menus available at the moment.
+            </p>
+
+            {upcoming && (
+              <div className="mt-6 bg-emerald-50 border border-emerald-100 rounded-lg p-4 text-left">
+                <div className="font-bold text-emerald-800">
+                  Next: {MENUS[upcoming.menuId].emoji}{" "}
+                  {MENUS[upcoming.menuId].title}
+                </div>
+
+                <div className="text-sm text-gray-600 mt-2">
+                  Orders open: {formatDateTime(upcoming.orderOpens)}
+                </div>
+
+                <div className="text-sm text-gray-600">
+                  Fulfilment: {formatDate(upcoming.fulfilmentDate)}
+                </div>
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={onRefresh}
+              className="mt-6 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
+            >
+              Check Again
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
   </script>
 </body>
 </html>
