@@ -45,7 +45,7 @@
   .sticky-inner { max-width:720px; margin:auto; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
   .total { font-size:22px; font-weight:800; color:#065f46; }
   .small { font-size:12px; color:#6b7280; }
-  .review { color:#047857; font-size:12px; text-decoration:underline; background:none; border:0; padding:0; }
+  .review { color:#047857; font-size:12px; text-decoration:underline; background:none; border:0; padding:0; text-align:left; }
   .cart-panel { max-width:720px; max-height:300px; overflow:auto; margin:auto; padding:14px 16px; background:#f9fafb; border-bottom:1px solid #e5e7eb; }
   .cart-line { background:white; border:1px solid #e5e7eb; border-radius:8px; padding:12px; margin-bottom:9px; }
   .cart-line-top { display:flex; justify-content:space-between; gap:12px; }
@@ -104,7 +104,7 @@ const MENU_SCHEDULE = [
   {
     id: "bowls-aug-21-22",
     menuId: "bowls",
-    orderOpens: "2026-08-12T09:00:00+08:00",    // Tomorrow 9:00 AM
+    orderOpens: "2026-08-12T00:00:00+08:00",    // SET TO TODAY FOR TESTING
     orderCloses: "2026-08-17T15:00:00+08:00",   // Next Mon 3:00 PM
     fulfilmentDate: "2026-08-21 & 22"           // Next Fri/Sat 21st & 22nd Aug
   }
@@ -303,6 +303,11 @@ function productCard(product, isOpen, isBanhMi) {
     photoContent = `<img src="${esc(photoPath)}" alt="${esc(product.name)}" onerror="this.onerror=null; this.src='${DEFAULT_PLACEHOLDER}';">`;
   }
 
+  // Calculate total quantity of this specific item currently in cart
+  const currentQty = state.cart
+    .filter(l => l.productId === product.id)
+    .reduce((sum, l) => sum + l.quantity, 0);
+
   return `
     <div class="product">
       <div class="product-inner">
@@ -311,11 +316,28 @@ function productCard(product, isOpen, isBanhMi) {
           <div class="product-name">${esc(product.name)}</div>
           ${product.note ? `<div class="note">${esc(product.note)}</div>` : ""}
           <div class="price">${money(product.price)}</div>
-          ${isOpen ? `<div class="actions">
-            <button class="btn btn-green" data-action="${(isBanhMi && !product.standalone) ? "customize" : "simple"}" data-id="${esc(product.id)}">
-              ${(isBanhMi && !product.standalone) ? "Customise & Add" : "+ Add"}
-            </button>
-          </div>` : ""}
+          
+          ${isOpen ? `
+            <div class="actions">
+              ${(isBanhMi && !product.standalone) ? `
+                <button class="btn btn-green" data-action="customize" data-id="${esc(product.id)}">
+                  Customise & Add ${currentQty > 0 ? `(${currentQty} in cart)` : ""}
+                </button>
+              ` : `
+                ${currentQty > 0 ? `
+                  <div class="qty" style="margin-top:0">
+                    <button data-action="menu-qty" data-id="${esc(product.id)}" data-delta="-1">−</button>
+                    <strong style="padding: 0 6px;">${currentQty}</strong>
+                    <button class="plus" data-action="menu-qty" data-id="${esc(product.id)}" data-delta="1">+</button>
+                  </div>
+                ` : `
+                  <button class="btn btn-green" data-action="simple" data-id="${esc(product.id)}">
+                    + Add
+                  </button>
+                `}
+              `}
+            </div>
+          ` : ""}
         </div>
       </div>
     </div>
@@ -450,7 +472,6 @@ function errorPage(title, message) {
 }
 
 function addSimple(product) {
-  // Check order-wide chilli limit
   if (isChilliProduct(product.id)) {
     const currentChilliCount = getTotalChilliInCart();
     if (currentChilliCount >= CHILLI_ORDER_LIMIT) {
@@ -520,7 +541,6 @@ function updateQuantity(lineId, delta) {
   state.cart = state.cart.map(line => {
     if (line.lineId !== lineId) return line;
 
-    // Prevent going over chilli order limit when clicking '+' button
     if (delta > 0 && isChilliProduct(line.productId)) {
       const currentChilliCount = getTotalChilliInCart();
       if (currentChilliCount >= CHILLI_ORDER_LIMIT) {
@@ -580,6 +600,18 @@ function bindEvents(menu, isOpen) {
       if (action === "simple") {
         const p = menu.products.find(x=>x.id===el.dataset.id);
         if (p && isOpen) addSimple(p);
+      }
+
+      if (action === "menu-qty") {
+        const productId = el.dataset.id;
+        const delta = Number(el.dataset.delta);
+        if (delta > 0) {
+          const product = menu.products.find(p => p.id === productId);
+          if (product && isOpen) addSimple(product);
+        } else {
+          const line = state.cart.find(l => l.productId === productId);
+          if (line) updateQuantity(line.lineId, -1);
+        }
       }
 
       if (action === "customize") {
