@@ -77,7 +77,7 @@
     googleAppsScriptUrl: "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE"
   };
 
-  // State Management with ID-referenced .jpg filenames
+  // State Management with mapped image filenames
   const state = {
     selectedDate: "Aug 21",
     deliveryTime: "12pm",
@@ -85,18 +85,18 @@
     customer: { name: "", phone: "", address: "" },
     cart: {
       "Bun Thit Nuong (Pork)": { 
-        id: "bun-thit-nuong-pork",
+        id: "bun-pork",
         price: 9.50, 
         qty: 0, 
         desc: "Vietnamese Dry Vermicelli with Grilled Pork",
-        img: "bun-thit-nuong-pork.jpg"
+        img: "bun-pork.jpg"
       },
       "Bun Thit Nuong (Chicken)": { 
-        id: "bun-thit-nuong-chicken",
+        id: "bun-chicken",
         price: 9.50, 
         qty: 0, 
         desc: "Vietnamese Dry Vermicelli with Lemongrass Chicken",
-        img: "bun-thit-nuong-chicken.jpg"
+        img: "bun-chicken.jpg"
       },
       "Com Tam (Pork Rice)": { 
         id: "com-tam-pork",
@@ -105,26 +105,33 @@
         desc: "Vietnamese Grilled Pork Rice Set",
         img: "com-tam-pork.jpg"
       },
+      "Com Tam (Chicken Rice)": { 
+        id: "com-tam-chicken",
+        price: 11.50, 
+        qty: 0, 
+        desc: "Vietnamese Lemongrass Chicken Rice Set",
+        img: "com-tam-chicken.jpg"
+      },
       "Chà Giờ (Fried Spring Rolls)": { 
-        id: "cha-gio",
+        id: "spring-pork",
         price: 4.50, 
         qty: 0, 
         desc: "Fried Pork Spring Rolls (5 pcs)",
-        img: "cha-gio.jpg"
+        img: "spring-pork.jpg"
       },
       "Gỏi Cuốn (Summer Rolls)": { 
-        id: "goi-cuon",
+        id: "spring-fresh",
         price: 11.00, 
         qty: 0, 
         desc: "Fresh Pork & Prawn Summer Rolls (5 pcs)",
-        img: "goi-cuon.jpg"
+        img: "spring-fresh.jpg"
       },
       "Spicy Chilli Bottle": { 
-        id: "spicy-chilli-bottle",
+        id: "bowls-addon-chilli",
         price: 8.00, 
         qty: 0, 
         desc: "House-made Spicy Chilli (~250g)",
-        img: "spicy-chilli-bottle.jpg"
+        img: "bowls-addon-chilli.jpg"
       }
     }
   };
@@ -142,7 +149,7 @@
     app.innerHTML = `
       <!-- Header Banner -->
       <div class="header-card">
-        <img src="${STORE_CONFIG.bannerImg}" alt="Banh Mi Wow" class="banner-img">
+        <img src="${STORE_CONFIG.bannerImg}" alt="Banh Mi Wow" class="banner-img" onerror="this.style.display='none'">
         <div class="header-content">
           <h1>🥖 Banh Mi Wow Order Form</h1>
           <div class="notice-box">
