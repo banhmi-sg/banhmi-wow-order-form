@@ -415,7 +415,10 @@ function productCard(product, isOpen, isBanhMi) {
     .filter(l => l.productId === product.id)
     .reduce((sum, l) => sum + l.quantity, 0);
 
-  const isCustomizable = !product.standalone && (isBanhMi || product.id.startsWith("bun-") || product.id.startsWith("com-tam-") || product.id.startsWith("spring-"));
+  const isCustomizable = !product.standalone 
+    && !isChilliProduct(product.id) 
+    && !product.id.startsWith("spring-") 
+    && (isBanhMi || product.id.startsWith("bun-") || product.id.startsWith("com-tam-"));
 
   return `
     <div class="product">
