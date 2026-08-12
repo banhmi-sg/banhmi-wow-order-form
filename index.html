@@ -83,7 +83,8 @@ const STORE_CONFIG = {
   instagram: "banhmiwowsg",
   whatsappNumber: "6581236142",
   paynowDetails: "PayNow UEN / Phone: +65 8123 6142 (Banh Mi Wow)",
-  currency: "$"
+  currency: "$",
+  googleSheetUrl: "https://script.google.com/macros/s/AKfycbzE8ND6xYYZiHLppJOZoYUgsedewpZopmuX1qqOtYN8CwBeEFrDpqwYLjlM1nYQfrsX/exec"
 };
 
 // Fallback image if a product image fails to load
@@ -572,6 +573,36 @@ function submitOrder() {
   const menu = MENUS[schedule.menuId];
   const total = state.cart.reduce((s,l)=>s+l.total,0);
 
+  // Format order lines for single spreadsheet cell
+  const itemsText = state.cart.map(line => {
+    let itemStr = `${line.productName} x${line.quantity} (${money(line.total)})`;
+    if (line.proteins.length) itemStr += ` [Protein: ${line.proteins.map(x=>x.name).join(" + ")}]`;
+    if (line.addOns.length) itemStr += ` [Add-ons: ${line.addOns.map(x=>x.name).join(", ")}]`;
+    return itemStr;
+  }).join("\n");
+
+  // Payload for Google Sheets
+  const sheetData = {
+    menuTitle: menu.title,
+    customerName: state.customer.name,
+    customerPhone: state.customer.phone,
+    customerAddress: state.customer.address,
+    customerNotes: state.customer.notes,
+    orderDetails: itemsText,
+    totalAmount: money(total)
+  };
+
+  // Send data to Google Sheet
+  if (STORE_CONFIG.googleSheetUrl) {
+    fetch(STORE_CONFIG.googleSheetUrl, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(sheetData)
+    }).catch(err => console.error("Sheet error:", err));
+  }
+
+  // Format WhatsApp Message
   let text = `*NEW ORDER - ${menu.title.toUpperCase()}*\n\n`;
   text += `*Fulfilment Date:* ${schedule.fulfilmentDate}\n`;
   text += `*Customer:* ${state.customer.name}\n`;
@@ -589,6 +620,7 @@ function submitOrder() {
   text += `\n*TOTAL:* ${money(total)}\n`;
   text += `*Payment via PayNow:* ${STORE_CONFIG.paynowDetails}\n`;
 
+  // Open WhatsApp
   window.open(`https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(text)}`, "_blank");
 }
 
