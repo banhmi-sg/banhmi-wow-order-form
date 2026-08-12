@@ -17,14 +17,13 @@
   .hero-box { background:#065f46; border-radius:6px; padding:12px; font-size:12px; }
   .hero-ig { display:inline-block; margin-top:10px; font-size:13px; color:#a7f3d0; text-decoration:none; font-weight:bold; }
   .hero-ig:hover { text-decoration:underline; }
-  .hero-warn { background:#78350f; color:#fef3c7; border-radius:6px; padding:12px; font-size:12px; margin-top:8px; }
   .card { background:white; border:1px solid #e5e7eb; border-radius:9px; padding:20px; margin-top:16px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
   .card h2 { margin:0 0 14px; font-size:19px; border-bottom:1px solid #e5e7eb; padding-bottom:10px; }
   label { display:block; font-size:14px; font-weight:600; color:#4b5563; margin-bottom:5px; }
   input,textarea,select { width:100%; border:1px solid #d1d5db; border-radius:6px; padding:10px; outline:none; }
   input:focus,textarea:focus,select:focus { border-color:#10b981; box-shadow:0 0 0 2px rgba(16,185,129,.15); }
   .field { margin-bottom:14px; }
-  .radio-group { display:flex; gap:16px; margin-top:6px; flex-wrap:wrap; }
+  .radio-group { display:flex; gap:16px; margin-top:6px; }
   .radio-option { display:flex; align-items:center; gap:6px; font-size:14px; cursor:pointer; font-weight:normal; }
   .radio-option input { width:auto; cursor:pointer; }
   .product { border:1px solid #f0f0f0; border-radius:9px; margin-bottom:10px; overflow:hidden; }
@@ -93,7 +92,7 @@ const STORE_CONFIG = {
   storeName: "Banh Mi Wow",
   instagram: "banhmiwowsg",
   whatsappNumber: "6581236142",
-  paynowDetails: "PayNow Phone: +65 8123 6142 (Banh Mi Wow)",
+  paynowDetails: "PayNow UEN / Phone: +65 8123 6142 (Banh Mi Wow)",
   currency: "$",
   googleSheetUrl: "https://script.google.com/macros/s/AKfycbzE8ND6xYYZiHLppJOZoYUgsedewpZopmuX1qqOtYN8CwBeEFrDpqwYLjlM1nYQfrsX/exec",
   flatDeliveryFee: 15.00,
@@ -111,11 +110,6 @@ const PRODUCT_ICONS = {
 };
 
 const CHILLI_ORDER_LIMIT = 2;
-
-const DATE_OPTIONS = [
-  { value: "2026-08-21", label: "Fri, 21 Aug" },
-  { value: "2026-08-22", label: "Sat, 22 Aug" }
-];
 
 const MENU_SCHEDULE = [
   {
@@ -204,7 +198,6 @@ let state = {
   scheduleInfo: getScheduleInfo(),
   customer: { name:"", phone:"", address:"", notes:"" },
   fulfillmentType: "delivery", // "delivery" or "pickup"
-  deliveryDate: "2026-08-21",  // "2026-08-21" or "2026-08-22"
   deliveryTime: "12pm",       // "12pm" or "6pm"
   cart: [],
   cartOpen: false,
@@ -243,11 +236,6 @@ function formatDateTime(value) {
   return new Intl.DateTimeFormat("en-SG", {
     dateStyle:"medium", timeStyle:"short", timeZone:"Asia/Singapore"
   }).format(new Date(value));
-}
-
-function dateLabel(value) {
-  const found = DATE_OPTIONS.find(d => d.value === value);
-  return found ? found.label : value;
 }
 
 function saveCustomer() {
@@ -324,7 +312,6 @@ function render() {
           <div class="hero-box"><strong>⏰ Orders close</strong><br>${esc(formatDateTime(schedule.orderCloses))}</div>
         </div>
         <div class="hero-box" style="margin-top:8px"><strong>💳 PayNow</strong><br>Payment details will be included in your WhatsApp order.</div>
-        <div class="hero-warn">⚠️ Please note: Orders will be confirmed upon receipt of payment.</div>
       </div>
 
       ${!isOpen ? `
@@ -361,19 +348,7 @@ function customerForm() {
       <h2>Customer Details</h2>
       <div class="field"><label>Full Name *</label><input id="name" required value="${esc(state.customer.name)}" placeholder="Banh Mi"></div>
       <div class="field"><label>Phone Number *</label><input id="phone" required value="${esc(state.customer.phone)}" placeholder="8123 6142"></div>
-
-      <div class="field">
-        <label>Preferred Date *</label>
-        <div class="radio-group">
-          ${DATE_OPTIONS.map(d => `
-            <label class="radio-option">
-              <input type="radio" name="deliveryDate" value="${d.value}" ${state.deliveryDate === d.value ? 'checked' : ''}>
-              <span>${esc(d.label)}</span>
-            </label>
-          `).join("")}
-        </div>
-      </div>
-
+      
       <div class="field">
         <label>Preferred Time Slot *</label>
         <div class="radio-group">
@@ -795,7 +770,6 @@ function submitOrder() {
     return itemStr;
   }).join("\n");
 
-  const dateLbl = dateLabel(state.deliveryDate);
   const timeLabel = state.deliveryTime === "12pm" ? "12:00 PM (Lunch)" : "6:00 PM (Dinner)";
   const locationLabel = state.fulfillmentType === "delivery" ? state.customer.address : STORE_CONFIG.pickupLocation;
 
@@ -803,7 +777,6 @@ function submitOrder() {
     menuTitle: menu.title,
     customerName: state.customer.name,
     customerPhone: state.customer.phone,
-    deliveryDate: dateLbl,
     deliveryTime: timeLabel,
     fulfillmentType: state.fulfillmentType === "delivery" ? "Delivery" : "Self-Collection",
     customerAddress: locationLabel,
@@ -825,7 +798,6 @@ function submitOrder() {
 
   let text = `*NEW ORDER - ${menu.title.toUpperCase()}*\n\n`;
   text += `*Fulfilment:* ${schedule.fulfilmentDate}\n`;
-  text += `*Date:* ${dateLbl}\n`;
   text += `*Time Slot:* ${timeLabel}\n`;
   text += `*Method:* ${state.fulfillmentType === "delivery" ? "Delivery" : "Self-Collection"}\n`;
   text += `*Customer:* ${state.customer.name}\n`;
@@ -857,7 +829,6 @@ function submitOrder() {
   }
 
   text += `\n*Payment via PayNow:* ${STORE_CONFIG.paynowDetails}\n`;
-  text += `\n⚠️ Please note: Orders will be confirmed upon receipt of payment.\n`;
 
   window.open(`https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(text)}`, "_blank");
 }
@@ -939,13 +910,6 @@ function bindEvents(menu, isOpen) {
     radio.addEventListener('change', (e) => {
       state.fulfillmentType = e.target.value;
       render();
-    });
-  });
-
-  // Handle Radio Input for Date
-  document.querySelectorAll('input[name="deliveryDate"]').forEach(radio => {
-    radio.addEventListener('change', (e) => {
-      state.deliveryDate = e.target.value;
     });
   });
 
