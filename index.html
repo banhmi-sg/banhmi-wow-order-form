@@ -7,7 +7,7 @@
 <style>
   * { box-sizing: border-box; }
   body { margin:0; background:#f3f4f6; color:#1f2937; font-family:Arial,Helvetica,sans-serif; }
-  button,input,textarea { font:inherit; }
+  button,input,textarea,select { font:inherit; }
   button { cursor:pointer; }
   .container { max-width:720px; margin:auto; padding:16px; }
   .hero { background:#047857; color:white; border-radius:10px 10px 0 0; padding:24px; border-top:8px solid #064e3b; }
@@ -20,9 +20,9 @@
   .card { background:white; border:1px solid #e5e7eb; border-radius:9px; padding:20px; margin-top:16px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
   .card h2 { margin:0 0 14px; font-size:19px; border-bottom:1px solid #e5e7eb; padding-bottom:10px; }
   label { display:block; font-size:14px; font-weight:600; color:#4b5563; margin-bottom:5px; }
-  input,textarea { width:100%; border:1px solid #d1d5db; border-radius:6px; padding:10px; outline:none; }
-  input:focus,textarea:focus { border-color:#10b981; box-shadow:0 0 0 2px rgba(16,185,129,.15); }
-  .field { margin-bottom:12px; }
+  input,textarea,select { width:100%; border:1px solid #d1d5db; border-radius:6px; padding:10px; outline:none; }
+  input:focus,textarea:focus,select:focus { border-color:#10b981; box-shadow:0 0 0 2px rgba(16,185,129,.15); }
+  .field { margin-bottom:14px; }
   .radio-group { display:flex; gap:16px; margin-top:6px; }
   .radio-option { display:flex; align-items:center; gap:6px; font-size:14px; cursor:pointer; font-weight:normal; }
   .radio-option input { width:auto; cursor:pointer; }
@@ -70,6 +70,7 @@
   .fee-row { display:flex; justify-content:space-between; margin-top:4px; font-size:13px; }
   .fee-notice { font-size:11px; color:#b45309; background:#fffbeb; padding:6px 8px; border-radius:6px; margin-top:6px; border:1px solid #fef3c7; line-height:1.3; }
   .fee-success { font-size:11px; color:#047857; background:#ecfdf5; padding:6px 8px; border-radius:6px; margin-top:6px; border:1px solid #a7f3d0; line-height:1.3; }
+  .pickup-info { font-size:12px; color:#065f46; background:#ecfdf5; padding:8px 10px; border-radius:6px; margin-top:6px; border:1px solid #a7f3d0; line-height:1.4; }
   @media (max-width:560px) {
     .hero-grid { grid-template-columns:1fr; }
     .product-inner { padding:10px; }
@@ -95,7 +96,8 @@ const STORE_CONFIG = {
   currency: "$",
   googleSheetUrl: "https://script.google.com/macros/s/AKfycbzE8ND6xYYZiHLppJOZoYUgsedewpZopmuX1qqOtYN8CwBeEFrDpqwYLjlM1nYQfrsX/exec",
   flatDeliveryFee: 15.00,
-  flatDeliveryThreshold: 80.00
+  flatDeliveryThreshold: 80.00,
+  pickupLocation: "T22 Poolside Pavilion"
 };
 
 const DEFAULT_PLACEHOLDER = "default-food.jpg";
@@ -196,6 +198,7 @@ let state = {
   scheduleInfo: getScheduleInfo(),
   customer: { name:"", phone:"", address:"", notes:"" },
   fulfillmentType: "delivery", // "delivery" or "pickup"
+  deliveryTime: "12pm",       // "12pm" or "6pm"
   cart: [],
   cartOpen: false,
   customizeProduct: null,
@@ -347,6 +350,20 @@ function customerForm() {
       <div class="field"><label>Phone Number *</label><input id="phone" required value="${esc(state.customer.phone)}" placeholder="8123 6142"></div>
       
       <div class="field">
+        <label>Preferred Time Slot *</label>
+        <div class="radio-group">
+          <label class="radio-option">
+            <input type="radio" name="deliveryTime" value="12pm" ${state.deliveryTime === '12pm' ? 'checked' : ''}>
+            <span>12:00 PM (Lunch)</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="deliveryTime" value="6pm" ${state.deliveryTime === '6pm' ? 'checked' : ''}>
+            <span>6:00 PM (Dinner)</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
         <label>Fulfillment Method *</label>
         <div class="radio-group">
           <label class="radio-option">
@@ -355,14 +372,21 @@ function customerForm() {
           </label>
           <label class="radio-option">
             <input type="radio" name="fulfillment" value="pickup" ${state.fulfillmentType === 'pickup' ? 'checked' : ''}>
-            <span>Self-Pickup</span>
+            <span>Self-Collection</span>
           </label>
         </div>
       </div>
 
       <div>
-        <label>${state.fulfillmentType === 'delivery' ? 'Delivery Address *' : 'Pickup Time Note'}</label>
-        <textarea id="address" rows="2" placeholder="${state.fulfillmentType === 'delivery' ? 'Block/Street, Unit #, Postal Code' : 'Estimated self-pickup time'}">${esc(state.customer.address)}</textarea>
+        ${state.fulfillmentType === 'delivery' ? `
+          <label>Delivery Address *</label>
+          <textarea id="address" rows="2" placeholder="Block/Street, Unit #, Postal Code">${esc(state.customer.address)}</textarea>
+        ` : `
+          <label>Collection Point</label>
+          <div class="pickup-info">
+            📍 <strong>Self-Collection Location:</strong> ${esc(STORE_CONFIG.pickupLocation)}
+          </div>
+        `}
       </div>
     </div>
   `;
@@ -490,7 +514,7 @@ function cartBar(isOpen) {
             ` : `
               <div class="fee-row" style="margin-top:4px;">
                 <span>Fulfillment</span>
-                <span>Self-Pickup ($0.00)</span>
+                <span>Self-Collection ($0.00)</span>
               </div>
             `}
 
@@ -743,12 +767,16 @@ function submitOrder() {
     return itemStr;
   }).join("\n");
 
+  const timeLabel = state.deliveryTime === "12pm" ? "12:00 PM (Lunch)" : "6:00 PM (Dinner)";
+  const locationLabel = state.fulfillmentType === "delivery" ? state.customer.address : STORE_CONFIG.pickupLocation;
+
   const sheetData = {
     menuTitle: menu.title,
     customerName: state.customer.name,
     customerPhone: state.customer.phone,
-    fulfillmentType: state.fulfillmentType,
-    customerAddress: state.customer.address,
+    deliveryTime: timeLabel,
+    fulfillmentType: state.fulfillmentType === "delivery" ? "Delivery" : "Self-Collection",
+    customerAddress: locationLabel,
     customerNotes: state.customer.notes,
     orderDetails: itemsText,
     subtotal: money(subtotal),
@@ -766,10 +794,12 @@ function submitOrder() {
   }
 
   let text = `*NEW ORDER - ${menu.title.toUpperCase()}*\n\n`;
-  text += `*Fulfilment:* ${state.fulfillmentType.toUpperCase()} (${schedule.fulfilmentDate})\n`;
+  text += `*Fulfilment:* ${schedule.fulfilmentDate}\n`;
+  text += `*Time Slot:* ${timeLabel}\n`;
+  text += `*Method:* ${state.fulfillmentType === "delivery" ? "Delivery" : "Self-Collection"}\n`;
   text += `*Customer:* ${state.customer.name}\n`;
   text += `*Phone:* ${state.customer.phone}\n`;
-  text += `*${state.fulfillmentType === "delivery" ? "Delivery Address" : "Pickup Note"}:* ${state.customer.address || "N/A"}\n`;
+  text += `*${state.fulfillmentType === "delivery" ? "Delivery Address" : "Collection Point"}:* ${locationLabel}\n`;
   if (state.customer.notes) text += `*General Remarks:* ${state.customer.notes}\n`;
 
   text += `\n*--- ORDER ITEMS ---*\n`;
@@ -791,7 +821,7 @@ function submitOrder() {
       text += `*TOTAL PAYABLE:* ${money(grandTotal)}\n`;
     }
   } else {
-    text += `*Delivery Fee:* $0.00 (Self-Pickup)\n`;
+    text += `*Delivery Fee:* $0.00 (Self-Collection)\n`;
     text += `*TOTAL PAYABLE:* ${money(grandTotal)}\n`;
   }
 
@@ -872,11 +902,18 @@ function bindEvents(menu, isOpen) {
     });
   });
 
-  // Handle Radio Input for Delivery vs Pickup
+  // Handle Radio Input for Fulfillment Type
   document.querySelectorAll('input[name="fulfillment"]').forEach(radio => {
     radio.addEventListener('change', (e) => {
       state.fulfillmentType = e.target.value;
       render();
+    });
+  });
+
+  // Handle Radio Input for Time Slot
+  document.querySelectorAll('input[name="deliveryTime"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      state.deliveryTime = e.target.value;
     });
   });
 
