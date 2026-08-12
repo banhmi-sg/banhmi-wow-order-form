@@ -311,7 +311,7 @@ function render() {
           <div class="hero-box"><strong>📅 Fulfilment</strong><br>${esc(schedule.fulfilmentDate)}</div>
           <div class="hero-box"><strong>⏰ Orders close</strong><br>${esc(formatDateTime(schedule.orderCloses))}</div>
         </div>
-        <div class="hero-box" style="margin-top:8px"><strong>💳 PayNow</strong><br>Payment details will be included in your WhatsApp order.</div>
+        <div class="hero-box" style="margin-top:8px"><strong>💳 PayNow</strong><br>Orders are confirmed upon receipt of payment.</div>
       </div>
 
       ${!isOpen ? `
@@ -829,7 +829,8 @@ function submitOrder() {
   }
 
   text += `\n*Payment via PayNow:* ${STORE_CONFIG.paynowDetails}\n`;
-
+  text += `\n⚠️ *Please note:* Orders will be confirmed upon receipt of payment.\n`;
+ 
   window.open(`https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(text)}`, "_blank");
 }
 
