@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vietnamese Delights - Order</title>
+<title>Banh Mi Wow - Order</title>
 <style>
   * { box-sizing: border-box; }
   body { margin:0; background:#f3f4f6; color:#1f2937; font-family:Arial,Helvetica,sans-serif; padding-bottom:110px; }
@@ -15,6 +15,8 @@
   .hero p { color:#d1fae5; margin:7px 0 0; font-size:14px; }
   .hero-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:16px; }
   .hero-box { background:#065f46; border-radius:6px; padding:12px; font-size:12px; }
+  .hero-ig { display:inline-block; margin-top:10px; font-size:13px; color:#a7f3d0; text-decoration:none; font-weight:bold; }
+  .hero-ig:hover { text-decoration:underline; }
   .card { background:white; border:1px solid #e5e7eb; border-radius:9px; padding:20px; margin-top:16px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
   .card h2 { margin:0 0 14px; font-size:19px; border-bottom:1px solid #e5e7eb; padding-bottom:10px; }
   label { display:block; font-size:14px; font-weight:600; color:#4b5563; margin-bottom:5px; }
@@ -74,31 +76,23 @@
 <script>
 /* ============================================================
    VIETNAMESE DELIGHTS - CONFIGURATION
-   Edit only this section for normal menu/date changes.
-   Times are Singapore time (+08:00).
    ============================================================ */
 
 const STORE_CONFIG = {
-  storeName: "Vietnamese Delights",
-  whatsappNumber: "6591234567",
-  paynowDetails: "PayNow UEN / Phone: +65 9123 4567 (Food Store Name)",
+  storeName: "Banh Mi Wow",
+  instagram: "banhmiwowsg",
+  whatsappNumber: "6581236142",
+  paynowDetails: "PayNow UEN / Phone: +65 8123 6142 (Banh Mi Wow)",
   currency: "$"
 };
 
 const MENU_SCHEDULE = [
   {
-    id: "banh-mi-aug-15",
-    menuId: "banh-mi",
-    orderOpens: "2026-08-10T09:00:00+08:00",
-    orderCloses: "2026-08-14T23:59:00+08:00",
-    fulfilmentDate: "2026-08-15"
-  },
-  {
-    id: "bowls-aug-22",
+    id: "bowls-aug-21-22",
     menuId: "bowls",
-    orderOpens: "2026-08-17T09:00:00+08:00",
-    orderCloses: "2026-08-21T23:59:00+08:00",
-    fulfilmentDate: "2026-08-22"
+    orderOpens: "2026-08-13T09:00:00+08:00",    // Tomorrow 9:00 AM
+    orderCloses: "2026-08-17T15:00:00+08:00",   // Next Mon 3:00 PM
+    fulfilmentDate: "2026-08-21 & 22"           // Next Fri/Sat 21st & 22nd Aug
   }
 ];
 
@@ -108,12 +102,12 @@ const MENUS = {
     emoji: "🥖",
     description: "Fresh Vietnamese baguettes with your choice of filling.",
     products: [
-      { id:"banh-mi-chicken", name:"Banh Mi - Grilled Chicken", price:8, note:"Contains pork pate & pickled vegs", image:"" },
-      { id:"banh-mi-pork", name:"Banh Mi - Grilled Pork", price:8, note:"Contains pork pate & pickled vegs", image:"" },
-      { id:"banh-mi-meatball", name:"Banh Mi - Pork Meatball", price:8, note:"Contains pork pate & pickled vegs", image:"" },
-      { id:"banh-mi-duck", name:"Banh Mi - Smoked Duck", price:8, note:"Contains pork pate & pickled vegs", image:"" },
-      { id:"banh-mi-veg", name:"Banh Mi - Vegetarian", price:5.5, note:"Eggs, vegetables, no pate, beancurd skin", image:"" },
-      { id:"banh-mi-trad", name:"Banh Mi - Traditional", price:8, note:"Braised pork, ham, pate, pickled vegetables", image:"" }
+      { id:"banh-mi-chicken", name:"Banh Mi - Grilled Chicken", price:8, note:"Contains pork pate & pickled vegs" },
+      { id:"banh-mi-pork", name:"Banh Mi - Grilled Pork", price:8, note:"Contains pork pate & pickled vegs" },
+      { id:"banh-mi-meatball", name:"Banh Mi - Pork Meatball", price:8, note:"Contains pork pate & pickled vegs" },
+      { id:"banh-mi-duck", name:"Banh Mi - Smoked Duck", price:8, note:"Contains pork pate & pickled vegs" },
+      { id:"banh-mi-veg", name:"Banh Mi - Vegetarian", price:5.5, note:"Eggs, vegetables, no pate, beancurd skin" },
+      { id:"banh-mi-trad", name:"Banh Mi - Traditional", price:8, note:"Braised pork, ham, pate, pickled vegetables" }
     ],
     addOns: [
       { id:"addon-meat", name:"Extra Meat", price:2 },
@@ -127,22 +121,22 @@ const MENUS = {
     emoji: "🍜",
     description: "Vietnamese noodles, rice dishes, spring rolls and sides.",
     products: [
-      { id:"bun-pork", name:"Bun Thit Nuong - Vietnamese Dry Vermicelli (Pork)", price:9.5, note:"⚠️ Contains peanuts & basil", image:"" },
-      { id:"bun-chicken", name:"Bun Thit Nuong - Vietnamese Dry Vermicelli (Chicken)", price:9.5, note:"⚠️ Contains peanuts & basil", image:"" },
-      { id:"com-tam-chicken", name:"Com Tam - Vietnamese Grilled Chicken Rice", price:9.5, image:"" },
-      { id:"com-tam-pork", name:"Com Tam - Vietnamese Grilled Pork Rice", price:9.5, image:"" },
-      { id:"spring-pork", name:"Fried Spring Rolls - Pork (5 pcs)", price:4.5, image:"" },
-      { id:"spring-fresh", name:"Fresh Spring Rolls - Pork / Prawn (5 pcs)", price:11, note:"⚠️ Contains basil", image:"" },
-      { id:"bowls-addon-meat", name:"Extra Meat", price:2, image:"" },
-      { id:"bowls-addon-egg", name:"Extra Egg", price:1, image:"" },
-      { id:"bowls-addon-chilli", name:"Our Spicy Chilli Bottle", price:8, image:"", standalone:true }
+      { id:"bun-pork", name:"Bun Thit Nuong - Vietnamese Dry Vermicelli (Pork)", price:9.5, note:"⚠️ Contains peanuts & basil" },
+      { id:"bun-chicken", name:"Bun Thit Nuong - Vietnamese Dry Vermicelli (Chicken)", price:9.5, note:"⚠️ Contains peanuts & basil" },
+      { id:"com-tam-chicken", name:"Com Tam - Vietnamese Grilled Chicken Rice", price:9.5 },
+      { id:"com-tam-pork", name:"Com Tam - Vietnamese Grilled Pork Rice", price:9.5 },
+      { id:"spring-pork", name:"Fried Spring Rolls - Pork (5 pcs)", price:4.5 },
+      { id:"spring-fresh", name:"Fresh Spring Rolls - Pork / Prawn (5 pcs)", price:11, note:"⚠️ Contains basil" },
+      { id:"bowls-addon-meat", name:"Extra Meat", price:2 },
+      { id:"bowls-addon-egg", name:"Extra Egg", price:1 },
+      { id:"bowls-addon-chilli", name:"Our Spicy Chilli Bottle", price:8, standalone:true }
     ],
     addOns: []
   }
 };
 
 /* ============================================================
-   APPLICATION
+   APPLICATION ENGINE
    ============================================================ */
 
 let state = {
@@ -186,12 +180,6 @@ function formatDateTime(value) {
   }).format(new Date(value));
 }
 
-function formatDate(value) {
-  return new Intl.DateTimeFormat("en-SG", {
-    dateStyle:"full", timeZone:"Asia/Singapore"
-  }).format(new Date(value + "T12:00:00+08:00"));
-}
-
 function saveCustomer() {
   try {
     localStorage.setItem("vietnameseDelightsCustomer", JSON.stringify(state.customer));
@@ -228,10 +216,11 @@ function render() {
     <div class="container">
       <div class="hero">
         <div style="font-size:40px;margin-bottom:6px">${menu.emoji}</div>
-        <h1>${esc(menu.title)}</h1>
+        <h1>${esc(STORE_CONFIG.storeName)}</h1>
         <p>${esc(menu.description)}</p>
+        <a class="hero-ig" href="https://instagram.com/${esc(STORE_CONFIG.instagram)}" target="_blank">📸 Follow us on IG: @${esc(STORE_CONFIG.instagram)}</a>
         <div class="hero-grid">
-          <div class="hero-box"><strong>📅 Fulfilment</strong><br>${esc(formatDate(schedule.fulfilmentDate))}</div>
+          <div class="hero-box"><strong>📅 Fulfilment</strong><br>${esc(schedule.fulfilmentDate)}</div>
           <div class="hero-box"><strong>⏰ Orders close</strong><br>${esc(formatDateTime(schedule.orderCloses))}</div>
         </div>
         <div class="hero-box" style="margin-top:8px"><strong>💳 PayNow</strong><br>Payment details will be included in your WhatsApp order.</div>
@@ -264,8 +253,8 @@ function customerForm() {
   return `
     <div class="card">
       <h2>Customer Details</h2>
-      <div class="field"><label>Full Name *</label><input id="name" required value="${esc(state.customer.name)}" placeholder="John Doe"></div>
-      <div class="field"><label>Phone Number *</label><input id="phone" required value="${esc(state.customer.phone)}" placeholder="9123 4567"></div>
+      <div class="field"><label>Full Name *</label><input id="name" required value="${esc(state.customer.name)}" placeholder="Banh Mi"></div>
+      <div class="field"><label>Phone Number *</label><input id="phone" required value="${esc(state.customer.phone)}" placeholder="8123 6142"></div>
       <div><label>Delivery Address / Pickup Note</label><textarea id="address" rows="2" placeholder="Block/Street or Self-Pickup time">${esc(state.customer.address)}</textarea></div>
     </div>
   `;
@@ -281,9 +270,8 @@ function menuSection(menu, isOpen, isBanhMi) {
 }
 
 function productCard(product, isOpen, isBanhMi) {
-  const photo = product.image
-    ? `<img src="${esc(product.image)}" alt="${esc(product.name)}">`
-    : `<span>📷<br>Add photo later</span>`;
+  const photoPath = product.image ? product.image : `${product.id}.jpg`;
+  const photo = `<img src="${esc(photoPath)}" alt="${esc(product.name)}" onerror="this.onerror=null; this.parentElement.innerHTML='📷<br>No Photo';">`;
 
   return `
     <div class="product">
@@ -419,7 +407,7 @@ function closedPage(next) {
           <div class="next">
             <strong>Next: ${MENUS[next.menuId].emoji} ${esc(MENUS[next.menuId].title)}</strong>
             <div class="small" style="margin-top:7px">Orders open: ${esc(formatDateTime(next.orderOpens))}</div>
-            <div class="small">Fulfilment: ${esc(formatDate(next.fulfilmentDate))}</div>
+            <div class="small">Fulfilment: ${esc(next.fulfilmentDate)}</div>
           </div>
         ` : ""}
       </div>
@@ -506,22 +494,22 @@ function submitOrder() {
   const menu = MENUS[schedule.menuId];
   const total = state.cart.reduce((s,l)=>s+l.total,0);
 
-  let text = `*NEW ORDER - ${menu.title.toUpperCase()}*\\n\\n`;
-  text += `*Fulfilment Date:* ${formatDate(schedule.fulfilmentDate)}\\n`;
-  text += `*Customer:* ${state.customer.name}\\n`;
-  text += `*Phone:* ${state.customer.phone}\\n`;
-  text += `*Delivery / Pickup:* ${state.customer.address || "N/A"}\\n`;
-  if (state.customer.notes) text += `*General Notes:* ${state.customer.notes}\\n`;
+  let text = `*NEW ORDER - ${menu.title.toUpperCase()}*\n\n`;
+  text += `*Fulfilment Date:* ${schedule.fulfilmentDate}\n`;
+  text += `*Customer:* ${state.customer.name}\n`;
+  text += `*Phone:* ${state.customer.phone}\n`;
+  text += `*Delivery / Pickup:* ${state.customer.address || "N/A"}\n`;
+  if (state.customer.notes) text += `*General Notes:* ${state.customer.notes}\n`;
 
-  text += `\\n*--- ORDER ITEMS ---*\\n`;
+  text += `\n*--- ORDER ITEMS ---*\n`;
   state.cart.forEach(line => {
-    text += `• ${line.productName} x${line.quantity} - ${money(line.total)}\\n`;
-    if (line.proteins.length) text += `   Protein mix: ${line.proteins.map(x=>x.name).join(" + ")}\\n`;
-    if (line.addOns.length) text += `   Add-ons: ${line.addOns.map(x=>x.name).join(", ")}\\n`;
+    text += `• ${line.productName} x${line.quantity} - ${money(line.total)}\n`;
+    if (line.proteins.length) text += `   Protein mix: ${line.proteins.map(x=>x.name).join(" + ")}\n`;
+    if (line.addOns.length) text += `   Add-ons: ${line.addOns.map(x=>x.name).join(", ")}\n`;
   });
 
-  text += `\\n*TOTAL:* ${money(total)}\\n`;
-  text += `*Payment via PayNow:* ${STORE_CONFIG.paynowDetails}\\n`;
+  text += `\n*TOTAL:* ${money(total)}\n`;
+  text += `*Payment via PayNow:* ${STORE_CONFIG.paynowDetails}\n`;
 
   window.open(`https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(text)}`, "_blank");
 }
@@ -599,7 +587,15 @@ window.addEventListener("error", function(e) {
 });
 
 render();
-setInterval(render, 30000);
+
+// Interval update without disturbing input focus or open modals
+setInterval(() => {
+  const activeEl = document.activeElement;
+  const isTyping = activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA");
+  if (!isTyping && !state.customizeProduct) {
+    render();
+  }
+}, 30000);
 </script>
 </body>
 </html>
