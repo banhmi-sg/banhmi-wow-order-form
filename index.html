@@ -3,42 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Banh Mi Order Form</title>
+  <title>Banh Mi Wow - Order Online</title>
   <style>
     :root {
       --primary: #d97706;
       --primary-hover: #b45309;
-      --bg: #fdfbf7;
+      --bg: #f9fafb;
       --card-bg: #ffffff;
       --text: #1f2937;
       --border: #e5e7eb;
     }
 
     * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); margin: 0; padding: 20px 12px; }
-    .container { max-width: 600px; margin: 0 auto; }
+    body { background-color: var(--bg); color: var(--text); margin: 0; padding: 0 0 40px 0; }
     
-    .card { background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid var(--border); }
-    h1, h2, h3 { margin-top: 0; color: #111827; }
+    .container { max-width: 600px; margin: 0 auto; padding: 16px; }
+
+    /* Header & Banner Styling */
+    .header-card { background: var(--card-bg); border-radius: 16px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+    .banner-img { width: 100%; height: 180px; object-fit: cover; display: block; background: #e5e7eb; }
+    .header-content { padding: 20px; }
+    .header-content h1 { margin: 0 0 8px 0; font-size: 1.6rem; color: #111827; }
     
-    .hero-box { background: #fef3c7; border-left: 4px solid var(--primary); padding: 12px 16px; border-radius: 6px; font-size: 0.9em; margin-top: 10px; }
+    .notice-box { background: #fffbeb; border-left: 4px solid var(--primary); padding: 12px 14px; border-radius: 8px; font-size: 0.9em; margin-top: 12px; line-height: 1.4; }
+    
+    /* Cards & Forms */
+    .card { background: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid var(--border); }
+    h2 { margin: 0 0 16px 0; font-size: 1.25rem; color: #111827; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
     
     .field { margin-bottom: 16px; }
-    label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9em; }
-    input[type="text"], input[type="tel"], textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; }
-    
-    .radio-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .radio-option { border: 1px solid var(--border); border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px; cursor: pointer; background: #fafafa; }
-    .radio-option:has(input:checked) { border-color: var(--primary); background: #fffbeb; font-weight: bold; }
-    
-    .menu-item { border-bottom: 1px solid var(--border); padding: 12px 0; display: flex; justify-content: space-between; align-items: center; }
+    label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9em; color: #374151; }
+    input[type="text"], input[type="tel"], textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; outline: none; }
+    input:focus, textarea:focus { border-color: var(--primary); }
+
+    /* Selection Grid */
+    .radio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .radio-card { border: 1px solid var(--border); border-radius: 10px; padding: 12px; display: flex; align-items: center; gap: 10px; cursor: pointer; background: #f9fafb; transition: all 0.2s; }
+    .radio-card:has(input:checked) { border-color: var(--primary); background: #fffbeb; font-weight: bold; }
+
+    /* Menu Items Layout with ID-based Images */
+    .menu-item { display: flex; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--border); align-items: center; }
     .menu-item:last-child { border-bottom: none; }
-    .btn-qty { background: #f3f4f6; border: 1px solid var(--border); border-radius: 6px; width: 32px; height: 32px; font-weight: bold; cursor: pointer; }
+    .item-img { width: 80px; height: 80px; border-radius: 10px; object-fit: cover; background: #f3f4f6; flex-shrink: 0; }
+    .item-details { flex-grow: 1; }
+    .item-title { font-weight: 600; font-size: 0.98rem; margin-bottom: 4px; }
+    .item-desc { font-size: 0.8rem; color: #6b7280; margin-bottom: 6px; }
+    .item-price { font-weight: 700; color: var(--primary); font-size: 0.95rem; }
+
+    /* Quantity Controls */
+    .qty-controls { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .btn-qty { background: #f3f4f6; border: 1px solid var(--border); border-radius: 8px; width: 34px; height: 34px; font-weight: bold; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .btn-qty:hover { background: #e5e7eb; }
-    
-    .pickup-info { background: #f3f4f6; padding: 10px; border-radius: 6px; font-size: 0.9em; }
-    .btn-submit { width: 100%; background: #25d366; color: white; border: none; padding: 14px; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .qty-num { font-weight: 700; width: 20px; text-align: center; }
+
+    /* Total & Submit Button */
+    .total-row { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; font-size: 1.2rem; font-weight: bold; border-top: 2px solid var(--border); margin-top: 10px; }
+    .btn-submit { width: 100%; background: #25d366; color: white; border: none; padding: 16px; font-size: 1.1rem; font-weight: bold; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3); margin-top: 10px; }
     .btn-submit:hover { background: #1da851; }
+    .pickup-box { background: #f3f4f6; padding: 12px; border-radius: 8px; font-size: 0.9em; }
   </style>
 </head>
 <body>
@@ -48,25 +70,62 @@
 <script>
   // Configuration
   const STORE_CONFIG = {
+    bannerImg: "banner.jpg",
     pickupLocation: "22 Upper Serangoon View",
-    paynowDetails: "PayNow to Phone: +65 8123 6142 (Banh Mi Wow)",
+    paynowDetails: "PayNow UEN / Phone: +65 8123 6142 (Banh Mi Wow)",
     whatsappPhone: "6581236142",
-    googleAppsScriptUrl: "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE" // Paste your Web App URL here
+    googleAppsScriptUrl: "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE"
   };
 
-  // State Management
+  // State Management with ID-referenced .jpg filenames
   const state = {
     selectedDate: "Aug 21",
     deliveryTime: "12pm",
     fulfillmentType: "delivery",
     customer: { name: "", phone: "", address: "" },
     cart: {
-      "Bun Thit Nuong (Pork)": { price: 9.50, qty: 0 },
-      "Bun Thit Nuong (Chicken)": { price: 9.50, qty: 0 },
-      "Com Tam (Pork Rice)": { price: 11.50, qty: 0 },
-      "Cha Gio (Fried Spring Rolls)": { price: 4.50, qty: 0 },
-      "Goi Cuon (Summer Rolls)": { price: 11.00, qty: 0 },
-      "Spicy Chilli Bottle": { price: 8.00, qty: 0 }
+      "Bun Thit Nuong (Pork)": { 
+        id: "bun-thit-nuong-pork",
+        price: 9.50, 
+        qty: 0, 
+        desc: "Vietnamese Dry Vermicelli with Grilled Pork",
+        img: "bun-thit-nuong-pork.jpg"
+      },
+      "Bun Thit Nuong (Chicken)": { 
+        id: "bun-thit-nuong-chicken",
+        price: 9.50, 
+        qty: 0, 
+        desc: "Vietnamese Dry Vermicelli with Lemongrass Chicken",
+        img: "bun-thit-nuong-chicken.jpg"
+      },
+      "Com Tam (Pork Rice)": { 
+        id: "com-tam-pork",
+        price: 11.50, 
+        qty: 0, 
+        desc: "Vietnamese Grilled Pork Rice Set",
+        img: "com-tam-pork.jpg"
+      },
+      "Chà Giờ (Fried Spring Rolls)": { 
+        id: "cha-gio",
+        price: 4.50, 
+        qty: 0, 
+        desc: "Fried Pork Spring Rolls (5 pcs)",
+        img: "cha-gio.jpg"
+      },
+      "Gỏi Cuốn (Summer Rolls)": { 
+        id: "goi-cuon",
+        price: 11.00, 
+        qty: 0, 
+        desc: "Fresh Pork & Prawn Summer Rolls (5 pcs)",
+        img: "goi-cuon.jpg"
+      },
+      "Spicy Chilli Bottle": { 
+        id: "spicy-chilli-bottle",
+        price: 8.00, 
+        qty: 0, 
+        desc: "House-made Spicy Chilli (~250g)",
+        img: "spicy-chilli-bottle.jpg"
+      }
     }
   };
 
@@ -81,37 +140,46 @@
     Object.values(state.cart).forEach(item => subtotal += (item.price * item.qty));
 
     app.innerHTML = `
-      <div class="card">
-        <h1>🥖 Banh Mi Wow Order Form</h1>
-        <div class="hero-box">
-          <strong>💳 Payment via PayNow</strong><br>
-          Orders are confirmed upon receipt of payment.
+      <!-- Header Banner -->
+      <div class="header-card">
+        <img src="${STORE_CONFIG.bannerImg}" alt="Banh Mi Wow" class="banner-img">
+        <div class="header-content">
+          <h1>🥖 Banh Mi Wow Order Form</h1>
+          <div class="notice-box">
+            <strong>💳 Payment via PayNow</strong><br>
+            Orders will be confirmed upon receipt of payment.
+          </div>
         </div>
       </div>
 
+      <!-- Customer & Timing Form -->
       ${customerForm()}
 
+      <!-- Menu Section -->
       <div class="card">
         <h2>Select Items</h2>
         ${Object.keys(state.cart).map(itemName => {
           const item = state.cart[itemName];
           return `
-            <div class="menu-item">
-              <div>
-                <strong>${itemName}</strong><br>
-                <small>$${item.price.toFixed(2)}</small>
+            <div class="menu-item" id="item-${item.id}">
+              <img src="${item.img}" alt="${itemName}" class="item-img" onerror="this.src='https://via.placeholder.com/80?text=No+Image'">
+              <div class="item-details">
+                <div class="item-title">${itemName}</div>
+                <div class="item-desc">${item.desc}</div>
+                <div class="item-price">$${item.price.toFixed(2)}</div>
               </div>
-              <div style="display: flex; align-items: center; gap: 8px;">
+              <div class="qty-controls">
                 <button class="btn-qty" onclick="updateQty('${itemName}', -1)">-</button>
-                <span><strong>${item.qty}</strong></span>
+                <span class="qty-num">${item.qty}</span>
                 <button class="btn-qty" onclick="updateQty('${itemName}', 1)">+</button>
               </div>
             </div>
           `;
         }).join('')}
         
-        <div style="margin-top: 20px; font-size: 1.2rem; text-align: right;">
-          <strong>Total Amount: $${subtotal.toFixed(2)}</strong> ${state.fulfillmentType === 'delivery' ? '+ Delivery Fee' : ''}
+        <div class="total-row">
+          <span>Total:</span>
+          <span>$${subtotal.toFixed(2)}${state.fulfillmentType === 'delivery' ? ' <small style="font-size:0.7em; color:#6b7280;">+ Delivery</small>' : ''}</span>
         </div>
       </div>
 
@@ -127,6 +195,7 @@
     return `
       <div class="card">
         <h2>Order & Fulfilment Details</h2>
+        
         <div class="field">
           <label>Full Name *</label>
           <input id="name" required value="${esc(state.customer.name)}" placeholder="Your Name">
@@ -136,15 +205,15 @@
           <label>Phone Number *</label>
           <input id="phone" type="tel" required value="${esc(state.customer.phone)}" placeholder="8123 6142">
         </div>
-        
+
         <div class="field">
           <label>Preferred Date *</label>
-          <div class="radio-group">
-            <label class="radio-option">
+          <div class="radio-grid">
+            <label class="radio-card">
               <input type="radio" name="fulfilmentDate" value="Aug 21" ${state.selectedDate === 'Aug 21' ? 'checked' : ''}>
               <span>Friday, 21 Aug</span>
             </label>
-            <label class="radio-option">
+            <label class="radio-card">
               <input type="radio" name="fulfilmentDate" value="Aug 22" ${state.selectedDate === 'Aug 22' ? 'checked' : ''}>
               <span>Saturday, 22 Aug</span>
             </label>
@@ -153,12 +222,12 @@
 
         <div class="field">
           <label>Preferred Time Slot *</label>
-          <div class="radio-group">
-            <label class="radio-option">
+          <div class="radio-grid">
+            <label class="radio-card">
               <input type="radio" name="deliveryTime" value="12pm" ${state.deliveryTime === '12pm' ? 'checked' : ''}>
               <span>12:00 PM (Lunch)</span>
             </label>
-            <label class="radio-option">
+            <label class="radio-card">
               <input type="radio" name="deliveryTime" value="6pm" ${state.deliveryTime === '6pm' ? 'checked' : ''}>
               <span>6:00 PM (Dinner)</span>
             </label>
@@ -167,12 +236,12 @@
 
         <div class="field">
           <label>Fulfillment Method *</label>
-          <div class="radio-group">
-            <label class="radio-option">
+          <div class="radio-grid">
+            <label class="radio-card">
               <input type="radio" name="fulfillment" value="delivery" ${state.fulfillmentType === 'delivery' ? 'checked' : ''}>
               <span>Delivery</span>
             </label>
-            <label class="radio-option">
+            <label class="radio-card">
               <input type="radio" name="fulfillment" value="pickup" ${state.fulfillmentType === 'pickup' ? 'checked' : ''}>
               <span>Self-Collection</span>
             </label>
@@ -185,7 +254,7 @@
             <textarea id="address" rows="2" placeholder="Block/Street, Unit #, Postal Code">${esc(state.customer.address)}</textarea>
           ` : `
             <label>Collection Point</label>
-            <div class="pickup-info">
+            <div class="pickup-box">
               📍 <strong>Self-Collection Location:</strong> ${esc(STORE_CONFIG.pickupLocation)}
             </div>
           `}
@@ -254,7 +323,7 @@
     const timeLabel = `${dateLabel} @ ${state.deliveryTime === "12pm" ? "12:00 PM (Lunch)" : "6:00 PM (Dinner)"}`;
     const totalText = `$${totalAmount.toFixed(2)}${state.fulfillmentType === 'delivery' ? ' + Delivery' : ''}`;
 
-    // 1. Send Data to Google Sheets via Apps Script Web App
+    // 1. Post to Google Sheets
     if (STORE_CONFIG.googleAppsScriptUrl && STORE_CONFIG.googleAppsScriptUrl !== "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE") {
       fetch(STORE_CONFIG.googleAppsScriptUrl, {
         method: "POST",
@@ -290,7 +359,7 @@
     msg += `*Payment via PayNow:* ${STORE_CONFIG.paynowDetails}\n`;
     msg += `⚠️ *Please note:* Orders will be confirmed upon receipt of payment.`;
 
-    // 3. Redirect to WhatsApp
+    // 3. Open WhatsApp
     const waUrl = `https://wa.me/${STORE_CONFIG.whatsappPhone}?text=${encodeURIComponent(msg)}`;
     window.open(waUrl, '_blank');
   }
