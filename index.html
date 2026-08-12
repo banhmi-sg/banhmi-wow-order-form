@@ -1,952 +1,303 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Banh Mi Wow - Order</title>
-<style>
-  * { box-sizing: border-box; }
-  body { margin:0; background:#f3f4f6; color:#1f2937; font-family:Arial,Helvetica,sans-serif; }
-  button,input,textarea,select { font:inherit; }
-  button { cursor:pointer; }
-  .container { max-width:720px; margin:auto; padding:16px; }
-  .hero { background:#047857; color:white; border-radius:10px 10px 0 0; padding:24px; border-top:8px solid #064e3b; }
-  .hero h1 { margin:0; font-size:28px; }
-  .hero p { color:#d1fae5; margin:7px 0 0; font-size:14px; }
-  .hero-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:16px; }
-  .hero-box { background:#065f46; border-radius:6px; padding:12px; font-size:12px; }
-  .hero-ig { display:inline-block; margin-top:10px; font-size:13px; color:#a7f3d0; text-decoration:none; font-weight:bold; }
-  .hero-ig:hover { text-decoration:underline; }
-  .card { background:white; border:1px solid #e5e7eb; border-radius:9px; padding:20px; margin-top:16px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
-  .card h2 { margin:0 0 14px; font-size:19px; border-bottom:1px solid #e5e7eb; padding-bottom:10px; }
-  label { display:block; font-size:14px; font-weight:600; color:#4b5563; margin-bottom:5px; }
-  input,textarea,select { width:100%; border:1px solid #d1d5db; border-radius:6px; padding:10px; outline:none; }
-  input:focus,textarea:focus,select:focus { border-color:#10b981; box-shadow:0 0 0 2px rgba(16,185,129,.15); }
-  .field { margin-bottom:14px; }
-  .radio-group { display:flex; gap:16px; margin-top:6px; }
-  .radio-option { display:flex; align-items:center; gap:6px; font-size:14px; cursor:pointer; font-weight:normal; }
-  .radio-option input { width:auto; cursor:pointer; }
-  .product { border:1px solid #f0f0f0; border-radius:9px; margin-bottom:10px; overflow:hidden; }
-  .product-inner { display:flex; gap:12px; padding:12px; }
-  .photo { width:92px; height:92px; flex:none; border-radius:8px; background:#f3f4f6; display:flex; align-items:center; justify-content:center; overflow:hidden; color:#9ca3af; font-size:11px; text-align:center; }
-  .photo img { width:100%; height:100%; object-fit:cover; }
-  .product-info { flex:1; min-width:0; }
-  .product-name { font-weight:600; }
-  .note { color:#b45309; font-size:12px; margin-top:5px; line-height:1.4; }
-  .price { color:#047857; font-weight:700; margin-top:6px; }
-  .actions { margin-top:9px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-  .btn { border:0; border-radius:7px; padding:9px 13px; font-weight:700; }
-  .btn-green { background:#059669; color:white; }
-  .btn-green:hover { background:#047857; }
-  .btn-outline { background:transparent; color:#059669; border:1px solid #059669; }
-  .btn-outline:hover { background:#ecfdf5; }
-  .btn-gray { background:#e5e7eb; color:#374151; }
-  .btn-red { background:#fee2e2; color:#b91c1c; }
-  .closed { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
-  .closed-card { max-width:520px; width:100%; background:white; padding:32px; border-radius:12px; text-align:center; box-shadow:0 2px 12px rgba(0,0,0,.1); }
-  .closed-card h1 { margin:8px 0; }
-  .next { background:#ecfdf5; border:1px solid #d1fae5; padding:14px; border-radius:8px; text-align:left; margin-top:18px; }
-  .sticky { position:fixed; left:0; right:0; bottom:0; background:white; border-top:1px solid #d1d5db; box-shadow:0 -2px 10px rgba(0,0,0,.08); z-index:50; }
-  .sticky-inner { max-width:720px; margin:auto; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
-  .total { font-size:22px; font-weight:800; color:#065f46; }
-  .small { font-size:12px; color:#6b7280; }
-  .review { color:#047857; font-size:12px; text-decoration:underline; background:none; border:0; padding:0; text-align:left; }
-  .cart-panel { max-width:720px; max-height:360px; overflow:auto; margin:auto; padding:14px 16px; background:#f9fafb; border-bottom:1px solid #e5e7eb; }
-  .cart-line { background:white; border:1px solid #e5e7eb; border-radius:8px; padding:12px; margin-bottom:9px; }
-  .cart-line-top { display:flex; justify-content:space-between; gap:12px; }
-  .cart-detail { font-size:12px; color:#6b7280; margin-top:4px; }
-  .cart-detail-excl { font-size:12px; color:#b91c1c; margin-top:2px; font-weight:600; }
-  .qty { display:flex; align-items:center; gap:8px; margin-top:9px; }
-  .qty button { width:30px; height:30px; border:0; border-radius:50%; background:#e5e7eb; font-weight:800; }
-  .qty button.plus { background:#059669; color:white; }
-  .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:100; display:flex; align-items:center; justify-content:center; padding:16px; }
-  .modal { width:100%; max-width:540px; max-height:90vh; overflow:auto; background:white; border-radius:12px; }
-  .modal-head { padding:18px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; gap:15px; }
-  .modal-body { padding:18px; }
-  .option { width:100%; text-align:left; padding:12px; border:1px solid #e5e7eb; background:white; border-radius:8px; margin-bottom:8px; }
-  .option.selected { border-color:#10b981; background:#ecfdf5; }
-  .summary { background:#f9fafb; border-radius:8px; padding:13px; margin:15px 0; }
-  .error { max-width:640px; margin:40px auto; padding:24px; font-family:Arial,sans-serif; background:white; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,.12); }
-  .fee-row { display:flex; justify-content:space-between; margin-top:4px; font-size:13px; }
-  .fee-notice { font-size:11px; color:#b45309; background:#fffbeb; padding:6px 8px; border-radius:6px; margin-top:6px; border:1px solid #fef3c7; line-height:1.3; }
-  .fee-success { font-size:11px; color:#047857; background:#ecfdf5; padding:6px 8px; border-radius:6px; margin-top:6px; border:1px solid #a7f3d0; line-height:1.3; }
-  .pickup-info { font-size:12px; color:#065f46; background:#ecfdf5; padding:8px 10px; border-radius:6px; margin-top:6px; border:1px solid #a7f3d0; line-height:1.4; }
-  @media (max-width:560px) {
-    .hero-grid { grid-template-columns:1fr; }
-    .product-inner { padding:10px; }
-    .photo { width:76px; height:76px; }
-    .sticky-inner { padding:10px 12px; }
-    .sticky .btn { padding:10px 12px; font-size:13px; }
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banh Mi Order Form</title>
+  <style>
+    :root {
+      --primary: #d97706;
+      --primary-hover: #b45309;
+      --bg: #fdfbf7;
+      --card-bg: #ffffff;
+      --text: #1f2937;
+      --border: #e5e7eb;
+    }
+
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); margin: 0; padding: 20px 12px; }
+    .container { max-width: 600px; margin: 0 auto; }
+    
+    .card { background: var(--card-bg); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+    h1, h2, h3 { margin-top: 0; color: #111827; }
+    
+    .hero-box { background: #fef3c7; border-left: 4px solid var(--primary); padding: 12px 16px; border-radius: 6px; font-size: 0.9em; margin-top: 10px; }
+    
+    .field { margin-bottom: 16px; }
+    label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 0.9em; }
+    input[type="text"], input[type="tel"], textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; }
+    
+    .radio-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .radio-option { border: 1px solid var(--border); border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 8px; cursor: pointer; background: #fafafa; }
+    .radio-option:has(input:checked) { border-color: var(--primary); background: #fffbeb; font-weight: bold; }
+    
+    .menu-item { border-bottom: 1px solid var(--border); padding: 12px 0; display: flex; justify-content: space-between; align-items: center; }
+    .menu-item:last-child { border-bottom: none; }
+    .btn-qty { background: #f3f4f6; border: 1px solid var(--border); border-radius: 6px; width: 32px; height: 32px; font-weight: bold; cursor: pointer; }
+    .btn-qty:hover { background: #e5e7eb; }
+    
+    .pickup-info { background: #f3f4f6; padding: 10px; border-radius: 6px; font-size: 0.9em; }
+    .btn-submit { width: 100%; background: #25d366; color: white; border: none; padding: 14px; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-submit:hover { background: #1da851; }
+  </style>
 </head>
 <body>
-<div id="app"></div>
+
+<div class="container" id="app"></div>
 
 <script>
-/* ============================================================
-   CONFIGURATIONS & CONSTANTS
-   ============================================================ */
-
-const STORE_CONFIG = {
-  storeName: "Banh Mi Wow",
-  instagram: "banhmiwowsg",
-  whatsappNumber: "6581236142",
-  paynowDetails: "PayNow to Phone number: +65 8123 6142",
-  currency: "$",
-  googleSheetUrl: "https://script.google.com/macros/s/AKfycbzE8ND6xYYZiHLppJOZoYUgsedewpZopmuX1qqOtYN8CwBeEFrDpqwYLjlM1nYQfrsX/exec",
-  flatDeliveryFee: 15.00,
-  flatDeliveryThreshold: 80.00,
-  pickupLocation: "T22 Poolside Pavilion"
-};
-
-const DEFAULT_PLACEHOLDER = "default-food.jpg";
-
-const PRODUCT_ICONS = {
-  "bowls-addon-meat": "🥩",
-  "addon-meat": "🥩",
-  "bowls-addon-egg": "🍳",
-  "addon-egg": "🍳"
-};
-
-const CHILLI_ORDER_LIMIT = 2;
-
-const MENU_SCHEDULE = [
-  {
-    id: "bowls-aug-21-22",
-    menuId: "bowls",
-    orderOpens: "2026-08-12T00:00:00+08:00",
-    orderCloses: "2026-08-17T15:00:00+08:00",
-    fulfilmentDate: "2026-08-21 & 22"
-  }
-];
-
-const MENUS = {
-  "banh-mi": {
-    title: "Banh Mi",
-    emoji: "🥖",
-    description: "Fresh Vietnamese baguettes with your choice of filling.",
-    products: [
-      { id:"banh-mi-chicken", name:"Banh Mi - Grilled Chicken", price:8, note:"Contains pork pate & pickled vegs" },
-      { id:"banh-mi-pork", name:"Banh Mi - Grilled Pork", price:8, note:"Contains pork pate & pickled vegs" },
-      { id:"banh-mi-meatball", name:"Banh Mi - Pork Meatball", price:8, note:"Contains pork pate & pickled vegs" },
-      { id:"banh-mi-duck", name:"Banh Mi - Smoked Duck", price:8, note:"Contains pork pate & pickled vegs" },
-      { id:"banh-mi-veg", name:"Banh Mi - Vegetarian", price:5.5, note:"Eggs, vegetables, no pate, beancurd skin" },
-      { id:"banh-mi-trad", name:"Banh Mi - Traditional", price:8, note:"Braised pork, ham, pate, pickled vegetables" }
-    ],
-    addOns: [
-      { id:"addon-meat", name:"Extra Meat", price:2 },
-      { id:"addon-egg", name:"Egg", price:1 },
-      { id:"addon-chilli", name:"Our Spicy Chilli Bottle (~250g)", price:8, standalone:true }
-    ]
-  },
-
-  "bowls": {
-    title: "Bowls & Sides",
-    emoji: "🍜",
-    description: "Authentic Southern Vietnamese noodle bowls, broken rice plates, and golden fried or fresh hand-rolled sides.",
-    products: [
-      { 
-        id:"bun-pork", 
-        name:"Bun Thit Nuong - Vietnamese Dry Vermicelli (Pork)", 
-        price:9.5, 
-        note:"A Southern Vietnamese classic featuring soft rice vermicelli topped with smoky flame-grilled pork, golden fried spring rolls, crisp pickled carrots, and fragrant fresh basil. Dressed in homemade nước mắm sauce for a sweet, savory, and tangy finish. ⚠️ Contains peanuts & basil" 
-      },
-      { 
-        id:"bun-chicken", 
-        name:"Bun Thit Nuong - Vietnamese Dry Vermicelli (Chicken)", 
-        price:9.5, 
-        note:"A Southern Vietnamese classic featuring soft rice vermicelli topped with smoky flame-grilled chicken, golden fried spring rolls, crisp pickled carrots, and fragrant fresh basil. Dressed in homemade nước mắm sauce for a sweet, savory, and tangy finish. ⚠️ Contains peanuts & basil" 
-      },
-      { 
-        id:"com-tam-chicken", 
-        name:"Com Tam - Vietnamese Grilled Chicken Rice", 
-        price:9.5,
-        note:"Cơm tấm (broken rice) topped with flame-grilled chicken, savory egg meatloaf, crisp cucumber, and tangy pickled carrots—served with sweet and sour nước mắm fish sauce."
-      },
-      { 
-        id:"com-tam-pork", 
-        name:"Com Tam - Vietnamese Grilled Pork Rice", 
-        price:9.5,
-        note:"Cơm tấm (broken rice) paired with iconic grilled pork chop (cơm sườn), savory egg meatloaf, crisp cucumber, and tangy pickled carrots—served with sweet and sour nước mắm fish sauce."
-      },
-      { 
-        id:"spring-pork", 
-        name:"Chả Giò - Fried Spring Rolls (Pork - 5 pcs)", 
-        price:4.5,
-        note:"A beloved Vietnamese favorite. Seasoned minced pork wrapped in delicate rice paper and deep-fried to a shatteringly crisp, golden perfection."
-      },
-      { 
-        id:"spring-fresh", 
-        name:"Gỏi Cuốn - Summer Rolls (Pork / Prawn - 5 pcs)", 
-        price:11, 
-        note:"Served fresh, not fried! Plump prawns, tender pork, aromatic herbs, and soft bún rice noodles hand-rolled in translucent bánh tráng rice paper. ⚠️ Contains basil" 
-      },
-      { id:"bowls-addon-chilli", name:"Our Spicy Chilli Bottle (~250g)", price:8, standalone:true }
-    ],
-    addOns: [
-      { id:"bowls-addon-meat", name:"Extra Meat (50g)", price:2 }
-    ]
-  }
-};
-
-/* ============================================================
-   APPLICATION ENGINE
-   ============================================================ */
-
-let state = {
-  scheduleInfo: getScheduleInfo(),
-  customer: { name:"", phone:"", address:"", notes:"" },
-  fulfillmentType: "delivery", // "delivery" or "pickup"
-  deliveryTime: "12pm",       // "12pm" or "6pm"
-  cart: [],
-  cartOpen: false,
-  customizeProduct: null,
-  selectedProteins: [],
-  selectedAddOns: [],
-  selectedExclusions: []
-};
-
-try {
-  const saved = localStorage.getItem("vietnameseDelightsCustomer");
-  if (saved) state.customer = JSON.parse(saved);
-} catch(e) {}
-
-function getScheduleInfo() {
-  const now = new Date();
-
-  const open = MENU_SCHEDULE.find(s =>
-    now >= new Date(s.orderOpens) && now <= new Date(s.orderCloses)
-  );
-
-  if (open) return { status:"open", schedule:open };
-
-  const next = MENU_SCHEDULE
-    .filter(s => new Date(s.orderOpens) > now)
-    .sort((a,b) => new Date(a.orderOpens) - new Date(b.orderOpens))[0];
-
-  return next ? { status:"upcoming", schedule:next } : { status:"closed", schedule:null };
-}
-
-function money(n) {
-  return STORE_CONFIG.currency + Number(n).toFixed(2);
-}
-
-function formatDateTime(value) {
-  return new Intl.DateTimeFormat("en-SG", {
-    dateStyle:"medium", timeStyle:"short", timeZone:"Asia/Singapore"
-  }).format(new Date(value));
-}
-
-function saveCustomer() {
-  try {
-    localStorage.setItem("vietnameseDelightsCustomer", JSON.stringify(state.customer));
-  } catch(e) {}
-}
-
-function esc(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[c]));
-}
-
-function isChilliProduct(id) {
-  return id === "bowls-addon-chilli" || id === "addon-chilli";
-}
-
-function getTotalChilliInCart() {
-  return state.cart.reduce((sum, line) => {
-    return isChilliProduct(line.productId) ? sum + line.quantity : sum;
-  }, 0);
-}
-
-function calculateTotals() {
-  const subtotal = state.cart.reduce((s, line) => s + line.total, 0);
-  let deliveryFee = 0;
-  let isDeliveryTBA = false;
-
-  if (state.fulfillmentType === "delivery" && subtotal > 0) {
-    if (subtotal >= STORE_CONFIG.flatDeliveryThreshold) {
-      deliveryFee = STORE_CONFIG.flatDeliveryFee;
-      isDeliveryTBA = false;
-    } else {
-      deliveryFee = 0;
-      isDeliveryTBA = true;
-    }
-  }
-
-  const grandTotal = subtotal + deliveryFee;
-
-  return { subtotal, deliveryFee, isDeliveryTBA, grandTotal };
-}
-
-function render() {
-  state.scheduleInfo = getScheduleInfo();
-  const root = document.getElementById("app");
-
-  if (!state.scheduleInfo.schedule) {
-    root.innerHTML = closedPage(null);
-    return;
-  }
-
-  const schedule = state.scheduleInfo.schedule;
-  const menu = MENUS[schedule.menuId];
-
-  if (!menu) {
-    root.innerHTML = errorPage("Menu configuration error", "The scheduled menu could not be found.");
-    return;
-  }
-
-  const isOpen = state.scheduleInfo.status === "open";
-  const isBanhMi = menu.title === "Banh Mi";
-
-  root.innerHTML = `
-    <div class="container">
-      <div class="hero">
-        <div style="font-size:40px;margin-bottom:6px">${menu.emoji}</div>
-        <h1>${esc(STORE_CONFIG.storeName)}</h1>
-        <p>${esc(menu.description)}</p>
-        <a class="hero-ig" href="https://instagram.com/${esc(STORE_CONFIG.instagram)}" target="_blank">📸 Follow us on IG: @${esc(STORE_CONFIG.instagram)}</a>
-        <div class="hero-grid">
-          <div class="hero-box"><strong>📅 Fulfilment</strong><br>${esc(schedule.fulfilmentDate)}</div>
-          <div class="hero-box"><strong>⏰ Orders close</strong><br>${esc(formatDateTime(schedule.orderCloses))}</div>
-        </div>
-        <div class="hero-box" style="margin-top:8px"><strong>💳 PayNow</strong><br>Orders are confirmed upon receipt of payment.</div>
-      </div>
-
-      ${!isOpen ? `
-        <div class="card" style="background:#fffbeb;border-color:#fde68a">
-          <strong>⏳ Ordering is not open yet</strong>
-          <div class="small" style="margin-top:5px">Orders open on ${esc(formatDateTime(schedule.orderOpens))}.</div>
-        </div>
-      ` : ""}
-
-      ${customerForm()}
-      ${menuSection(menu, isOpen, isBanhMi)}
-
-      <div class="card">
-        <label>General Remarks / Special Requests</label>
-        <input id="notes" value="${esc(state.customer.notes)}" placeholder="Less spicy, separate sauce, etc.">
-      </div>
-    </div>
-
-    ${cartBar(isOpen)}
-    ${state.customizeProduct ? customizeModal(menu) : ""}
-  `;
-
-  bindEvents(menu, isOpen);
-
-  const stickyEl = document.querySelector('.sticky');
-  if (stickyEl) {
-    document.body.style.paddingBottom = (stickyEl.offsetHeight + 24) + 'px';
-  }
-}
-
-function customerForm() {
-  return `
-    <div class="card">
-      <h2>Customer Details</h2>
-      <div class="field"><label>Full Name *</label><input id="name" required value="${esc(state.customer.name)}" placeholder="Banh Mi"></div>
-      <div class="field"><label>Phone Number *</label><input id="phone" required value="${esc(state.customer.phone)}" placeholder="8123 6142"></div>
-      
-      <div class="field">
-        <label>Preferred Time Slot *</label>
-        <div class="radio-group">
-          <label class="radio-option">
-            <input type="radio" name="deliveryTime" value="12pm" ${state.deliveryTime === '12pm' ? 'checked' : ''}>
-            <span>12:00 PM (Lunch)</span>
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="deliveryTime" value="6pm" ${state.deliveryTime === '6pm' ? 'checked' : ''}>
-            <span>6:00 PM (Dinner)</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="field">
-        <label>Fulfillment Method *</label>
-        <div class="radio-group">
-          <label class="radio-option">
-            <input type="radio" name="fulfillment" value="delivery" ${state.fulfillmentType === 'delivery' ? 'checked' : ''}>
-            <span>Delivery</span>
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="fulfillment" value="pickup" ${state.fulfillmentType === 'pickup' ? 'checked' : ''}>
-            <span>Self-Collection</span>
-          </label>
-        </div>
-      </div>
-
-      <div>
-        ${state.fulfillmentType === 'delivery' ? `
-          <label>Delivery Address *</label>
-          <textarea id="address" rows="2" placeholder="Block/Street, Unit #, Postal Code">${esc(state.customer.address)}</textarea>
-        ` : `
-          <label>Collection Point</label>
-          <div class="pickup-info">
-            📍 <strong>Self-Collection Location:</strong> ${esc(STORE_CONFIG.pickupLocation)}
-          </div>
-        `}
-      </div>
-    </div>
-  `;
-}
-
-function menuSection(menu, isOpen, isBanhMi) {
-  return `
-    <div class="card">
-      <h2>${esc(menu.title)}</h2>
-      ${menu.products.map(p => productCard(p, isOpen, isBanhMi)).join("")}
-    </div>
-  `;
-}
-
-function productCard(product, isOpen, isBanhMi) {
-  let photoContent = "";
-
-  if (PRODUCT_ICONS[product.id]) {
-    photoContent = `<div style="font-size:36px; text-align:center;">${PRODUCT_ICONS[product.id]}</div>`;
-  } else {
-    const photoPath = product.image ? product.image : `${product.id}.jpg`;
-    photoContent = `<img src="${esc(photoPath)}" alt="${esc(product.name)}" onerror="this.onerror=null; this.src='${DEFAULT_PLACEHOLDER}';">`;
-  }
-
-  const currentQty = state.cart
-    .filter(l => l.productId === product.id)
-    .reduce((sum, l) => sum + l.quantity, 0);
-
-  const isCustomizable = !product.standalone 
-    && !isChilliProduct(product.id) 
-    && !product.id.startsWith("spring-") 
-    && (isBanhMi || product.id.startsWith("bun-") || product.id.startsWith("com-tam-"));
-
-  return `
-    <div class="product">
-      <div class="product-inner">
-        <div class="photo">${photoContent}</div>
-        <div class="product-info">
-          <div class="product-name">${esc(product.name)}</div>
-          ${product.note ? `<div class="note">${esc(product.note)}</div>` : ""}
-          <div class="price">${money(product.price)}</div>
-          
-          ${isOpen ? `
-            <div class="actions">
-              ${currentQty > 0 ? `
-                <div class="qty" style="margin-top:0">
-                  <button data-action="menu-qty" data-id="${esc(product.id)}" data-delta="-1">−</button>
-                  <strong style="padding: 0 6px;">${currentQty}</strong>
-                  <button class="plus" data-action="menu-qty" data-id="${esc(product.id)}" data-delta="1">+</button>
-                </div>
-              ` : `
-                <button class="btn btn-green" data-action="simple" data-id="${esc(product.id)}">
-                  + Add
-                </button>
-              `}
-
-              ${isCustomizable ? `
-                <button class="btn btn-outline" data-action="customize" data-id="${esc(product.id)}">
-                  Customise
-                </button>
-              ` : ""}
-            </div>
-          ` : ""}
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function cartBar(isOpen) {
-  const { subtotal, deliveryFee, isDeliveryTBA, grandTotal } = calculateTotals();
-  const count = state.cart.reduce((s, l) => s + l.quantity, 0);
-
-  return `
-    <div class="sticky">
-      ${state.cartOpen && state.cart.length ? `
-        <div class="cart-panel">
-          <strong>Your Order</strong>
-          <div style="margin-top:10px">
-            ${state.cart.map(line => `
-              <div class="cart-line">
-                <div class="cart-line-top">
-                  <div>
-                    <strong>${esc(line.productName)}</strong>
-                    ${line.proteins.length ? `<div class="cart-detail">Protein: ${esc(line.proteins.map(x=>x.name).join(" + "))}</div>` : ""}
-                    ${line.addOns.length ? `<div class="cart-detail">Add-ons: ${esc(line.addOns.map(x=>x.name).join(", "))}</div>` : ""}
-                    ${line.exclusions.length ? `<div class="cart-detail-excl">🚫 ${esc(line.exclusions.join(", "))}</div>` : ""}
-                    <div class="cart-detail">${money(line.unitPrice)} each</div>
-                  </div>
-                  <button class="btn btn-red" data-action="remove" data-line="${esc(line.lineId)}">Remove</button>
-                </div>
-                <div class="qty">
-                  <button data-action="qty" data-delta="-1" data-line="${esc(line.lineId)}">−</button>
-                  <strong>${line.quantity}</strong>
-                  <button class="plus" data-action="qty" data-delta="1" data-line="${esc(line.lineId)}">+</button>
-                  <strong style="margin-left:auto">${money(line.total)}</strong>
-                </div>
-              </div>
-            `).join("")}
-          </div>
-
-          <div style="border-top:1px solid #e5e7eb; margin-top:12px; padding-top:10px;">
-            <div class="fee-row">
-              <span>Subtotal</span>
-              <span>${money(subtotal)}</span>
-            </div>
-
-            ${state.fulfillmentType === 'delivery' ? `
-              <div class="fee-row" style="margin-top:4px;">
-                <span>Delivery Fee</span>
-                <span>
-                  ${isDeliveryTBA 
-                    ? `<strong style="color:#b45309;">TBA (Advised via WA)</strong>` 
-                    : money(deliveryFee)}
-                </span>
-              </div>
-              
-              ${isDeliveryTBA ? `
-                <div class="fee-notice">
-                  ℹ️ Delivery fee quoted via WhatsApp based on distance when booking driver.<br>
-                  💡 Add <strong>${money(STORE_CONFIG.flatDeliveryThreshold - subtotal)}</strong> more to hit $80 for <strong>$15 flat delivery</strong>!
-                </div>
-              ` : `
-                <div class="fee-success">
-                  ✓ $15 flat delivery rate unlocked!
-                </div>
-              `}
-            ` : `
-              <div class="fee-row" style="margin-top:4px;">
-                <span>Fulfillment</span>
-                <span>Self-Collection ($0.00)</span>
-              </div>
-            `}
-
-            <div class="fee-row" style="font-weight:800; font-size:16px; margin-top:8px; border-top:1px dashed #e5e7eb; padding-top:6px;">
-              <span>Total Payable</span>
-              <span style="color:#047857;">
-                ${money(grandTotal)} ${isDeliveryTBA ? '<small style="font-size:11px; font-weight:normal;">+ delivery</small>' : ''}
-              </span>
-            </div>
-          </div>
-        </div>
-      ` : ""}
-      <div class="sticky-inner">
-        <button class="review" data-action="toggle-cart">
-          <div class="small">${count} item(s) selected</div>
-          <div class="total">${money(grandTotal)}${isDeliveryTBA ? '*' : ''}</div>
-          ${state.cart.length ? (state.cartOpen ? "Hide order" : "Review order") : ""}
-        </button>
-        <button class="btn btn-green" data-action="submit" ${!isOpen || subtotal === 0 ? "disabled style='background:#d1d5db;cursor:not-allowed'" : ""}>
-          ${isOpen ? "Order via WhatsApp" : "Ordering Closed"}
-        </button>
-      </div>
-    </div>
-  `;
-}
-
-function customizeModal(menu) {
-  const product = state.customizeProduct;
-  const isBanhMi = menu.title === "Banh Mi";
-
-  const proteins = [
-    {id:"pork",name:"Grilled Pork",price:0},
-    {id:"chicken",name:"Grilled Chicken",price:0},
-    {id:"meatball",name:"Pork Meatball",price:0},
-    {id:"duck",name:"Smoked Duck",price:0}
-  ];
-
-  const availableExclusions = [];
-  if (product.note && product.note.includes("peanuts")) availableExclusions.push("No Peanuts");
-  if (product.note && product.note.includes("basil")) availableExclusions.push("No Basil");
-
-  const extras = state.selectedAddOns.reduce((s,x)=>s+x.price,0);
-  const proteinTotal = state.selectedProteins.reduce((s,x)=>s+x.price,0);
-  const final = product.price + extras + proteinTotal;
-
-  return `
-    <div class="modal-backdrop">
-      <div class="modal">
-        <div class="modal-head">
-          <div><h2 style="margin:0">Customise Item</h2><div class="small">${esc(product.name)}</div></div>
-          <button class="btn btn-gray" data-action="close-modal">×</button>
-        </div>
-        <div class="modal-body">
-          ${isBanhMi ? `
-            <strong>Protein mix</strong>
-            <div class="small" style="margin:5px 0 10px">Select another protein for a mix, e.g. Chicken + Pork.</div>
-            ${proteins.map(p => {
-              const selected = state.selectedProteins.some(x=>x.id===p.id);
-              return `<button class="option ${selected ? "selected":""}" data-action="protein" data-id="${p.id}">
-                ${selected ? "✓ " : ""}${esc(p.name)} <span class="small">— no extra charge</span>
-              </button>`;
-            }).join("")}
-          ` : ""}
-
-          ${availableExclusions.length ? `
-            <div style="margin-top:${isBanhMi ? "18px" : "0"}"><strong>Dietary Preference / Exclusions</strong></div>
-            <div style="margin-top:8px">
-              ${availableExclusions.map(ex => {
-                const selected = state.selectedExclusions.includes(ex);
-                return `<button class="option ${selected ? "selected":""}" data-action="exclusion" data-val="${esc(ex)}">
-                  ${selected ? "✓ " : ""}${esc(ex)}
-                </button>`;
-              }).join("")}
-            </div>
-          ` : ""}
-
-          ${menu.addOns && menu.addOns.filter(a => !a.standalone).length ? `
-            <div style="margin-top:18px"><strong>Add-ons</strong></div>
-            <div style="margin-top:8px">
-              ${menu.addOns.filter(a => !a.standalone).map(a => {
-                const selected = state.selectedAddOns.some(x=>x.id===a.id);
-                return `<button class="option ${selected ? "selected":""}" data-action="addon" data-id="${a.id}">
-                  ${selected ? "✓ " : ""}${esc(a.name)} <span style="float:right">+${money(a.price)}</span>
-                </button>`;
-              }).join("")}
-            </div>
-          ` : ""}
-
-          <div class="summary">
-            <div>${esc(product.name)} — ${money(product.price)}</div>
-            ${state.selectedProteins.length ? `<div class="small">Protein mix: ${esc(state.selectedProteins.map(x=>x.name).join(" + "))}</div>` : ""}
-            ${state.selectedExclusions.length ? `<div class="small" style="color:#b91c1c;font-weight:600">Exclusions: ${esc(state.selectedExclusions.join(", "))}</div>` : ""}
-            ${state.selectedAddOns.length ? `<div class="small">Add-ons: ${esc(state.selectedAddOns.map(x=>x.name).join(", "))}</div>` : ""}
-            <div style="border-top:1px solid #e5e7eb;margin-top:10px;padding-top:10px;display:flex;justify-content:space-between;font-weight:800">
-              <span>Total</span><span style="color:#047857">${money(final)}</span>
-            </div>
-          </div>
-
-          <button class="btn btn-green" style="width:100%" data-action="confirm-custom">
-            Add to Order — ${money(final)}
-          </button>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function closedPage(next) {
-  return `
-    <div class="closed">
-      <div class="closed-card">
-        <div style="font-size:50px">🔒</div>
-        <h1>Ordering is currently closed</h1>
-        <p style="color:#6b7280">There are no menus available for ordering right now.</p>
-        ${next ? `
-          <div class="next">
-            <strong>Next: ${MENUS[next.menuId].emoji} ${esc(MENUS[next.menuId].title)}</strong>
-            <div class="small" style="margin-top:7px">Orders open: ${esc(formatDateTime(next.orderOpens))}</div>
-            <div class="small">Fulfilment: ${esc(next.fulfilmentDate)}</div>
-          </div>
-        ` : ""}
-      </div>
-    </div>
-  `;
-}
-
-function errorPage(title, message) {
-  return `<div class="error"><h1>${esc(title)}</h1><p>${esc(message)}</p></div>`;
-}
-
-function addSimple(product) {
-  if (isChilliProduct(product.id)) {
-    const currentChilliCount = getTotalChilliInCart();
-    if (currentChilliCount >= CHILLI_ORDER_LIMIT) {
-      alert(`Sorry, you can only order a maximum of ${CHILLI_ORDER_LIMIT} chilli bottle(s) per order.`);
-      return;
-    }
-  }
-
-  const existingLine = state.cart.find(l => l.productId === product.id && l.proteins.length === 0 && l.addOns.length === 0 && l.exclusions.length === 0);
-
-  if (existingLine) {
-    updateQuantity(existingLine.lineId, 1);
-  } else {
-    state.cart.push({
-      lineId: Date.now() + "-" + Math.random(),
-      productId: product.id,
-      productName: product.name,
-      basePrice: product.price,
-      proteins: [],
-      addOns: [],
-      exclusions: [],
-      quantity: 1,
-      unitPrice: product.price,
-      total: product.price
-    });
-    render();
-  }
-}
-
-function openCustomize(product) {
-  state.customizeProduct = product;
-  state.selectedProteins = [];
-  state.selectedAddOns = [];
-  state.selectedExclusions = [];
-  render();
-}
-
-function confirmCustomize() {
-  const product = state.customizeProduct;
-  const unit = product.price
-    + state.selectedProteins.reduce((s,x)=>s+x.price,0)
-    + state.selectedAddOns.reduce((s,x)=>s+x.price,0);
-
-  state.cart.push({
-    lineId: Date.now() + "-" + Math.random(),
-    productId: product.id,
-    productName: product.name,
-    basePrice: product.price,
-    proteins: [...state.selectedProteins],
-    addOns: [...state.selectedAddOns],
-    exclusions: [...state.selectedExclusions],
-    quantity: 1,
-    unitPrice: unit,
-    total: unit
-  });
-
-  state.customizeProduct = null;
-  state.selectedProteins = [];
-  state.selectedAddOns = [];
-  state.selectedExclusions = [];
-  state.cartOpen = true;
-  render();
-}
-
-function toggleChoice(collection, item) {
-  const exists = collection.some(x=>x.id===item.id);
-  return exists ? collection.filter(x=>x.id!==item.id) : [...collection,item];
-}
-
-function toggleExclusion(val) {
-  if (state.selectedExclusions.includes(val)) {
-    state.selectedExclusions = state.selectedExclusions.filter(x => x !== val);
-  } else {
-    state.selectedExclusions.push(val);
-  }
-}
-
-function updateQuantity(lineId, delta) {
-  state.cart = state.cart.map(line => {
-    if (line.lineId !== lineId) return line;
-
-    if (delta > 0 && isChilliProduct(line.productId)) {
-      const currentChilliCount = getTotalChilliInCart();
-      if (currentChilliCount >= CHILLI_ORDER_LIMIT) {
-        alert(`Sorry, you can only order a maximum of ${CHILLI_ORDER_LIMIT} chilli bottle(s) per order.`);
-        return line;
-      }
-    }
-
-    const quantity = Math.max(0, line.quantity + delta);
-    return { ...line, quantity, total: quantity * line.unitPrice };
-  }).filter(line => line.quantity > 0);
-
-  render();
-}
-
-function submitOrder() {
-  state.customer.name = document.getElementById("name")?.value.trim() || "";
-  state.customer.phone = document.getElementById("phone")?.value.trim() || "";
-  state.customer.address = document.getElementById("address")?.value.trim() || "";
-  state.customer.notes = document.getElementById("notes")?.value.trim() || "";
-  saveCustomer();
-
-  const info = getScheduleInfo();
-  if (info.status !== "open") { alert("Ordering is currently closed."); render(); return; }
-  if (!state.cart.length) { alert("Please add at least one item."); return; }
-  if (!state.customer.name || !state.customer.phone) { alert("Please enter your name and phone number."); return; }
-  if (state.fulfillmentType === "delivery" && !state.customer.address) { alert("Please enter your delivery address."); return; }
-
-  const schedule = info.schedule;
-  const menu = MENUS[schedule.menuId];
-  const { subtotal, deliveryFee, isDeliveryTBA, grandTotal } = calculateTotals();
-
-  const itemsText = state.cart.map(line => {
-    let itemStr = `${line.productName} x${line.quantity} (${money(line.total)})`;
-    if (line.proteins.length) itemStr += ` [Protein: ${line.proteins.map(x=>x.name).join(" + ")}]`;
-    if (line.exclusions.length) itemStr += ` [Exclusions: ${line.exclusions.join(", ")}]`;
-    if (line.addOns.length) itemStr += ` [Add-ons: ${line.addOns.map(x=>x.name).join(", ")}]`;
-    return itemStr;
-  }).join("\n");
-
-  const timeLabel = state.deliveryTime === "12pm" ? "12:00 PM (Lunch)" : "6:00 PM (Dinner)";
-  const locationLabel = state.fulfillmentType === "delivery" ? state.customer.address : STORE_CONFIG.pickupLocation;
-
-  const sheetData = {
-    menuTitle: menu.title,
-    customerName: state.customer.name,
-    customerPhone: state.customer.phone,
-    deliveryTime: timeLabel,
-    fulfillmentType: state.fulfillmentType === "delivery" ? "Delivery" : "Self-Collection",
-    customerAddress: locationLabel,
-    customerNotes: state.customer.notes,
-    orderDetails: itemsText,
-    subtotal: money(subtotal),
-    deliveryFee: state.fulfillmentType === "delivery" ? (isDeliveryTBA ? "TBA" : money(deliveryFee)) : "$0.00",
-    totalAmount: money(grandTotal) + (isDeliveryTBA ? " + Delivery" : "")
+  // Configuration
+  const STORE_CONFIG = {
+    pickupLocation: "22 Upper Serangoon View",
+    paynowDetails: "PayNow to Phone: +65 8123 6142 (Banh Mi Wow)",
+    whatsappPhone: "6581236142",
+    googleAppsScriptUrl: "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE" // Paste your Web App URL here
   };
 
-  if (STORE_CONFIG.googleSheetUrl) {
-    fetch(STORE_CONFIG.googleSheetUrl, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(sheetData)
-    }).catch(err => console.error("Sheet error:", err));
-  }
-
-  let text = `*NEW ORDER - ${menu.title.toUpperCase()}*\n\n`;
-  text += `*Fulfilment:* ${schedule.fulfilmentDate}\n`;
-  text += `*Time Slot:* ${timeLabel}\n`;
-  text += `*Method:* ${state.fulfillmentType === "delivery" ? "Delivery" : "Self-Collection"}\n`;
-  text += `*Customer:* ${state.customer.name}\n`;
-  text += `*Phone:* ${state.customer.phone}\n`;
-  text += `*${state.fulfillmentType === "delivery" ? "Delivery Address" : "Collection Point"}:* ${locationLabel}\n`;
-  if (state.customer.notes) text += `*General Remarks:* ${state.customer.notes}\n`;
-
-  text += `\n*--- ORDER ITEMS ---*\n`;
-  state.cart.forEach(line => {
-    text += `• ${line.productName} x${line.quantity} - ${money(line.total)}\n`;
-    if (line.proteins.length) text += `   Protein mix: ${line.proteins.map(x=>x.name).join(" + ")}\n`;
-    if (line.exclusions.length) text += `   Exclusions: ${line.exclusions.join(", ")}\n`;
-    if (line.addOns.length) text += `   Add-ons: ${line.addOns.map(x=>x.name).join(", ")}\n`;
-  });
-
-  text += `\n*Subtotal:* ${money(subtotal)}\n`;
-
-  if (state.fulfillmentType === "delivery") {
-    if (isDeliveryTBA) {
-      text += `*Delivery Fee:* TBA (Advised via reply based on driver quote)\n`;
-      text += `*ESTIMATED TOTAL:* ${money(subtotal)} + delivery fee\n`;
-    } else {
-      text += `*Delivery Fee:* ${money(deliveryFee)} (Flat Rate)\n`;
-      text += `*TOTAL PAYABLE:* ${money(grandTotal)}\n`;
+  // State Management
+  const state = {
+    selectedDate: "Aug 21",
+    deliveryTime: "12pm",
+    fulfillmentType: "delivery",
+    customer: { name: "", phone: "", address: "" },
+    cart: {
+      "Bun Thit Nuong (Pork)": { price: 9.50, qty: 0 },
+      "Bun Thit Nuong (Chicken)": { price: 9.50, qty: 0 },
+      "Com Tam (Pork Rice)": { price: 11.50, qty: 0 },
+      "Cha Gio (Fried Spring Rolls)": { price: 4.50, qty: 0 },
+      "Goi Cuon (Summer Rolls)": { price: 11.00, qty: 0 },
+      "Spicy Chilli Bottle": { price: 8.00, qty: 0 }
     }
-  } else {
-    text += `*Delivery Fee:* $0.00 (Self-Collection)\n`;
-    text += `*TOTAL PAYABLE:* ${money(grandTotal)}\n`;
+  };
+
+  function esc(str) {
+    return (str || "").replace(/"/g, "&quot;");
   }
 
-  text += `\n*Payment via PayNow:* ${STORE_CONFIG.paynowDetails}\n`;
-  text += `\n⚠️ *Please note:* Orders will be confirmed upon receipt of payment.\n`;
- 
-  window.open(`https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(text)}`, "_blank");
-}
+  function render() {
+    const app = document.getElementById('app');
+    
+    let subtotal = 0;
+    Object.values(state.cart).forEach(item => subtotal += (item.price * item.qty));
 
-function bindEvents(menu, isOpen) {
-  document.querySelectorAll("[data-action]").forEach(el => {
-    el.addEventListener("click", () => {
-      const action = el.dataset.action;
+    app.innerHTML = `
+      <div class="card">
+        <h1>🥖 Banh Mi Wow Order Form</h1>
+        <div class="hero-box">
+          <strong>💳 Payment via PayNow</strong><br>
+          Orders are confirmed upon receipt of payment.
+        </div>
+      </div>
 
-      if (action === "simple") {
-        const p = menu.products.find(x=>x.id===el.dataset.id);
-        if (p && isOpen) addSimple(p);
-      }
+      ${customerForm()}
 
-      if (action === "menu-qty") {
-        const productId = el.dataset.id;
-        const delta = Number(el.dataset.delta);
-        if (delta > 0) {
-          const product = menu.products.find(p => p.id === productId);
-          if (product && isOpen) addSimple(product);
-        } else {
-          const line = state.cart.find(l => l.productId === productId && l.proteins.length === 0 && l.addOns.length === 0 && l.exclusions.length === 0) || state.cart.find(l => l.productId === productId);
-          if (line) updateQuantity(line.lineId, -1);
-        }
-      }
+      <div class="card">
+        <h2>Select Items</h2>
+        ${Object.keys(state.cart).map(itemName => {
+          const item = state.cart[itemName];
+          return `
+            <div class="menu-item">
+              <div>
+                <strong>${itemName}</strong><br>
+                <small>$${item.price.toFixed(2)}</small>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <button class="btn-qty" onclick="updateQty('${itemName}', -1)">-</button>
+                <span><strong>${item.qty}</strong></span>
+                <button class="btn-qty" onclick="updateQty('${itemName}', 1)">+</button>
+              </div>
+            </div>
+          `;
+        }).join('')}
+        
+        <div style="margin-top: 20px; font-size: 1.2rem; text-align: right;">
+          <strong>Total Amount: $${subtotal.toFixed(2)}</strong> ${state.fulfillmentType === 'delivery' ? '+ Delivery Fee' : ''}
+        </div>
+      </div>
 
-      if (action === "customize") {
-        const p = menu.products.find(x=>x.id===el.dataset.id);
-        if (p && isOpen) openCustomize(p);
-      }
+      <button class="btn-submit" onclick="submitOrder()">
+        Send Order via WhatsApp 🚀
+      </button>
+    `;
 
-      if (action === "close-modal") {
-        state.customizeProduct = null;
-        render();
-      }
+    bindEvents();
+  }
 
-      if (action === "protein") {
-        const p = [
-          {id:"pork",name:"Grilled Pork",price:0},
-          {id:"chicken",name:"Grilled Chicken",price:0},
-          {id:"meatball",name:"Pork Meatball",price:0},
-          {id:"duck",name:"Smoked Duck",price:0}
-        ].find(x=>x.id===el.dataset.id);
-        if (p) { state.selectedProteins = toggleChoice(state.selectedProteins,p); render(); }
-      }
+  function customerForm() {
+    return `
+      <div class="card">
+        <h2>Order & Fulfilment Details</h2>
+        <div class="field">
+          <label>Full Name *</label>
+          <input id="name" required value="${esc(state.customer.name)}" placeholder="Your Name">
+        </div>
+        
+        <div class="field">
+          <label>Phone Number *</label>
+          <input id="phone" type="tel" required value="${esc(state.customer.phone)}" placeholder="8123 6142">
+        </div>
+        
+        <div class="field">
+          <label>Preferred Date *</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="fulfilmentDate" value="Aug 21" ${state.selectedDate === 'Aug 21' ? 'checked' : ''}>
+              <span>Friday, 21 Aug</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="fulfilmentDate" value="Aug 22" ${state.selectedDate === 'Aug 22' ? 'checked' : ''}>
+              <span>Saturday, 22 Aug</span>
+            </label>
+          </div>
+        </div>
 
-      if (action === "exclusion") {
-        toggleExclusion(el.dataset.val);
-        render();
-      }
+        <div class="field">
+          <label>Preferred Time Slot *</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="deliveryTime" value="12pm" ${state.deliveryTime === '12pm' ? 'checked' : ''}>
+              <span>12:00 PM (Lunch)</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="deliveryTime" value="6pm" ${state.deliveryTime === '6pm' ? 'checked' : ''}>
+              <span>6:00 PM (Dinner)</span>
+            </label>
+          </div>
+        </div>
 
-      if (action === "addon") {
-        const a = menu.addOns.find(x=>x.id===el.dataset.id);
-        if (a) { state.selectedAddOns = toggleChoice(state.selectedAddOns,a); render(); }
-      }
+        <div class="field">
+          <label>Fulfillment Method *</label>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="fulfillment" value="delivery" ${state.fulfillmentType === 'delivery' ? 'checked' : ''}>
+              <span>Delivery</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="fulfillment" value="pickup" ${state.fulfillmentType === 'pickup' ? 'checked' : ''}>
+              <span>Self-Collection</span>
+            </label>
+          </div>
+        </div>
 
-      if (action === "confirm-custom") confirmCustomize();
+        <div class="field">
+          ${state.fulfillmentType === 'delivery' ? `
+            <label>Delivery Address *</label>
+            <textarea id="address" rows="2" placeholder="Block/Street, Unit #, Postal Code">${esc(state.customer.address)}</textarea>
+          ` : `
+            <label>Collection Point</label>
+            <div class="pickup-info">
+              📍 <strong>Self-Collection Location:</strong> ${esc(STORE_CONFIG.pickupLocation)}
+            </div>
+          `}
+        </div>
+      </div>
+    `;
+  }
 
-      if (action === "toggle-cart") {
-        state.cartOpen = !state.cartOpen;
-        render();
-      }
+  function bindEvents() {
+    const nameInput = document.getElementById('name');
+    const phoneInput = document.getElementById('phone');
+    const addressInput = document.getElementById('address');
 
-      if (action === "remove") {
-        state.cart = state.cart.filter(x=>x.lineId!==el.dataset.line);
-        render();
-      }
+    if (nameInput) nameInput.addEventListener('input', e => state.customer.name = e.target.value);
+    if (phoneInput) phoneInput.addEventListener('input', e => state.customer.phone = e.target.value);
+    if (addressInput) addressInput.addEventListener('input', e => state.customer.address = e.target.value);
 
-      if (action === "qty") {
-        updateQuantity(el.dataset.line, Number(el.dataset.delta));
-      }
-
-      if (action === "submit") submitOrder();
+    document.querySelectorAll('input[name="fulfilmentDate"]').forEach(radio => {
+      radio.addEventListener('change', e => { state.selectedDate = e.target.value; render(); });
     });
-  });
 
-  // Handle Radio Input for Fulfillment Type
-  document.querySelectorAll('input[name="fulfillment"]').forEach(radio => {
-    radio.addEventListener('change', (e) => {
-      state.fulfillmentType = e.target.value;
+    document.querySelectorAll('input[name="deliveryTime"]').forEach(radio => {
+      radio.addEventListener('change', e => { state.deliveryTime = e.target.value; render(); });
+    });
+
+    document.querySelectorAll('input[name="fulfillment"]').forEach(radio => {
+      radio.addEventListener('change', e => { state.fulfillmentType = e.target.value; render(); });
+    });
+  }
+
+  function updateQty(itemName, change) {
+    if (state.cart[itemName]) {
+      state.cart[itemName].qty = Math.max(0, state.cart[itemName].qty + change);
       render();
-    });
-  });
-
-  // Handle Radio Input for Time Slot
-  document.querySelectorAll('input[name="deliveryTime"]').forEach(radio => {
-    radio.addEventListener('change', (e) => {
-      state.deliveryTime = e.target.value;
-    });
-  });
-
-  ["name","phone","address","notes"].forEach(id => {
-    const input = document.getElementById(id);
-    if (!input) return;
-    input.addEventListener("input", () => {
-      state.customer[id] = input.value;
-      saveCustomer();
-    });
-  });
-}
-
-window.addEventListener("error", function(e) {
-  const app = document.getElementById("app");
-  if (app && !app.innerHTML.trim()) {
-    app.innerHTML = errorPage("The order page could not load", e.message || "A JavaScript error occurred.");
+    }
   }
-});
 
-render();
+  function submitOrder() {
+    if (!state.customer.name.trim() || !state.customer.phone.trim()) {
+      alert("Please fill in your Name and Phone Number.");
+      return;
+    }
+    if (state.fulfillmentType === 'delivery' && !state.customer.address.trim()) {
+      alert("Please provide a delivery address.");
+      return;
+    }
 
-setInterval(() => {
-  const activeEl = document.activeElement;
-  const isTyping = activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA");
-  if (!isTyping && !state.customizeProduct) {
-    render();
+    let itemsSummary = [];
+    let totalAmount = 0;
+
+    Object.keys(state.cart).forEach(name => {
+      const item = state.cart[name];
+      if (item.qty > 0) {
+        const lineCost = item.qty * item.price;
+        totalAmount += lineCost;
+        itemsSummary.push(`${name} x${item.qty} ($${lineCost.toFixed(2)})`);
+      }
+    });
+
+    if (itemsSummary.length === 0) {
+      alert("Please select at least one item.");
+      return;
+    }
+
+    const dateLabel = state.selectedDate === "Aug 21" ? "Friday, 21 Aug" : "Saturday, 22 Aug";
+    const timeLabel = `${dateLabel} @ ${state.deliveryTime === "12pm" ? "12:00 PM (Lunch)" : "6:00 PM (Dinner)"}`;
+    const totalText = `$${totalAmount.toFixed(2)}${state.fulfillmentType === 'delivery' ? ' + Delivery' : ''}`;
+
+    // 1. Send Data to Google Sheets via Apps Script Web App
+    if (STORE_CONFIG.googleAppsScriptUrl && STORE_CONFIG.googleAppsScriptUrl !== "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE") {
+      fetch(STORE_CONFIG.googleAppsScriptUrl, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          menuTitle: "Bowls & Sides",
+          deliveryTime: timeLabel,
+          customerName: state.customer.name,
+          customerPhone: state.customer.phone,
+          customerAddress: state.fulfillmentType === 'delivery' ? state.customer.address : `Self-Collection (${STORE_CONFIG.pickupLocation})`,
+          orderDetails: itemsSummary.join("\n"),
+          totalAmount: totalText,
+          customerNotes: ""
+        })
+      }).catch(err => console.error("Sheet sync error:", err));
+    }
+
+    // 2. Format WhatsApp Message
+    let msg = `*NEW ORDER - BANH MI WOW*\n\n`;
+    msg += `*Name:* ${state.customer.name}\n`;
+    msg += `*Phone:* ${state.customer.phone}\n`;
+    msg += `*Fulfilment:* ${state.fulfillmentType.toUpperCase()}\n`;
+    msg += `*Date & Time:* ${timeLabel}\n`;
+    if (state.fulfillmentType === 'delivery') {
+      msg += `*Address:* ${state.customer.address}\n`;
+    } else {
+      msg += `*Collection Point:* ${STORE_CONFIG.pickupLocation}\n`;
+    }
+    
+    msg += `\n*Order Summary:*\n` + itemsSummary.map(i => `• ${i}`).join('\n') + `\n\n`;
+    msg += `*Total Amount:* ${totalText}\n\n`;
+    msg += `*Payment via PayNow:* ${STORE_CONFIG.paynowDetails}\n`;
+    msg += `⚠️ *Please note:* Orders will be confirmed upon receipt of payment.`;
+
+    // 3. Redirect to WhatsApp
+    const waUrl = `https://wa.me/${STORE_CONFIG.whatsappPhone}?text=${encodeURIComponent(msg)}`;
+    window.open(waUrl, '_blank');
   }
-}, 30000);
+
+  // Initial Render
+  render();
 </script>
+
 </body>
 </html>
