@@ -117,7 +117,8 @@ const MENU_SCHEDULE = [
     menuId: "bowls",
     orderOpens: "2026-08-12T00:00:00+08:00",
     orderCloses: "2026-08-17T15:00:00+08:00",
-    fulfilmentDates: ["2026-08-21", "2026-08-22"]
+    fulfilmentDates: ["2026-08-21", "2026-08-22"],
+    fulfilmentTimes: ["12:00", "18:00"]
   }
 ];
 
@@ -205,7 +206,8 @@ let state = {
   selectedProteins: [],
   selectedAddOns: [],
   selectedExclusions: [],
-  selectedFulfilmentDate: null
+  selectedFulfilmentDate: null,
+  selectedFulfilmentTime: null
 };
 
 try {
@@ -238,16 +240,36 @@ function getSelectedFulfilmentDate(schedule) {
   return state.selectedFulfilmentDate;
 }
 
+function getSelectedFulfilmentTime(schedule) {
+  const times = schedule.fulfilmentTimes || [];
+  if (!times.length) return "";
+  if (!state.selectedFulfilmentTime || !times.includes(state.selectedFulfilmentTime)) {
+    state.selectedFulfilmentTime = times[0];
+  }
+  return state.selectedFulfilmentTime;
+}
+
+function formatMealTime(time) {
+  if (!time) return "";
+  const [h, m] = time.split(":").map(Number);
+  const suffix = h >= 12 ? "PM" : "AM";
+  const hour = h % 12 || 12;
+  return `${hour}:${String(m).padStart(2, "0")} ${suffix}`;
+}
+
 function fulfilmentDateSelector(schedule, isOpen) {
   const dates = schedule.fulfilmentDates || (schedule.fulfilmentDate ? [schedule.fulfilmentDate] : []);
-  if (dates.length <= 1) return "";
+  const times = schedule.fulfilmentTimes || [];
 
   return `
     <div class="card" style="background:#ecfdf5;border-color:#a7f3d0">
       <label style="color:#065f46;font-size:15px">📅 Choose your fulfilment date *</label>
-      <div class="small" style="margin:5px 0 10px">Orders are open for both dates. Please select which date you want to collect/receive your order.</div>
+      <div class="small" style="margin:5px 0 10px">
+        Please select your preferred day and meal time.
+      </div>
+
       <div class="radio-group" style="flex-wrap:wrap">
-        ${dates.map((date, i) => `
+        ${dates.map(date => `
           <label class="radio-option" style="border:1px solid #d1d5db;border-radius:7px;padding:10px 12px;background:white">
             <input type="radio" name="fulfilmentDate" value="${esc(date)}"
               ${getSelectedFulfilmentDate(schedule) === date ? "checked" : ""} ${!isOpen ? "disabled" : ""}>
@@ -255,6 +277,19 @@ function fulfilmentDateSelector(schedule, isOpen) {
           </label>
         `).join("")}
       </div>
+
+      ${times.length ? `
+        <label style="color:#065f46;font-size:15px;margin-top:15px">🍽️ Meal time *</label>
+        <div class="radio-group" style="flex-wrap:wrap">
+          ${times.map(time => `
+            <label class="radio-option" style="border:1px solid #d1d5db;border-radius:7px;padding:10px 12px;background:white">
+              <input type="radio" name="fulfilmentTime" value="${esc(time)}"
+                ${getSelectedFulfilmentTime(schedule) === time ? "checked" : ""} ${!isOpen ? "disabled" : ""}>
+              <span>${time === "12:00" ? "Lunch — 12:00 PM" : time === "18:00" ? "Dinner — 6:00 PM" : esc(formatMealTime(time))}</span>
+            </label>
+          `).join("")}
+        </div>
+      ` : ""}
     </div>
   `;
 }
@@ -267,6 +302,12 @@ function formatDateTime(value) {
   return new Intl.DateTimeFormat("en-SG", {
     dateStyle:"medium", timeStyle:"short", timeZone:"Asia/Singapore"
   }).format(new Date(value));
+}
+
+function formatDate(value) {
+  return new Intl.DateTimeFormat("en-SG", {
+    dateStyle:"full", timeZone:"Asia/Singapore"
+  }).format(new Date(value + "T12:00:00+08:00"));
 }
 
 function saveCustomer() {
@@ -313,7 +354,10 @@ function calculateTotals() {
 
 function render() {
   state.scheduleInfo = getScheduleInfo();
-  if (state.scheduleInfo.schedule) getSelectedFulfilmentDate(state.scheduleInfo.schedule);
+  if (state.scheduleInfo.schedule) {
+    getSelectedFulfilmentDate(state.scheduleInfo.schedule);
+    getSelectedFulfilmentTime(state.scheduleInfo.schedule);
+  }
   const root = document.getElementById("app");
 
   if (!state.scheduleInfo.schedule) {
@@ -802,7 +846,9 @@ function submitOrder() {
 
   const schedule = info.schedule;
   const selectedFulfilmentDate = getSelectedFulfilmentDate(schedule);
+  const selectedFulfilmentTime = getSelectedFulfilmentTime(schedule);
   if (!selectedFulfilmentDate) { alert("Please select a fulfilment date."); return; }
+  if (schedule.fulfilmentTimes?.length && !selectedFulfilmentTime) { alert("Please select a meal time."); return; }
   const menu = MENUS[schedule.menuId];
   const { subtotal, deliveryFee, isDeliveryTBA, grandTotal } = calculateTotals();
 
@@ -820,6 +866,7 @@ function submitOrder() {
   const sheetData = {
     menuTitle: menu.title,
     fulfilmentDate: selectedFulfilmentDate,
+    fulfilmentTime: selectedFulfilmentTime,
     customerName: state.customer.name,
     customerPhone: state.customer.phone,
     deliveryTime: timeLabel,
@@ -842,7 +889,7 @@ function submitOrder() {
   }
 
   let text = `*NEW ORDER - ${menu.title.toUpperCase()}*\n\n`;
-  text += `*Fulfilment:* ${formatDate(selectedFulfilmentDate)}\n`;
+  text += `*Fulfilment:* ${formatDate(selectedFulfilmentDate)} — ${selectedFulfilmentTime === "12:00" ? "Lunch (12:00 PM)" : selectedFulfilmentTime === "18:00" ? "Dinner (6:00 PM)" : formatMealTime(selectedFulfilmentTime)}\n`;
   text += `*Time Slot:* ${timeLabel}\n`;
   text += `*Method:* ${state.fulfillmentType === "delivery" ? "Delivery" : "Self-Collection"}\n`;
   text += `*Customer:* ${state.customer.name}\n`;
@@ -957,6 +1004,13 @@ function bindEvents(menu, isOpen) {
     });
   });
 
+  // Handle Radio Input for Meal Time
+  document.querySelectorAll('input[name="fulfilmentTime"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      state.selectedFulfilmentTime = e.target.value;
+    });
+  });
+
   // Handle Radio Input for Fulfillment Type
   document.querySelectorAll('input[name="fulfillment"]').forEach(radio => {
     radio.addEventListener('change', (e) => {
@@ -984,7 +1038,7 @@ function bindEvents(menu, isOpen) {
 
 window.addEventListener("error", function(e) {
   const app = document.getElementById("app");
-  if (app && !app.innerHTML.trim()) {
+  if (app && (!app.innerHTML.trim() || app.innerHTML.includes("The order page could not load"))) {
     app.innerHTML = errorPage("The order page could not load", e.message || "A JavaScript error occurred.");
   }
 });
