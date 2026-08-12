@@ -52,6 +52,7 @@
   .cart-line { background:white; border:1px solid #e5e7eb; border-radius:8px; padding:12px; margin-bottom:9px; }
   .cart-line-top { display:flex; justify-content:space-between; gap:12px; }
   .cart-detail { font-size:12px; color:#6b7280; margin-top:4px; }
+  .cart-detail-excl { font-size:12px; color:#b91c1c; margin-top:2px; font-weight:600; }
   .qty { display:flex; align-items:center; gap:8px; margin-top:9px; }
   .qty button { width:30px; height:30px; border:0; border-radius:50%; background:#e5e7eb; font-weight:800; }
   .qty button.plus { background:#059669; color:white; }
@@ -190,7 +191,8 @@ let state = {
   cartOpen: false,
   customizeProduct: null,
   selectedProteins: [],
-  selectedAddOns: []
+  selectedAddOns: [],
+  selectedExclusions: []
 };
 
 try {
@@ -292,7 +294,7 @@ function render() {
 
       <div class="card">
         <label>General Remarks / Special Requests</label>
-        <input id="notes" value="${esc(state.customer.notes)}" placeholder="Less spicy, no peanuts, separate sauce, etc.">
+        <input id="notes" value="${esc(state.customer.notes)}" placeholder="Less spicy, separate sauce, etc.">
       </div>
     </div>
 
@@ -343,7 +345,7 @@ function productCard(product, isOpen, isBanhMi) {
     .filter(l => l.productId === product.id)
     .reduce((sum, l) => sum + l.quantity, 0);
 
-  const isCustomizable = !product.standalone && (isBanhMi || product.id.startsWith("bun-") || product.id.startsWith("com-tam-"));
+  const isCustomizable = !product.standalone && (isBanhMi || product.id.startsWith("bun-") || product.id.startsWith("com-tam-") || product.id.startsWith("spring-"));
 
   return `
     <div class="product">
@@ -398,6 +400,7 @@ function cartBar(isOpen) {
                     <strong>${esc(line.productName)}</strong>
                     ${line.proteins.length ? `<div class="cart-detail">Protein: ${esc(line.proteins.map(x=>x.name).join(" + "))}</div>` : ""}
                     ${line.addOns.length ? `<div class="cart-detail">Add-ons: ${esc(line.addOns.map(x=>x.name).join(", "))}</div>` : ""}
+                    ${line.exclusions.length ? `<div class="cart-detail-excl">🚫 ${esc(line.exclusions.join(", "))}</div>` : ""}
                     <div class="cart-detail">${money(line.unitPrice)} each</div>
                   </div>
                   <button class="btn btn-red" data-action="remove" data-line="${esc(line.lineId)}">Remove</button>
@@ -438,6 +441,10 @@ function customizeModal(menu) {
     {id:"duck",name:"Smoked Duck",price:0}
   ];
 
+  const availableExclusions = [];
+  if (product.note && product.note.includes("peanuts")) availableExclusions.push("No Peanuts");
+  if (product.note && product.note.includes("basil")) availableExclusions.push("No Basil");
+
   const extras = state.selectedAddOns.reduce((s,x)=>s+x.price,0);
   const proteinTotal = state.selectedProteins.reduce((s,x)=>s+x.price,0);
   const final = product.price + extras + proteinTotal;
@@ -461,8 +468,20 @@ function customizeModal(menu) {
             }).join("")}
           ` : ""}
 
+          ${availableExclusions.length ? `
+            <div style="margin-top:${isBanhMi ? "18px" : "0"}"><strong>Dietary Preference / Exclusions</strong></div>
+            <div style="margin-top:8px">
+              ${availableExclusions.map(ex => {
+                const selected = state.selectedExclusions.includes(ex);
+                return `<button class="option ${selected ? "selected":""}" data-action="exclusion" data-val="${esc(ex)}">
+                  ${selected ? "✓ " : ""}${esc(ex)}
+                </button>`;
+              }).join("")}
+            </div>
+          ` : ""}
+
           ${menu.addOns && menu.addOns.filter(a => !a.standalone).length ? `
-            <div style="margin-top:${isBanhMi ? "18px" : "0"}"><strong>Add-ons</strong></div>
+            <div style="margin-top:18px"><strong>Add-ons</strong></div>
             <div style="margin-top:8px">
               ${menu.addOns.filter(a => !a.standalone).map(a => {
                 const selected = state.selectedAddOns.some(x=>x.id===a.id);
@@ -476,6 +495,7 @@ function customizeModal(menu) {
           <div class="summary">
             <div>${esc(product.name)} — ${money(product.price)}</div>
             ${state.selectedProteins.length ? `<div class="small">Protein mix: ${esc(state.selectedProteins.map(x=>x.name).join(" + "))}</div>` : ""}
+            ${state.selectedExclusions.length ? `<div class="small" style="color:#b91c1c;font-weight:600">Exclusions: ${esc(state.selectedExclusions.join(", "))}</div>` : ""}
             ${state.selectedAddOns.length ? `<div class="small">Add-ons: ${esc(state.selectedAddOns.map(x=>x.name).join(", "))}</div>` : ""}
             <div style="border-top:1px solid #e5e7eb;margin-top:10px;padding-top:10px;display:flex;justify-content:space-between;font-weight:800">
               <span>Total</span><span style="color:#047857">${money(final)}</span>
@@ -523,8 +543,8 @@ function addSimple(product) {
     }
   }
 
-  // Find standard line without customizations
-  const existingLine = state.cart.find(l => l.productId === product.id && l.proteins.length === 0 && l.addOns.length === 0);
+  // Find standard line without customizations or exclusions
+  const existingLine = state.cart.find(l => l.productId === product.id && l.proteins.length === 0 && l.addOns.length === 0 && l.exclusions.length === 0);
 
   if (existingLine) {
     updateQuantity(existingLine.lineId, 1);
@@ -536,6 +556,7 @@ function addSimple(product) {
       basePrice: product.price,
       proteins: [],
       addOns: [],
+      exclusions: [],
       quantity: 1,
       unitPrice: product.price,
       total: product.price
@@ -548,6 +569,7 @@ function openCustomize(product) {
   state.customizeProduct = product;
   state.selectedProteins = [];
   state.selectedAddOns = [];
+  state.selectedExclusions = [];
   render();
 }
 
@@ -564,6 +586,7 @@ function confirmCustomize() {
     basePrice: product.price,
     proteins: [...state.selectedProteins],
     addOns: [...state.selectedAddOns],
+    exclusions: [...state.selectedExclusions],
     quantity: 1,
     unitPrice: unit,
     total: unit
@@ -572,6 +595,7 @@ function confirmCustomize() {
   state.customizeProduct = null;
   state.selectedProteins = [];
   state.selectedAddOns = [];
+  state.selectedExclusions = [];
   state.cartOpen = true;
   render();
 }
@@ -579,6 +603,14 @@ function confirmCustomize() {
 function toggleChoice(collection, item) {
   const exists = collection.some(x=>x.id===item.id);
   return exists ? collection.filter(x=>x.id!==item.id) : [...collection,item];
+}
+
+function toggleExclusion(val) {
+  if (state.selectedExclusions.includes(val)) {
+    state.selectedExclusions = state.selectedExclusions.filter(x => x !== val);
+  } else {
+    state.selectedExclusions.push(val);
+  }
 }
 
 function updateQuantity(lineId, delta) {
@@ -619,6 +651,7 @@ function submitOrder() {
   const itemsText = state.cart.map(line => {
     let itemStr = `${line.productName} x${line.quantity} (${money(line.total)})`;
     if (line.proteins.length) itemStr += ` [Protein: ${line.proteins.map(x=>x.name).join(" + ")}]`;
+    if (line.exclusions.length) itemStr += ` [Exclusions: ${line.exclusions.join(", ")}]`;
     if (line.addOns.length) itemStr += ` [Add-ons: ${line.addOns.map(x=>x.name).join(", ")}]`;
     return itemStr;
   }).join("\n");
@@ -653,6 +686,7 @@ function submitOrder() {
   state.cart.forEach(line => {
     text += `• ${line.productName} x${line.quantity} - ${money(line.total)}\n`;
     if (line.proteins.length) text += `   Protein mix: ${line.proteins.map(x=>x.name).join(" + ")}\n`;
+    if (line.exclusions.length) text += `   Exclusions: ${line.exclusions.join(", ")}\n`;
     if (line.addOns.length) text += `   Add-ons: ${line.addOns.map(x=>x.name).join(", ")}\n`;
   });
 
@@ -679,7 +713,7 @@ function bindEvents(menu, isOpen) {
           const product = menu.products.find(p => p.id === productId);
           if (product && isOpen) addSimple(product);
         } else {
-          const line = state.cart.find(l => l.productId === productId && l.proteins.length === 0 && l.addOns.length === 0) || state.cart.find(l => l.productId === productId);
+          const line = state.cart.find(l => l.productId === productId && l.proteins.length === 0 && l.addOns.length === 0 && l.exclusions.length === 0) || state.cart.find(l => l.productId === productId);
           if (line) updateQuantity(line.lineId, -1);
         }
       }
@@ -702,6 +736,11 @@ function bindEvents(menu, isOpen) {
           {id:"duck",name:"Smoked Duck",price:0}
         ].find(x=>x.id===el.dataset.id);
         if (p) { state.selectedProteins = toggleChoice(state.selectedProteins,p); render(); }
+      }
+
+      if (action === "exclusion") {
+        toggleExclusion(el.dataset.val);
+        render();
       }
 
       if (action === "addon") {
