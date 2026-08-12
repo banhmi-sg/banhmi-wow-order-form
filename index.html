@@ -131,10 +131,10 @@ const MENUS = {
     ]
   },
 
-  "bowls": {
+ "bowls": {
     title: "Bowls & Sides",
     emoji: "🍜",
-    description: "Authentic Southern Vietnamese rice noodle bowls, Grilled meat rice plates, and golden fried or fresh summer rolls sides.",
+    description: "Authentic Southern Vietnamese noodle bowls, broken rice plates, and golden fried or fresh hand-rolled sides.",
     products: [
       { 
         id:"bun-pork", 
@@ -172,13 +172,12 @@ const MENUS = {
         price:11, 
         note:"Served fresh, not fried! Plump prawns, tender pork, aromatic herbs, and soft bún rice noodles hand-rolled in translucent bánh tráng rice paper. ⚠️ Contains basil" 
       },
-      { id:"bowls-addon-meat", name:"Extra Meat", price:2 },
-      { id:"bowls-addon-egg", name:"Extra Egg", price:1 },
-      { id:"bowls-addon-chilli", name:"Our Spicy Chilli Bottle", price:8, standalone:true }
+      { id:"bowls-addon-chilli", name:"Our Spicy Chilli Bottle (~250g)", price:8, standalone:true }
     ],
-    addOns: []
+    addOns: [
+      { id:"bowls-addon-meat", name:"Extra Meat (50g)", price:2 }
+    ]
   }
-};
 
 /* ============================================================
    APPLICATION ENGINE
