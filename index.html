@@ -31,10 +31,12 @@
   .product-name { font-weight:600; }
   .note { color:#b45309; font-size:12px; margin-top:5px; line-height:1.4; }
   .price { color:#047857; font-weight:700; margin-top:6px; }
-  .actions { margin-top:9px; }
+  .actions { margin-top:9px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
   .btn { border:0; border-radius:7px; padding:9px 13px; font-weight:700; }
   .btn-green { background:#059669; color:white; }
   .btn-green:hover { background:#047857; }
+  .btn-outline { background:transparent; color:#059669; border:1px solid #059669; }
+  .btn-outline:hover { background:#ecfdf5; }
   .btn-gray { background:#e5e7eb; color:#374151; }
   .btn-red { background:#fee2e2; color:#b91c1c; }
   .closed { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
@@ -354,23 +356,23 @@ function productCard(product, isOpen, isBanhMi) {
           
           ${isOpen ? `
             <div class="actions">
-              ${isCustomizable ? `
-                <button class="btn btn-green" data-action="customize" data-id="${esc(product.id)}">
-                  Customise & Add ${currentQty > 0 ? `(${currentQty} in cart)` : ""}
-                </button>
+              ${currentQty > 0 ? `
+                <div class="qty" style="margin-top:0">
+                  <button data-action="menu-qty" data-id="${esc(product.id)}" data-delta="-1">−</button>
+                  <strong style="padding: 0 6px;">${currentQty}</strong>
+                  <button class="plus" data-action="menu-qty" data-id="${esc(product.id)}" data-delta="1">+</button>
+                </div>
               ` : `
-                ${currentQty > 0 ? `
-                  <div class="qty" style="margin-top:0">
-                    <button data-action="menu-qty" data-id="${esc(product.id)}" data-delta="-1">−</button>
-                    <strong style="padding: 0 6px;">${currentQty}</strong>
-                    <button class="plus" data-action="menu-qty" data-id="${esc(product.id)}" data-delta="1">+</button>
-                  </div>
-                ` : `
-                  <button class="btn btn-green" data-action="simple" data-id="${esc(product.id)}">
-                    + Add
-                  </button>
-                `}
+                <button class="btn btn-green" data-action="simple" data-id="${esc(product.id)}">
+                  + Add
+                </button>
               `}
+
+              ${isCustomizable ? `
+                <button class="btn btn-outline" data-action="customize" data-id="${esc(product.id)}">
+                  Customise
+                </button>
+              ` : ""}
             </div>
           ` : ""}
         </div>
@@ -521,7 +523,8 @@ function addSimple(product) {
     }
   }
 
-  const existingLine = state.cart.find(l => l.productId === product.id);
+  // Find standard line without customizations
+  const existingLine = state.cart.find(l => l.productId === product.id && l.proteins.length === 0 && l.addOns.length === 0);
 
   if (existingLine) {
     updateQuantity(existingLine.lineId, 1);
@@ -676,7 +679,7 @@ function bindEvents(menu, isOpen) {
           const product = menu.products.find(p => p.id === productId);
           if (product && isOpen) addSimple(product);
         } else {
-          const line = state.cart.find(l => l.productId === productId);
+          const line = state.cart.find(l => l.productId === productId && l.proteins.length === 0 && l.addOns.length === 0) || state.cart.find(l => l.productId === productId);
           if (line) updateQuantity(line.lineId, -1);
         }
       }
