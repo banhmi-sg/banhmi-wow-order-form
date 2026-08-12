@@ -75,7 +75,7 @@
 
 <script>
 /* ============================================================
-   VIETNAMESE DELIGHTS - CONFIGURATION
+   CONFIGURATIONS & CONSTANTS
    ============================================================ */
 
 const STORE_CONFIG = {
@@ -85,6 +85,20 @@ const STORE_CONFIG = {
   paynowDetails: "PayNow UEN / Phone: +65 8123 6142 (Banh Mi Wow)",
   currency: "$"
 };
+
+// Fallback image if a product image fails to load
+const DEFAULT_PLACEHOLDER = "default-food.jpg";
+
+// Emojis to display for add-ons instead of missing image files
+const PRODUCT_ICONS = {
+  "bowls-addon-meat": "🥩",
+  "addon-meat": "🥩",
+  "bowls-addon-egg": "🍳",
+  "addon-egg": "🍳"
+};
+
+// Maximum total chilli bottles allowed per order
+const CHILLI_ORDER_LIMIT = 2;
 
 const MENU_SCHEDULE = [
   {
@@ -192,6 +206,16 @@ function esc(value) {
   }[c]));
 }
 
+function isChilliProduct(id) {
+  return id === "bowls-addon-chilli" || id === "addon-chilli";
+}
+
+function getTotalChilliInCart() {
+  return state.cart.reduce((sum, line) => {
+    return isChilliProduct(line.productId) ? sum + line.quantity : sum;
+  }, 0);
+}
+
 function render() {
   state.scheduleInfo = getScheduleInfo();
   const root = document.getElementById("app");
@@ -270,13 +294,19 @@ function menuSection(menu, isOpen, isBanhMi) {
 }
 
 function productCard(product, isOpen, isBanhMi) {
-  const photoPath = product.image ? product.image : `${product.id}.jpg`;
-  const photo = `<img src="${esc(photoPath)}" alt="${esc(product.name)}" onerror="this.onerror=null; this.parentElement.innerHTML='📷<br>No Photo';">`;
+  let photoContent = "";
+
+  if (PRODUCT_ICONS[product.id]) {
+    photoContent = `<div style="font-size:36px; text-align:center;">${PRODUCT_ICONS[product.id]}</div>`;
+  } else {
+    const photoPath = product.image ? product.image : `${product.id}.jpg`;
+    photoContent = `<img src="${esc(photoPath)}" alt="${esc(product.name)}" onerror="this.onerror=null; this.src='${DEFAULT_PLACEHOLDER}';">`;
+  }
 
   return `
     <div class="product">
       <div class="product-inner">
-        <div class="photo">${photo}</div>
+        <div class="photo">${photoContent}</div>
         <div class="product-info">
           <div class="product-name">${esc(product.name)}</div>
           ${product.note ? `<div class="note">${esc(product.note)}</div>` : ""}
@@ -420,17 +450,33 @@ function errorPage(title, message) {
 }
 
 function addSimple(product) {
-  state.cart.push({
-    lineId: Date.now()+"-"+Math.random(),
-    productName: product.name,
-    basePrice: product.price,
-    proteins: [],
-    addOns: [],
-    quantity: 1,
-    unitPrice: product.price,
-    total: product.price
-  });
-  render();
+  // Check order-wide chilli limit
+  if (isChilliProduct(product.id)) {
+    const currentChilliCount = getTotalChilliInCart();
+    if (currentChilliCount >= CHILLI_ORDER_LIMIT) {
+      alert(`Sorry, you can only order a maximum of ${CHILLI_ORDER_LIMIT} chilli bottle(s) per order.`);
+      return;
+    }
+  }
+
+  const existingLine = state.cart.find(l => l.productId === product.id);
+
+  if (existingLine) {
+    updateQuantity(existingLine.lineId, 1);
+  } else {
+    state.cart.push({
+      lineId: Date.now() + "-" + Math.random(),
+      productId: product.id,
+      productName: product.name,
+      basePrice: product.price,
+      proteins: [],
+      addOns: [],
+      quantity: 1,
+      unitPrice: product.price,
+      total: product.price
+    });
+    render();
+  }
 }
 
 function openCustomize(product) {
@@ -447,7 +493,8 @@ function confirmCustomize() {
     + state.selectedAddOns.reduce((s,x)=>s+x.price,0);
 
   state.cart.push({
-    lineId: Date.now()+"-"+Math.random(),
+    lineId: Date.now() + "-" + Math.random(),
+    productId: product.id,
     productName: product.name,
     basePrice: product.price,
     proteins: [...state.selectedProteins],
@@ -472,9 +519,20 @@ function toggleChoice(collection, item) {
 function updateQuantity(lineId, delta) {
   state.cart = state.cart.map(line => {
     if (line.lineId !== lineId) return line;
+
+    // Prevent going over chilli order limit when clicking '+' button
+    if (delta > 0 && isChilliProduct(line.productId)) {
+      const currentChilliCount = getTotalChilliInCart();
+      if (currentChilliCount >= CHILLI_ORDER_LIMIT) {
+        alert(`Sorry, you can only order a maximum of ${CHILLI_ORDER_LIMIT} chilli bottle(s) per order.`);
+        return line;
+      }
+    }
+
     const quantity = Math.max(0, line.quantity + delta);
-    return {...line, quantity, total:quantity*line.unitPrice};
-  }).filter(line=>line.quantity>0);
+    return { ...line, quantity, total: quantity * line.unitPrice };
+  }).filter(line => line.quantity > 0);
+
   render();
 }
 
@@ -588,7 +646,7 @@ window.addEventListener("error", function(e) {
 
 render();
 
-// Interval update without disturbing input focus or open modals
+// Refresh timer that respects input fields and modals
 setInterval(() => {
   const activeEl = document.activeElement;
   const isTyping = activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA");
