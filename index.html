@@ -29,7 +29,7 @@
   .photo img { width:100%; height:100%; object-fit:cover; }
   .product-info { flex:1; min-width:0; }
   .product-name { font-weight:600; }
-  .note { color:#b45309; font-size:12px; margin-top:5px; }
+  .note { color:#b45309; font-size:12px; margin-top:5px; line-height:1.4; }
   .price { color:#047857; font-weight:700; margin-top:6px; }
   .actions { margin-top:9px; }
   .btn { border:0; border-radius:7px; padding:9px 13px; font-weight:700; }
@@ -87,10 +87,8 @@ const STORE_CONFIG = {
   googleSheetUrl: "https://script.google.com/macros/s/AKfycbzE8ND6xYYZiHLppJOZoYUgsedewpZopmuX1qqOtYN8CwBeEFrDpqwYLjlM1nYQfrsX/exec"
 };
 
-// Fallback image if a product image fails to load
 const DEFAULT_PLACEHOLDER = "default-food.jpg";
 
-// Emojis to display for add-ons instead of missing image files
 const PRODUCT_ICONS = {
   "bowls-addon-meat": "🥩",
   "addon-meat": "🥩",
@@ -98,16 +96,15 @@ const PRODUCT_ICONS = {
   "addon-egg": "🍳"
 };
 
-// Maximum total chilli bottles allowed per order
 const CHILLI_ORDER_LIMIT = 2;
 
 const MENU_SCHEDULE = [
   {
     id: "bowls-aug-21-22",
     menuId: "bowls",
-    orderOpens: "2026-08-12T00:00:00+08:00",    // SET TO TODAY FOR TESTING
-    orderCloses: "2026-08-17T15:00:00+08:00",   // Next Mon 3:00 PM
-    fulfilmentDate: "2026-08-21 & 22"           // Next Fri/Sat 21st & 22nd Aug
+    orderOpens: "2026-08-12T00:00:00+08:00",
+    orderCloses: "2026-08-17T15:00:00+08:00",
+    fulfilmentDate: "2026-08-21 & 22"
   }
 ];
 
@@ -127,11 +124,11 @@ const MENUS = {
     addOns: [
       { id:"addon-meat", name:"Extra Meat", price:2 },
       { id:"addon-egg", name:"Egg", price:1 },
-      { id:"addon-chilli", name:"Our Spicy Chilli Bottle", price:8, standalone:true }
+      { id:"addon-chilli", name:"Our Spicy Chilli Bottle (~250g)", price:8, standalone:true }
     ]
   },
 
- "bowls": {
+  "bowls": {
     title: "Bowls & Sides",
     emoji: "🍜",
     description: "Authentic Southern Vietnamese noodle bowls, broken rice plates, and golden fried or fresh hand-rolled sides.",
@@ -177,7 +174,8 @@ const MENUS = {
     addOns: [
       { id:"bowls-addon-meat", name:"Extra Meat (50g)", price:2 }
     ]
-  },
+  }
+};
 
 /* ============================================================
    APPLICATION ENGINE
@@ -317,7 +315,7 @@ function customerForm() {
 function menuSection(menu, isOpen, isBanhMi) {
   return `
     <div class="card">
-      <h2>${esc(menu.title)} ${isBanhMi ? '<span style="font-size:12px;color:#047857;font-weight:normal">Customise each Banh Mi</span>' : ""}</h2>
+      <h2>${esc(menu.title)}</h2>
       ${menu.products.map(p => productCard(p, isOpen, isBanhMi)).join("")}
     </div>
   `;
@@ -333,10 +331,11 @@ function productCard(product, isOpen, isBanhMi) {
     photoContent = `<img src="${esc(photoPath)}" alt="${esc(product.name)}" onerror="this.onerror=null; this.src='${DEFAULT_PLACEHOLDER}';">`;
   }
 
-  // Calculate total quantity of this specific item currently in cart
   const currentQty = state.cart
     .filter(l => l.productId === product.id)
     .reduce((sum, l) => sum + l.quantity, 0);
+
+  const isCustomizable = !product.standalone && (isBanhMi || product.id.startsWith("bun-") || product.id.startsWith("com-tam-"));
 
   return `
     <div class="product">
@@ -349,7 +348,7 @@ function productCard(product, isOpen, isBanhMi) {
           
           ${isOpen ? `
             <div class="actions">
-              ${(isBanhMi && !product.standalone) ? `
+              ${isCustomizable ? `
                 <button class="btn btn-green" data-action="customize" data-id="${esc(product.id)}">
                   Customise & Add ${currentQty > 0 ? `(${currentQty} in cart)` : ""}
                 </button>
@@ -422,6 +421,8 @@ function cartBar(isOpen) {
 
 function customizeModal(menu) {
   const product = state.customizeProduct;
+  const isBanhMi = menu.title === "Banh Mi";
+
   const proteins = [
     {id:"pork",name:"Grilled Pork",price:0},
     {id:"chicken",name:"Grilled Chicken",price:0},
@@ -437,28 +438,32 @@ function customizeModal(menu) {
     <div class="modal-backdrop">
       <div class="modal">
         <div class="modal-head">
-          <div><h2 style="margin:0">Customise Banh Mi</h2><div class="small">${esc(product.name)}</div></div>
+          <div><h2 style="margin:0">Customise Item</h2><div class="small">${esc(product.name)}</div></div>
           <button class="btn btn-gray" data-action="close-modal">×</button>
         </div>
         <div class="modal-body">
-          <strong>Protein mix</strong>
-          <div class="small" style="margin:5px 0 10px">Select another protein for a mix, e.g. Chicken + Pork.</div>
-          ${proteins.map(p => {
-            const selected = state.selectedProteins.some(x=>x.id===p.id);
-            return `<button class="option ${selected ? "selected":""}" data-action="protein" data-id="${p.id}">
-              ${selected ? "✓ " : ""}${esc(p.name)} <span class="small">— no extra charge</span>
-            </button>`;
-          }).join("")}
-
-          <div style="margin-top:18px"><strong>Add-ons</strong></div>
-          <div style="margin-top:8px">
-            ${menu.addOns.filter(a => !a.standalone).map(a => {
-              const selected = state.selectedAddOns.some(x=>x.id===a.id);
-              return `<button class="option ${selected ? "selected":""}" data-action="addon" data-id="${a.id}">
-                ${selected ? "✓ " : ""}${esc(a.name)} <span style="float:right">+${money(a.price)}</span>
+          ${isBanhMi ? `
+            <strong>Protein mix</strong>
+            <div class="small" style="margin:5px 0 10px">Select another protein for a mix, e.g. Chicken + Pork.</div>
+            ${proteins.map(p => {
+              const selected = state.selectedProteins.some(x=>x.id===p.id);
+              return `<button class="option ${selected ? "selected":""}" data-action="protein" data-id="${p.id}">
+                ${selected ? "✓ " : ""}${esc(p.name)} <span class="small">— no extra charge</span>
               </button>`;
             }).join("")}
-          </div>
+          ` : ""}
+
+          ${menu.addOns && menu.addOns.filter(a => !a.standalone).length ? `
+            <div style="margin-top:${isBanhMi ? "18px" : "0"}"><strong>Add-ons</strong></div>
+            <div style="margin-top:8px">
+              ${menu.addOns.filter(a => !a.standalone).map(a => {
+                const selected = state.selectedAddOns.some(x=>x.id===a.id);
+                return `<button class="option ${selected ? "selected":""}" data-action="addon" data-id="${a.id}">
+                  ${selected ? "✓ " : ""}${esc(a.name)} <span style="float:right">+${money(a.price)}</span>
+                </button>`;
+              }).join("")}
+            </div>
+          ` : ""}
 
           <div class="summary">
             <div>${esc(product.name)} — ${money(product.price)}</div>
@@ -602,7 +607,6 @@ function submitOrder() {
   const menu = MENUS[schedule.menuId];
   const total = state.cart.reduce((s,l)=>s+l.total,0);
 
-  // Format order lines for single spreadsheet cell
   const itemsText = state.cart.map(line => {
     let itemStr = `${line.productName} x${line.quantity} (${money(line.total)})`;
     if (line.proteins.length) itemStr += ` [Protein: ${line.proteins.map(x=>x.name).join(" + ")}]`;
@@ -610,7 +614,6 @@ function submitOrder() {
     return itemStr;
   }).join("\n");
 
-  // Payload for Google Sheets
   const sheetData = {
     menuTitle: menu.title,
     customerName: state.customer.name,
@@ -621,7 +624,6 @@ function submitOrder() {
     totalAmount: money(total)
   };
 
-  // Send data to Google Sheet
   if (STORE_CONFIG.googleSheetUrl) {
     fetch(STORE_CONFIG.googleSheetUrl, {
       method: "POST",
@@ -631,7 +633,6 @@ function submitOrder() {
     }).catch(err => console.error("Sheet error:", err));
   }
 
-  // Format WhatsApp Message
   let text = `*NEW ORDER - ${menu.title.toUpperCase()}*\n\n`;
   text += `*Fulfilment Date:* ${schedule.fulfilmentDate}\n`;
   text += `*Customer:* ${state.customer.name}\n`;
@@ -649,7 +650,6 @@ function submitOrder() {
   text += `\n*TOTAL:* ${money(total)}\n`;
   text += `*Payment via PayNow:* ${STORE_CONFIG.paynowDetails}\n`;
 
-  // Open WhatsApp
   window.open(`https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(text)}`, "_blank");
 }
 
@@ -739,7 +739,6 @@ window.addEventListener("error", function(e) {
 
 render();
 
-// Refresh timer that respects input fields and modals
 setInterval(() => {
   const activeEl = document.activeElement;
   const isTyping = activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA");
