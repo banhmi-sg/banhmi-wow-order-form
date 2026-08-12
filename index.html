@@ -92,7 +92,7 @@ const STORE_CONFIG = {
   storeName: "Banh Mi Wow",
   instagram: "banhmiwowsg",
   whatsappNumber: "6581236142",
-  paynowDetails: "PayNow UEN / Phone: +65 8123 6142 (Banh Mi Wow)",
+  paynowDetails: "PayNow Phone: +65 8123 6142 (Banh Mi Wow)",
   currency: "$",
   googleSheetUrl: "https://script.google.com/macros/s/AKfycbzE8ND6xYYZiHLppJOZoYUgsedewpZopmuX1qqOtYN8CwBeEFrDpqwYLjlM1nYQfrsX/exec",
   flatDeliveryFee: 15.00,
@@ -357,7 +357,7 @@ function render() {
           }</div>
           <div class="hero-box"><strong>⏰ Orders close</strong><br>${esc(formatDateTime(schedule.orderCloses))}</div>
         </div>
-        <div class="hero-box" style="margin-top:8px"><strong>💳 PayNow</strong><br>Payment details will be included in your WhatsApp order.</div>
+        <div class="hero-box" style="margin-top:8px"><strong>💳 PayNow</strong><br> Orders will be confirmed upon receipt of payment.</div>
       </div>
 
       ${!isOpen ? `
