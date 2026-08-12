@@ -92,7 +92,7 @@ const STORE_CONFIG = {
   storeName: "Banh Mi Wow",
   instagram: "banhmiwowsg",
   whatsappNumber: "6581236142",
-  paynowDetails: "PayNow Phone: +65 8123 6142 (Banh Mi Wow)",
+  paynowDetails: "PayNow UEN / Phone: +65 8123 6142 (Banh Mi Wow)",
   currency: "$",
   googleSheetUrl: "https://script.google.com/macros/s/AKfycbzE8ND6xYYZiHLppJOZoYUgsedewpZopmuX1qqOtYN8CwBeEFrDpqwYLjlM1nYQfrsX/exec",
   flatDeliveryFee: 15.00,
@@ -117,7 +117,7 @@ const MENU_SCHEDULE = [
     menuId: "bowls",
     orderOpens: "2026-08-12T00:00:00+08:00",
     orderCloses: "2026-08-17T15:00:00+08:00",
-    fulfilmentDate: "2026-08-21 & 22"
+    fulfilmentDates: ["2026-08-21", "2026-08-22"]
   }
 ];
 
@@ -204,7 +204,8 @@ let state = {
   customizeProduct: null,
   selectedProteins: [],
   selectedAddOns: [],
-  selectedExclusions: []
+  selectedExclusions: [],
+  selectedFulfilmentDate: null
 };
 
 try {
@@ -226,6 +227,36 @@ function getScheduleInfo() {
     .sort((a,b) => new Date(a.orderOpens) - new Date(b.orderOpens))[0];
 
   return next ? { status:"upcoming", schedule:next } : { status:"closed", schedule:null };
+}
+
+function getSelectedFulfilmentDate(schedule) {
+  const dates = schedule.fulfilmentDates || (schedule.fulfilmentDate ? [schedule.fulfilmentDate] : []);
+  if (!dates.length) return "";
+  if (!state.selectedFulfilmentDate || !dates.includes(state.selectedFulfilmentDate)) {
+    state.selectedFulfilmentDate = dates[0];
+  }
+  return state.selectedFulfilmentDate;
+}
+
+function fulfilmentDateSelector(schedule, isOpen) {
+  const dates = schedule.fulfilmentDates || (schedule.fulfilmentDate ? [schedule.fulfilmentDate] : []);
+  if (dates.length <= 1) return "";
+
+  return `
+    <div class="card" style="background:#ecfdf5;border-color:#a7f3d0">
+      <label style="color:#065f46;font-size:15px">📅 Choose your fulfilment date *</label>
+      <div class="small" style="margin:5px 0 10px">Orders are open for both dates. Please select which date you want to collect/receive your order.</div>
+      <div class="radio-group" style="flex-wrap:wrap">
+        ${dates.map((date, i) => `
+          <label class="radio-option" style="border:1px solid #d1d5db;border-radius:7px;padding:10px 12px;background:white">
+            <input type="radio" name="fulfilmentDate" value="${esc(date)}"
+              ${getSelectedFulfilmentDate(schedule) === date ? "checked" : ""} ${!isOpen ? "disabled" : ""}>
+            <span>${esc(formatDate(date))}</span>
+          </label>
+        `).join("")}
+      </div>
+    </div>
+  `;
 }
 
 function money(n) {
@@ -282,6 +313,7 @@ function calculateTotals() {
 
 function render() {
   state.scheduleInfo = getScheduleInfo();
+  if (state.scheduleInfo.schedule) getSelectedFulfilmentDate(state.scheduleInfo.schedule);
   const root = document.getElementById("app");
 
   if (!state.scheduleInfo.schedule) {
@@ -308,10 +340,12 @@ function render() {
         <p>${esc(menu.description)}</p>
         <a class="hero-ig" href="https://instagram.com/${esc(STORE_CONFIG.instagram)}" target="_blank">📸 Follow us on IG: @${esc(STORE_CONFIG.instagram)}</a>
         <div class="hero-grid">
-          <div class="hero-box"><strong>📅 Fulfilment</strong><br>${esc(schedule.fulfilmentDate)}</div>
+          <div class="hero-box"><strong>📅 Fulfilment</strong><br>${
+            (schedule.fulfilmentDates || [schedule.fulfilmentDate]).map(d => esc(formatDate(d))).join(" / ")
+          }</div>
           <div class="hero-box"><strong>⏰ Orders close</strong><br>${esc(formatDateTime(schedule.orderCloses))}</div>
         </div>
-        <div class="hero-box" style="margin-top:8px"><strong>💳 PayNow</strong><br>Orders will be confirmed upon receipt of payment.</div>
+        <div class="hero-box" style="margin-top:8px"><strong>💳 PayNow</strong><br>Payment details will be included in your WhatsApp order.</div>
       </div>
 
       ${!isOpen ? `
@@ -321,6 +355,7 @@ function render() {
         </div>
       ` : ""}
 
+      ${fulfilmentDateSelector(schedule, isOpen)}
       ${customerForm()}
       ${menuSection(menu, isOpen, isBanhMi)}
 
@@ -411,8 +446,15 @@ function productCard(product, isOpen, isBanhMi) {
     photoContent = `<img src="${esc(photoPath)}" alt="${esc(product.name)}" onerror="this.onerror=null; this.src='${DEFAULT_PLACEHOLDER}';">`;
   }
 
-  const currentQty = state.cart
-    .filter(l => l.productId === product.id)
+  // Only count the "default" version of the item here.
+  // Customised Banh Mi lines stay separate in the cart and never hide the normal + Add button.
+  const currentDefaultQty = state.cart
+    .filter(l =>
+      l.productId === product.id &&
+      (!l.proteins || l.proteins.length === 0) &&
+      (!l.addOns || l.addOns.length === 0) &&
+      (!l.exclusions || l.exclusions.length === 0)
+    )
     .reduce((sum, l) => sum + l.quantity, 0);
 
   const isCustomizable = !product.standalone 
@@ -431,17 +473,17 @@ function productCard(product, isOpen, isBanhMi) {
           
           ${isOpen ? `
             <div class="actions">
-              ${currentQty > 0 ? `
+              <button class="btn btn-green" data-action="simple" data-id="${esc(product.id)}">
+                + Add
+              </button>
+
+              ${currentDefaultQty > 0 ? `
                 <div class="qty" style="margin-top:0">
                   <button data-action="menu-qty" data-id="${esc(product.id)}" data-delta="-1">−</button>
-                  <strong style="padding: 0 6px;">${currentQty}</strong>
+                  <strong style="padding: 0 6px;">${currentDefaultQty}</strong>
                   <button class="plus" data-action="menu-qty" data-id="${esc(product.id)}" data-delta="1">+</button>
                 </div>
-              ` : `
-                <button class="btn btn-green" data-action="simple" data-id="${esc(product.id)}">
-                  + Add
-                </button>
-              `}
+              ` : ""}
 
               ${isCustomizable ? `
                 <button class="btn btn-outline" data-action="customize" data-id="${esc(product.id)}">
@@ -636,7 +678,7 @@ function closedPage(next) {
           <div class="next">
             <strong>Next: ${MENUS[next.menuId].emoji} ${esc(MENUS[next.menuId].title)}</strong>
             <div class="small" style="margin-top:7px">Orders open: ${esc(formatDateTime(next.orderOpens))}</div>
-            <div class="small">Fulfilment: ${esc(next.fulfilmentDate)}</div>
+            <div class="small">Fulfilment: ${(next.fulfilmentDates || [next.fulfilmentDate]).map(d => esc(formatDate(d))).join(" / ")}</div>
           </div>
         ` : ""}
       </div>
@@ -759,6 +801,8 @@ function submitOrder() {
   if (state.fulfillmentType === "delivery" && !state.customer.address) { alert("Please enter your delivery address."); return; }
 
   const schedule = info.schedule;
+  const selectedFulfilmentDate = getSelectedFulfilmentDate(schedule);
+  if (!selectedFulfilmentDate) { alert("Please select a fulfilment date."); return; }
   const menu = MENUS[schedule.menuId];
   const { subtotal, deliveryFee, isDeliveryTBA, grandTotal } = calculateTotals();
 
@@ -775,6 +819,7 @@ function submitOrder() {
 
   const sheetData = {
     menuTitle: menu.title,
+    fulfilmentDate: selectedFulfilmentDate,
     customerName: state.customer.name,
     customerPhone: state.customer.phone,
     deliveryTime: timeLabel,
@@ -797,7 +842,7 @@ function submitOrder() {
   }
 
   let text = `*NEW ORDER - ${menu.title.toUpperCase()}*\n\n`;
-  text += `*Fulfilment:* ${schedule.fulfilmentDate}\n`;
+  text += `*Fulfilment:* ${formatDate(selectedFulfilmentDate)}\n`;
   text += `*Time Slot:* ${timeLabel}\n`;
   text += `*Method:* ${state.fulfillmentType === "delivery" ? "Delivery" : "Self-Collection"}\n`;
   text += `*Customer:* ${state.customer.name}\n`;
@@ -902,6 +947,13 @@ function bindEvents(menu, isOpen) {
       }
 
       if (action === "submit") submitOrder();
+    });
+  });
+
+  // Handle Radio Input for Fulfilment Date
+  document.querySelectorAll('input[name="fulfilmentDate"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      state.selectedFulfilmentDate = e.target.value;
     });
   });
 
