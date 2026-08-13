@@ -432,9 +432,8 @@ function customerForm() {
             🚚 <strong>Delivery charge will be advised separately</strong> based on delivery distance.
           </div>
         ` : `
-          <label>Self-Collection Address</label>
           <input id="address" value="${esc(STORE_CONFIG.pickupLocation)}" readonly
-            style="background:#ecfdf5;color:#065f46;font-weight:600;">
+            style="display:none;">
           <div class="pickup-info">
             📍 <strong>Collection Point:</strong> ${esc(STORE_CONFIG.pickupLocation)}
           </div>
