@@ -427,11 +427,16 @@ function customerForm() {
       <div>
         ${state.fulfillmentType === 'delivery' ? `
           <label>Delivery Address *</label>
-          <textarea id="address" rows="2" placeholder="Block/Street, Unit #, Postal Code">${esc(state.customer.address)}</textarea>
+          <textarea id="address" rows="2" placeholder="Block/Street, Unit #, Postal Code">${esc(state.customer.address === STORE_CONFIG.pickupLocation ? "" : state.customer.address)}</textarea>
+          <div class="pickup-info" style="margin-top:8px;">
+            🚚 <strong>Delivery charge will be advised separately</strong> based on delivery distance.
+          </div>
         ` : `
-          <label>Collection Point</label>
+          <label>Self-Collection Address</label>
+          <input id="address" value="${esc(STORE_CONFIG.pickupLocation)}" readonly
+            style="background:#ecfdf5;color:#065f46;font-weight:600;">
           <div class="pickup-info">
-            📍 <strong>Self-Collection Location:</strong> ${esc(STORE_CONFIG.pickupLocation)}
+            📍 <strong>Collection Point:</strong> ${esc(STORE_CONFIG.pickupLocation)}
           </div>
         `}
       </div>
@@ -553,14 +558,14 @@ function cartBar(isOpen) {
                 <span>Delivery Fee</span>
                 <span>
                   ${isDeliveryTBA 
-                    ? `<strong style="color:#b45309;">TBA (Advised via WA)</strong>` 
+                    ? `<strong style="color:#b45309;">Will be advised</strong>` 
                     : money(deliveryFee)}
                 </span>
               </div>
               
               ${isDeliveryTBA ? `
                 <div class="fee-notice">
-                  ℹ️ Delivery fee quoted via WhatsApp based on distance when booking driver.<br>
+                  ℹ️ Delivery charge will be advised separately based on delivery distance.<br>
                   💡 Add <strong>${money(STORE_CONFIG.flatDeliveryThreshold - subtotal)}</strong> more to hit $80 for <strong>$15 flat delivery</strong>!
                 </div>
               ` : `
@@ -874,7 +879,7 @@ function submitOrder() {
 
   if (state.fulfillmentType === "delivery") {
     if (isDeliveryTBA) {
-      text += `*Delivery Fee:* TBA (Advised via reply based on driver quote)\n`;
+      text += `*Delivery Fee:* Will be advised separately based on delivery distance\n`;
       text += `*ESTIMATED TOTAL:* ${money(subtotal)} + delivery fee\n`;
     } else {
       text += `*Delivery Fee:* ${money(deliveryFee)} (Flat Rate)\n`;
@@ -970,9 +975,17 @@ function bindEvents(menu, isOpen) {
   });
 
   // Handle Radio Input for Fulfillment Type
-  document.querySelectorAll('input[name="fulfillment"]').forEach(radio => {
+  document.querySelectorAll('input[name="order"]').forEach(radio => {
     radio.addEventListener('change', (e) => {
       state.fulfillmentType = e.target.value;
+
+      if (state.fulfillmentType === "pickup") {
+        state.customer.address = STORE_CONFIG.pickupLocation;
+      } else if (state.customer.address === STORE_CONFIG.pickupLocation) {
+        state.customer.address = "";
+      }
+
+      saveCustomer();
       render();
     });
   });
