@@ -411,14 +411,14 @@ function customerForm() {
       </div>
 
       <div class="field">
-        <label>Fulfillment Method *</label>
+        <label>Order Method *</label>
         <div class="radio-group">
           <label class="radio-option">
-            <input type="radio" name="fulfillment" value="delivery" ${state.fulfillmentType === 'delivery' ? 'checked' : ''}>
+            <input type="radio" name="order" value="delivery" ${state.fulfillmentType === 'delivery' ? 'checked' : ''}>
             <span>Delivery</span>
           </label>
           <label class="radio-option">
-            <input type="radio" name="fulfillment" value="pickup" ${state.fulfillmentType === 'pickup' ? 'checked' : ''}>
+            <input type="radio" name="order" value="pickup" ${state.fulfillmentType === 'pickup' ? 'checked' : ''}>
             <span>Self-Collection</span>
           </label>
         </div>
@@ -570,7 +570,7 @@ function cartBar(isOpen) {
               `}
             ` : `
               <div class="fee-row" style="margin-top:4px;">
-                <span>Fulfillment</span>
+                <span>When you'll get it</span>
                 <span>Self-Collection ($0.00)</span>
               </div>
             `}
