@@ -240,13 +240,12 @@ function getSelectedFulfilmentDate(schedule) {
 
 function fulfilmentDateSelector(schedule, isOpen) {
   const dates = schedule.fulfilmentDates || (schedule.fulfilmentDate ? [schedule.fulfilmentDate] : []);
-  const times = schedule.fulfilmentTimes || [];
 
   return `
     <div class="card" style="background:#ecfdf5;border-color:#a7f3d0">
-      <label style="color:#065f46;font-size:15px">📅 Choose your order / pickup date *</label>
+      <label style="color:#065f46;font-size:15px">📅 Availability Dates *</label>
       <div class="small" style="margin:5px 0 10px">
-        Please select your preferred day and meal time.
+        Please select your preferred order day.
       </div>
 
       <div class="radio-group" style="flex-wrap:wrap">
@@ -259,6 +258,19 @@ function fulfilmentDateSelector(schedule, isOpen) {
         `).join("")}
       </div>
 
+      <div style="margin-top:14px">
+        <label style="color:#065f46;font-size:15px">🕐 Meal Time *</label>
+        <div class="radio-group" style="flex-wrap:wrap">
+          <label class="radio-option">
+            <input type="radio" name="deliveryTime" value="12pm" ${state.deliveryTime === '12pm' ? 'checked' : ''}>
+            <span>12:00 PM (Lunch)</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="deliveryTime" value="6pm" ${state.deliveryTime === '6pm' ? 'checked' : ''}>
+            <span>6:00 PM (Dinner)</span>
+          </label>
+        </div>
+      </div>
     </div>
   `;
 }
@@ -352,7 +364,7 @@ function render() {
         <p>${esc(menu.description)}</p>
         <a class="hero-ig" href="https://instagram.com/${esc(STORE_CONFIG.instagram)}" target="_blank">📸 Follow us on IG: @${esc(STORE_CONFIG.instagram)}</a>
         <div class="hero-grid">
-          <div class="hero-box"><strong>📅 When you'll get it</strong><br>${
+          <div class="hero-box"><strong>📅 Availability Dates</strong><br>${
             (schedule.fulfilmentDates || [schedule.fulfilmentDate]).map(d => esc(formatDate(d))).join(" / ")
           }</div>
           <div class="hero-box"><strong>⏰ Orders close</strong><br>${esc(formatDateTime(schedule.orderCloses))}</div>
@@ -397,28 +409,14 @@ function customerForm() {
       <div class="field"><label>Phone Number *</label><input id="phone" required value="${esc(state.customer.phone)}" placeholder="8123 6142"></div>
       
       <div class="field">
-        <label>Preferred Time Slot *</label>
-        <div class="radio-group">
-          <label class="radio-option">
-            <input type="radio" name="deliveryTime" value="12pm" ${state.deliveryTime === '12pm' ? 'checked' : ''}>
-            <span>12:00 PM (Lunch)</span>
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="deliveryTime" value="6pm" ${state.deliveryTime === '6pm' ? 'checked' : ''}>
-            <span>6:00 PM (Dinner)</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="field">
         <label>Order Method *</label>
         <div class="radio-group">
           <label class="radio-option">
-            <input type="radio" name="order" value="delivery" ${state.fulfillmentType === 'delivery' ? 'checked' : ''}>
+            <input type="radio" name="fulfillment" value="delivery" ${state.fulfillmentType === 'delivery' ? 'checked' : ''}>
             <span>Delivery</span>
           </label>
           <label class="radio-option">
-            <input type="radio" name="order" value="pickup" ${state.fulfillmentType === 'pickup' ? 'checked' : ''}>
+            <input type="radio" name="fulfillment" value="pickup" ${state.fulfillmentType === 'pickup' ? 'checked' : ''}>
             <span>Self-Collection</span>
           </label>
         </div>
@@ -427,18 +425,14 @@ function customerForm() {
       <div>
         ${state.fulfillmentType === 'delivery' ? `
           <label>Delivery Address *</label>
-          <textarea id="address" rows="2" placeholder="Block/Street, Unit #, Postal Code">${esc(state.customer.address === STORE_CONFIG.pickupLocation ? "" : state.customer.address)}</textarea>
-          <div class="pickup-info" style="margin-top:8px;">
-            🚚 <strong>Delivery charge will be advised separately</strong> based on delivery distance.
-          </div>
+          <textarea id="address" rows="2" placeholder="Block/Street, Unit #, Postal Code">${esc(state.customer.address)}</textarea>
+          <div class="fee-notice">🚚 Delivery charge will be advised separately based on delivery distance.</div>
         ` : `
-          <input id="address" value="${esc(STORE_CONFIG.pickupLocation)}" readonly
-            style="display:none;">
+          <label>Collection Point</label>
           <div class="pickup-info">
             📍 <strong>Collection Point:</strong> ${esc(STORE_CONFIG.pickupLocation)}
             <br>
-            🕐 <strong>Collection Time:</strong> Your selected meal time —
-            <strong>12:00 PM (Lunch)</strong> or <strong>6:00 PM (Dinner)</strong>.
+            🕐 <strong>Collection Time:</strong> Your selected meal time — <strong>12:00 PM (Lunch)</strong> or <strong>6:00 PM (Dinner)</strong>.
           </div>
         `}
       </div>
@@ -560,14 +554,14 @@ function cartBar(isOpen) {
                 <span>Delivery Fee</span>
                 <span>
                   ${isDeliveryTBA 
-                    ? `<strong style="color:#b45309;">Will be advised</strong>` 
+                    ? `<strong style="color:#b45309;">TBA (Advised via WA)</strong>` 
                     : money(deliveryFee)}
                 </span>
               </div>
               
               ${isDeliveryTBA ? `
                 <div class="fee-notice">
-                  ℹ️ Delivery charge will be advised separately based on delivery distance.<br>
+                  ℹ️ Delivery fee quoted via WhatsApp based on distance when booking driver.<br>
                   💡 Add <strong>${money(STORE_CONFIG.flatDeliveryThreshold - subtotal)}</strong> more to hit $80 for <strong>$15 flat delivery</strong>!
                 </div>
               ` : `
@@ -577,7 +571,7 @@ function cartBar(isOpen) {
               `}
             ` : `
               <div class="fee-row" style="margin-top:4px;">
-                <span>When you'll get it</span>
+                <span>Availability Date</span>
                 <span>Self-Collection ($0.00)</span>
               </div>
             `}
@@ -881,7 +875,7 @@ function submitOrder() {
 
   if (state.fulfillmentType === "delivery") {
     if (isDeliveryTBA) {
-      text += `*Delivery Fee:* Will be advised separately based on delivery distance\n`;
+      text += `*Delivery Fee:* TBA (Advised via reply based on driver quote)\n`;
       text += `*ESTIMATED TOTAL:* ${money(subtotal)} + delivery fee\n`;
     } else {
       text += `*Delivery Fee:* ${money(deliveryFee)} (Flat Rate)\n`;
@@ -977,17 +971,9 @@ function bindEvents(menu, isOpen) {
   });
 
   // Handle Radio Input for Fulfillment Type
-  document.querySelectorAll('input[name="order"]').forEach(radio => {
+  document.querySelectorAll('input[name="fulfillment"]').forEach(radio => {
     radio.addEventListener('change', (e) => {
       state.fulfillmentType = e.target.value;
-
-      if (state.fulfillmentType === "pickup") {
-        state.customer.address = STORE_CONFIG.pickupLocation;
-      } else if (state.customer.address === STORE_CONFIG.pickupLocation) {
-        state.customer.address = "";
-      }
-
-      saveCustomer();
       render();
     });
   });
