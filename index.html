@@ -244,7 +244,7 @@ function fulfilmentDateSelector(schedule, isOpen) {
 
   return `
     <div class="card" style="background:#ecfdf5;border-color:#a7f3d0">
-      <label style="color:#065f46;font-size:15px">📅 Choose your fulfilment date *</label>
+      <label style="color:#065f46;font-size:15px">📅 Choose your order / pickup date *</label>
       <div class="small" style="margin:5px 0 10px">
         Please select your preferred day and meal time.
       </div>
@@ -352,7 +352,7 @@ function render() {
         <p>${esc(menu.description)}</p>
         <a class="hero-ig" href="https://instagram.com/${esc(STORE_CONFIG.instagram)}" target="_blank">📸 Follow us on IG: @${esc(STORE_CONFIG.instagram)}</a>
         <div class="hero-grid">
-          <div class="hero-box"><strong>📅 Fulfilment</strong><br>${
+          <div class="hero-box"><strong>📅 When you'll get it</strong><br>${
             (schedule.fulfilmentDates || [schedule.fulfilmentDate]).map(d => esc(formatDate(d))).join(" / ")
           }</div>
           <div class="hero-box"><strong>⏰ Orders close</strong><br>${esc(formatDateTime(schedule.orderCloses))}</div>
