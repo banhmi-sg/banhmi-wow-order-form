@@ -6,9 +6,7 @@
 <title>Banh Mi Wow - Order</title>
 
 <style>
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
 
   body {
     margin: 0;
@@ -34,9 +32,9 @@
     padding: 16px;
   }
 
-  /* ============================================================
+  /* =========================
      HERO
-     ============================================================ */
+     ========================= */
 
   .hero {
     background: #047857;
@@ -86,9 +84,9 @@
     text-decoration: underline;
   }
 
-  /* ============================================================
-     CARDS / FORM
-     ============================================================ */
+  /* =========================
+     CARDS
+     ========================= */
 
   .card {
     background: white;
@@ -122,7 +120,6 @@
     border-radius: 6px;
     padding: 10px;
     outline: none;
-    background: white;
   }
 
   input:focus,
@@ -156,34 +153,35 @@
     cursor: pointer;
   }
 
-  /* ============================================================
-     PRODUCT CARDS
-     ============================================================ */
+  /* =========================
+     PRODUCTS
+     ========================= */
 
   .product {
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    margin-bottom: 14px;
+    border: 1px solid #f0f0f0;
+    border-radius: 9px;
+    margin-bottom: 12px;
     overflow: hidden;
-    background: white;
   }
 
-  /*
-    Larger visual treatment:
-    Every product gets a consistent full-width image area.
-    Replace product-id.jpg files later with your actual pictures.
-  */
+  .product-inner {
+    display: flex;
+    gap: 14px;
+    padding: 14px;
+  }
 
   .photo {
-    width: 100%;
-    height: 190px;
+    width: 120px;
+    height: 120px;
+    flex: none;
+    border-radius: 9px;
     background: #f3f4f6;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     color: #9ca3af;
-    font-size: 12px;
+    font-size: 11px;
     text-align: center;
   }
 
@@ -191,44 +189,42 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
   }
 
   .product-info {
-    padding: 15px;
+    flex: 1;
+    min-width: 0;
   }
 
   .product-name {
     font-weight: 700;
-    font-size: 16px;
     line-height: 1.35;
   }
 
   .note {
-    color: #6b7280;
+    color: #b45309;
     font-size: 12px;
-    margin-top: 7px;
-    line-height: 1.5;
+    margin-top: 5px;
+    line-height: 1.45;
   }
 
   .price {
     color: #047857;
     font-weight: 700;
-    font-size: 16px;
-    margin-top: 9px;
+    margin-top: 7px;
   }
 
   .actions {
-    margin-top: 11px;
+    margin-top: 10px;
     display: flex;
     gap: 8px;
     align-items: center;
     flex-wrap: wrap;
   }
 
-  /* ============================================================
+  /* =========================
      BUTTONS
-     ============================================================ */
+     ========================= */
 
   .btn {
     border: 0;
@@ -266,9 +262,9 @@
     color: #b91c1c;
   }
 
-  /* ============================================================
-     CLOSED PAGE
-     ============================================================ */
+  /* =========================
+     CLOSED / NEXT MENU
+     ========================= */
 
   .closed {
     min-height: 100vh;
@@ -279,7 +275,7 @@
   }
 
   .closed-card {
-    max-width: 520px;
+    max-width: 620px;
     width: 100%;
     background: white;
     padding: 32px;
@@ -292,6 +288,61 @@
     margin: 8px 0;
   }
 
+  .closed-subtitle {
+    color: #6b7280;
+    line-height: 1.5;
+  }
+
+  .next-menu {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+    margin-top: 22px;
+  }
+
+  .next-menu-title {
+    color: #065f46;
+    font-size: 20px;
+    font-weight: 800;
+  }
+
+  .next-menu-row {
+    margin-top: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .next-menu-label {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+  }
+
+  .next-menu-highlight {
+    margin-top: 16px;
+    background: white;
+    border: 1px solid #d1fae5;
+    border-radius: 8px;
+    padding: 12px;
+    color: #065f46;
+    font-weight: 700;
+  }
+
+  .next-menu-items {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #374151;
+    line-height: 1.6;
+  }
+
+  /* =========================
+     GENERAL
+     ========================= */
+
   .next {
     background: #ecfdf5;
     border: 1px solid #d1fae5;
@@ -300,10 +351,6 @@
     text-align: left;
     margin-top: 18px;
   }
-
-  /* ============================================================
-     STICKY CART
-     ============================================================ */
 
   .sticky {
     position: fixed;
@@ -346,6 +393,10 @@
     padding: 0;
     text-align: left;
   }
+
+  /* =========================
+     CART
+     ========================= */
 
   .cart-panel {
     max-width: 720px;
@@ -405,9 +456,9 @@
     color: white;
   }
 
-  /* ============================================================
-     CUSTOMISE MODAL
-     ============================================================ */
+  /* =========================
+     MODAL
+     ========================= */
 
   .modal-backdrop {
     position: fixed;
@@ -463,9 +514,9 @@
     margin: 15px 0;
   }
 
-  /* ============================================================
-     MESSAGES
-     ============================================================ */
+  /* =========================
+     FEES / PICKUP
+     ========================= */
 
   .error {
     max-width: 640px;
@@ -517,42 +568,23 @@
     line-height: 1.4;
   }
 
-  /* ============================================================
+  /* =========================
      MOBILE
-     ============================================================ */
+     ========================= */
 
-  @media (max-width: 560px) {
-
-    .container {
-      padding: 10px;
-    }
-
-    .hero {
-      padding: 20px;
-    }
-
-    .hero h1 {
-      font-size: 25px;
-    }
+  @media (max-width:560px) {
 
     .hero-grid {
       grid-template-columns: 1fr;
     }
 
+    .product-inner {
+      padding: 10px;
+    }
+
     .photo {
-      height: 165px;
-    }
-
-    .product-info {
-      padding: 13px;
-    }
-
-    .product-name {
-      font-size: 15px;
-    }
-
-    .actions {
-      gap: 7px;
+      width: 100px;
+      height: 100px;
     }
 
     .sticky-inner {
@@ -564,8 +596,8 @@
       font-size: 13px;
     }
 
-    .total {
-      font-size: 20px;
+    .closed-card {
+      padding: 24px 18px;
     }
   }
 </style>
@@ -578,31 +610,44 @@
 <script>
 
 /* ============================================================
-   CONFIGURATIONS & CONSTANTS
+   CONFIGURATION
    ============================================================ */
 
 const STORE_CONFIG = {
+
   storeName: "Banh Mi Wow",
+
   instagram: "banhmiwowsg",
+
   whatsappNumber: "6581236142",
-  paynowDetails: "PayNow Phone: +65 8123 6142 (Banh Mi Wow)",
+
+  paynowDetails:
+    "PayNow Phone: +65 8123 6142 (Banh Mi Wow)",
+
   currency: "$",
 
-  /*
-    IMPORTANT:
-    Keep this Google Apps Script Web App URL unchanged
-    unless you deliberately replace the backend.
-  */
   googleSheetUrl:
     "https://script.google.com/macros/s/AKfycbzE8ND6xYYZiHLppJOZoYUgsedewpZopmuX1qqOtYN8CwBeEFrDpqwYLjlM1nYQfrsX/exec",
 
   flatDeliveryFee: 15.00,
+
   flatDeliveryThreshold: 80.00,
 
-  pickupLocation: "T22 Poolside Pavilion"
+  pickupLocation:
+    "T22 Poolside Pavilion"
 };
 
+
+/* ============================================================
+   IMAGE PLACEHOLDER
+   ============================================================ */
+
 const DEFAULT_PLACEHOLDER = "default-food.jpg";
+
+
+/* ============================================================
+   PRODUCT ICONS
+   ============================================================ */
 
 const PRODUCT_ICONS = {
   "bowls-addon-meat": "🥩",
@@ -611,6 +656,11 @@ const PRODUCT_ICONS = {
   "addon-egg": "🍳"
 };
 
+
+/* ============================================================
+   CHILLI LIMIT
+   ============================================================ */
+
 const CHILLI_ORDER_LIMIT = 2;
 
 
@@ -618,32 +668,29 @@ const CHILLI_ORDER_LIMIT = 2;
    MENU SCHEDULE
    ============================================================
 
-   THIS is where you control which menu is live.
-
-   menuId can be:
-     "banh-mi"
-     "bowls"
-
-   To prepare a future sale, simply add another object.
+   THIS IS THE MAIN AREA YOU EDIT WHEN YOU WANT TO
+   OPEN / CLOSE A MENU.
 
    Example:
 
-   {
-     id: "banh-mi-next-sale",
-     menuId: "banh-mi",
-     orderOpens: "2026-08-20T00:00:00+08:00",
-     orderCloses: "2026-08-24T15:00:00+08:00",
-     fulfilmentDates: ["2026-08-28", "2026-08-29"]
-   }
+   menuId: "banh-mi"
+   = Banh Mi menu
 
+   menuId: "bowls"
+   = Bowls & Sides menu
+
+   You can add future schedules underneath.
+
+   IMPORTANT:
+   The page automatically shows the NEXT schedule
+   whenever there is no currently active schedule.
    ============================================================ */
 
 const MENU_SCHEDULE = [
 
-  /* CURRENT BOWLS & SIDES SALE */
-
   {
     id: "bowls-aug-21-22",
+
     menuId: "bowls",
 
     orderOpens:
@@ -656,21 +703,32 @@ const MENU_SCHEDULE = [
       "2026-08-21",
       "2026-08-22"
     ]
-  }
+  },
 
   /*
-    FUTURE SCHEDULES GO HERE.
+  ============================================================
+  FUTURE EXAMPLE
 
-    Example:
+  Uncomment / modify this when you want to run Banh Mi again.
 
-    ,
-    {
-      id: "banh-mi-next-sale",
-      menuId: "banh-mi",
-      orderOpens: "2026-08-20T00:00:00+08:00",
-      orderCloses: "2026-08-24T15:00:00+08:00",
-      fulfilmentDates: ["2026-08-28", "2026-08-29"]
-    }
+  {
+    id: "banh-mi-next",
+
+    menuId: "banh-mi",
+
+    orderOpens:
+      "2026-08-20T00:00:00+08:00",
+
+    orderCloses:
+      "2026-08-24T15:00:00+08:00",
+
+    fulfilmentDates: [
+      "2026-08-28",
+      "2026-08-29"
+    ]
+  }
+
+  ============================================================
   */
 ];
 
@@ -680,10 +738,6 @@ const MENU_SCHEDULE = [
    ============================================================ */
 
 const MENUS = {
-
-  /* ==========================================================
-     BANH MI
-     ========================================================== */
 
   "banh-mi": {
 
@@ -728,15 +782,18 @@ const MENUS = {
         id: "banh-mi-veg",
         name: "Banh Mi - Vegetarian",
         price: 5.5,
-        note: "Eggs, vegetables, no pate, beancurd skin"
+        note:
+          "Eggs, vegetables, no pate, beancurd skin"
       },
 
       {
         id: "banh-mi-trad",
         name: "Banh Mi - Traditional",
         price: 8,
-        note: "Braised pork, ham, pate, pickled vegetables"
+        note:
+          "Braised pork, ham, pate, pickled vegetables"
       }
+
     ],
 
     addOns: [
@@ -759,13 +816,10 @@ const MENUS = {
         price: 8,
         standalone: true
       }
+
     ]
   },
 
-
-  /* ==========================================================
-     BOWLS & SIDES
-     ========================================================== */
 
   "bowls": {
 
@@ -780,65 +834,87 @@ const MENUS = {
 
       {
         id: "bun-pork",
+
         name:
           "Bun Thit Nuong - Vietnamese Dry Vermicelli (Pork)",
+
         price: 9.5,
+
         note:
           "A Southern Vietnamese classic featuring soft rice vermicelli topped with smoky flame-grilled pork, golden fried spring rolls, crisp pickled carrots, and fragrant fresh basil. Dressed in homemade nước mắm sauce for a sweet, savory, and tangy finish. ⚠️ Contains peanuts & basil"
       },
 
       {
         id: "bun-chicken",
+
         name:
           "Bun Thit Nuong - Vietnamese Dry Vermicelli (Chicken)",
+
         price: 9.5,
+
         note:
           "A Southern Vietnamese classic featuring soft rice vermicelli topped with smoky flame-grilled chicken, golden fried spring rolls, crisp pickled carrots, and fragrant fresh basil. Dressed in homemade nước mắm sauce for a sweet, savory, and tangy finish. ⚠️ Contains peanuts & basil"
       },
 
       {
         id: "com-tam-chicken",
+
         name:
           "Com Tam - Vietnamese Grilled Chicken Rice",
+
         price: 9.5,
+
         note:
           "Cơm tấm (broken rice) topped with flame-grilled chicken, savory egg meatloaf, crisp cucumber, and tangy pickled carrots—served with sweet and sour nước mắm fish sauce."
       },
 
       {
         id: "com-tam-pork",
+
         name:
           "Com Tam - Vietnamese Grilled Pork Rice",
+
         price: 9.5,
+
         note:
           "Cơm tấm (broken rice) paired with iconic grilled pork chop (cơm sườn), savory egg meatloaf, crisp cucumber, and tangy pickled carrots—served with sweet and sour nước mắm fish sauce."
       },
 
       {
         id: "spring-pork",
+
         name:
           "Chả Giò - Fried Spring Rolls (Pork - 5 pcs)",
+
         price: 4.5,
+
         note:
           "A beloved Vietnamese favorite. Seasoned minced pork wrapped in delicate rice paper and deep-fried to a shatteringly crisp, golden perfection."
       },
 
       {
         id: "spring-fresh",
+
         name:
           "Gỏi Cuốn - Summer Rolls (Pork / Prawn - 5 pcs)",
+
         price: 11,
+
         note:
           "Served fresh, not fried! Plump prawns, tender pork, aromatic herbs, and soft bún rice noodles hand-rolled in translucent bánh tráng rice paper. ⚠️ Contains basil"
       },
 
       {
         id: "bowls-addon-chilli",
+
         name:
           "Our Spicy Chilli Bottle (~250g)",
+
         price: 8,
+
         standalone: true
       }
+
     ],
 
     addOns: [
@@ -848,18 +924,20 @@ const MENUS = {
         name: "Extra Meat (50g)",
         price: 2
       }
+
     ]
   }
 };
 
 
 /* ============================================================
-   APPLICATION STATE
+   STATE
    ============================================================ */
 
 let state = {
 
-  scheduleInfo: getScheduleInfo(),
+  scheduleInfo:
+    getScheduleInfo(),
 
   customer: {
     name: "",
@@ -889,21 +967,24 @@ let state = {
 
 
 /* ============================================================
-   RESTORE SAVED CUSTOMER DETAILS
+   LOAD SAVED CUSTOMER DETAILS
    ============================================================ */
 
 try {
 
   const saved =
-    localStorage.getItem("vietnameseDelightsCustomer");
+    localStorage.getItem(
+      "vietnameseDelightsCustomer"
+    );
 
   if (saved) {
-    state.customer = JSON.parse(saved);
+
+    state.customer =
+      JSON.parse(saved);
+
   }
 
-} catch (e) {
-  console.warn("Could not restore saved customer details.");
-}
+} catch (e) {}
 
 
 /* ============================================================
@@ -914,11 +995,26 @@ function getScheduleInfo() {
 
   const now = new Date();
 
+  const schedules =
+    MENU_SCHEDULE
+      .filter(s => MENUS[s.menuId])
+      .sort(
+        (a,b) =>
+          new Date(a.orderOpens) -
+          new Date(b.orderOpens)
+      );
+
+
+  /* CURRENTLY OPEN */
+
   const open =
-    MENU_SCHEDULE.find(schedule =>
-      now >= new Date(schedule.orderOpens) &&
-      now <= new Date(schedule.orderCloses)
+    schedules.find(s =>
+
+      now >= new Date(s.orderOpens) &&
+      now <= new Date(s.orderCloses)
+
     );
+
 
   if (open) {
 
@@ -929,77 +1025,279 @@ function getScheduleInfo() {
 
   }
 
-  const next =
-    MENU_SCHEDULE
-      .filter(schedule =>
-        new Date(schedule.orderOpens) > now
-      )
-      .sort((a, b) =>
-        new Date(a.orderOpens) -
-        new Date(b.orderOpens)
-      )[0];
 
-  return next
-    ? {
-        status: "upcoming",
-        schedule: next
-      }
-    : {
-        status: "closed",
-        schedule: null
-      };
+  /* NEXT UPCOMING MENU */
+
+  const next =
+    schedules.find(s =>
+      new Date(s.orderOpens) > now
+    );
+
+
+  if (next) {
+
+    return {
+      status: "upcoming",
+      schedule: next
+    };
+
+  }
+
+
+  /* NO CURRENT OR FUTURE MENU */
+
+  return {
+    status: "closed",
+    schedule: null
+  };
 }
 
 
 /* ============================================================
-   FULFILMENT DATE
+   DATE SELECTION
    ============================================================ */
 
 function getSelectedFulfilmentDate(schedule) {
 
   const dates =
     schedule.fulfilmentDates ||
-    (schedule.fulfilmentDate
-      ? [schedule.fulfilmentDate]
-      : []);
+    (
+      schedule.fulfilmentDate
+        ? [schedule.fulfilmentDate]
+        : []
+    );
+
 
   if (!dates.length) {
+
     return "";
+
   }
+
 
   if (
     !state.selectedFulfilmentDate ||
-    !dates.includes(state.selectedFulfilmentDate)
+    !dates.includes(
+      state.selectedFulfilmentDate
+    )
   ) {
 
     state.selectedFulfilmentDate =
       dates[0];
+
   }
+
 
   return state.selectedFulfilmentDate;
 }
 
 
 /* ============================================================
-   DATE SELECTOR
+   FORMATTERS
    ============================================================ */
 
-function fulfilmentDateSelector(schedule, isOpen) {
+function money(n) {
+
+  return (
+    STORE_CONFIG.currency +
+    Number(n).toFixed(2)
+  );
+
+}
+
+
+function formatDateTime(value) {
+
+  return new Intl.DateTimeFormat(
+    "en-SG",
+    {
+      dateStyle: "medium",
+      timeStyle: "short",
+      timeZone: "Asia/Singapore"
+    }
+  ).format(
+    new Date(value)
+  );
+
+}
+
+
+function formatDate(value) {
+
+  return new Intl.DateTimeFormat(
+    "en-SG",
+    {
+      dateStyle: "full",
+      timeZone: "Asia/Singapore"
+    }
+  ).format(
+    new Date(
+      value +
+      "T12:00:00+08:00"
+    )
+  );
+
+}
+
+
+function saveCustomer() {
+
+  try {
+
+    localStorage.setItem(
+      "vietnameseDelightsCustomer",
+      JSON.stringify(
+        state.customer
+      )
+    );
+
+  } catch (e) {}
+
+}
+
+
+function esc(value) {
+
+  return String(
+    value ?? ""
+  ).replace(
+    /[&<>"']/g,
+    c => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[c])
+  );
+
+}
+
+
+/* ============================================================
+   PRODUCT HELPERS
+   ============================================================ */
+
+function isChilliProduct(id) {
+
+  return (
+    id === "bowls-addon-chilli" ||
+    id === "addon-chilli"
+  );
+
+}
+
+
+function getTotalChilliInCart() {
+
+  return state.cart.reduce(
+    (sum,line) => {
+
+      return isChilliProduct(
+        line.productId
+      )
+        ? sum + line.quantity
+        : sum;
+
+    },
+    0
+  );
+
+}
+
+
+/* ============================================================
+   TOTALS
+   ============================================================ */
+
+function calculateTotals() {
+
+  const subtotal =
+    state.cart.reduce(
+      (s,line) =>
+        s + line.total,
+      0
+    );
+
+
+  let deliveryFee = 0;
+
+  let isDeliveryTBA = false;
+
+
+  if (
+    state.fulfillmentType === "delivery" &&
+    subtotal > 0
+  ) {
+
+    if (
+      subtotal >=
+      STORE_CONFIG.flatDeliveryThreshold
+    ) {
+
+      deliveryFee =
+        STORE_CONFIG.flatDeliveryFee;
+
+      isDeliveryTBA = false;
+
+    } else {
+
+      deliveryFee = 0;
+
+      isDeliveryTBA = true;
+
+    }
+
+  }
+
+
+  const grandTotal =
+    subtotal + deliveryFee;
+
+
+  return {
+    subtotal,
+    deliveryFee,
+    isDeliveryTBA,
+    grandTotal
+  };
+
+}
+
+
+/* ============================================================
+   AVAILABILITY DATE SELECTOR
+   ============================================================ */
+
+function fulfilmentDateSelector(
+  schedule,
+  isOpen
+) {
 
   const dates =
     schedule.fulfilmentDates ||
-    (schedule.fulfilmentDate
-      ? [schedule.fulfilmentDate]
-      : []);
+    (
+      schedule.fulfilmentDate
+        ? [schedule.fulfilmentDate]
+        : []
+    );
+
 
   return `
+
     <div
       class="card"
-      style="background:#ecfdf5;border-color:#a7f3d0"
+      style="
+        background:#ecfdf5;
+        border-color:#a7f3d0
+      "
     >
 
       <label
-        style="color:#065f46;font-size:15px"
+        style="
+          color:#065f46;
+          font-size:15px
+        "
       >
         📅 Availability Dates *
       </label>
@@ -1010,6 +1308,7 @@ function fulfilmentDateSelector(schedule, isOpen) {
       >
         Please select your preferred order day.
       </div>
+
 
       <div
         class="radio-group"
@@ -1037,7 +1336,11 @@ function fulfilmentDateSelector(schedule, isOpen) {
                   ? "checked"
                   : ""
               }
-              ${!isOpen ? "disabled" : ""}
+              ${
+                !isOpen
+                  ? "disabled"
+                  : ""
+              }
             >
 
             <span>
@@ -1054,10 +1357,14 @@ function fulfilmentDateSelector(schedule, isOpen) {
       <div style="margin-top:14px">
 
         <label
-          style="color:#065f46;font-size:15px"
+          style="
+            color:#065f46;
+            font-size:15px
+          "
         >
           🕐 Meal Time *
         </label>
+
 
         <div
           class="radio-group"
@@ -1108,148 +1415,225 @@ function fulfilmentDateSelector(schedule, isOpen) {
       </div>
 
     </div>
+
   `;
+
 }
 
 
 /* ============================================================
-   GENERAL HELPERS
+   NEXT MENU PAGE
    ============================================================ */
 
-function money(n) {
+function nextMenuPage(schedule) {
 
-  return STORE_CONFIG.currency +
-    Number(n).toFixed(2);
-}
+  if (!schedule) {
 
+    return `
 
-function formatDateTime(value) {
+      <div class="closed">
 
-  return new Intl.DateTimeFormat(
-    "en-SG",
-    {
-      dateStyle: "medium",
-      timeStyle: "short",
-      timeZone: "Asia/Singapore"
-    }
-  ).format(new Date(value));
-}
+        <div class="closed-card">
 
+          <div style="font-size:50px">
+            🍜
+          </div>
 
-function formatDate(value) {
+          <h1>
+            Ordering is currently closed
+          </h1>
 
-  return new Intl.DateTimeFormat(
-    "en-SG",
-    {
-      dateStyle: "full",
-      timeZone: "Asia/Singapore"
-    }
-  ).format(
-    new Date(value + "T12:00:00+08:00")
-  );
-}
+          <p class="closed-subtitle">
+            There are no menus currently open for ordering.
+            Please check back for our next menu.
+          </p>
 
+        </div>
 
-function saveCustomer() {
+      </div>
 
-  try {
+    `;
 
-    localStorage.setItem(
-      "vietnameseDelightsCustomer",
-      JSON.stringify(state.customer)
-    );
-
-  } catch (e) {}
-}
-
-
-function esc(value) {
-
-  return String(value ?? "")
-    .replace(
-      /[&<>"']/g,
-      c => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;"
-      }[c])
-    );
-}
-
-
-function isChilliProduct(id) {
-
-  return (
-    id === "bowls-addon-chilli" ||
-    id === "addon-chilli"
-  );
-}
-
-
-function getTotalChilliInCart() {
-
-  return state.cart.reduce(
-    (sum, line) => {
-
-      return isChilliProduct(line.productId)
-        ? sum + line.quantity
-        : sum;
-
-    },
-    0
-  );
-}
-
-
-/* ============================================================
-   TOTALS
-   ============================================================ */
-
-function calculateTotals() {
-
-  const subtotal =
-    state.cart.reduce(
-      (sum, line) =>
-        sum + line.total,
-      0
-    );
-
-  let deliveryFee = 0;
-  let isDeliveryTBA = false;
-
-  if (
-    state.fulfillmentType === "delivery" &&
-    subtotal > 0
-  ) {
-
-    if (
-      subtotal >=
-      STORE_CONFIG.flatDeliveryThreshold
-    ) {
-
-      deliveryFee =
-        STORE_CONFIG.flatDeliveryFee;
-
-      isDeliveryTBA = false;
-
-    } else {
-
-      deliveryFee = 0;
-      isDeliveryTBA = true;
-    }
   }
 
-  const grandTotal =
-    subtotal + deliveryFee;
 
-  return {
-    subtotal,
-    deliveryFee,
-    isDeliveryTBA,
-    grandTotal
-  };
+  const menu =
+    MENUS[schedule.menuId];
+
+
+  if (!menu) {
+
+    return errorPage(
+      "Menu configuration error",
+      "The next scheduled menu could not be found."
+    );
+
+  }
+
+
+  const dates =
+    schedule.fulfilmentDates ||
+    (
+      schedule.fulfilmentDate
+        ? [schedule.fulfilmentDate]
+        : []
+    );
+
+
+  const previewItems =
+    menu.products
+      .slice(0, 5)
+      .map(
+        p =>
+          `• ${esc(p.name)}`
+      )
+      .join("<br>");
+
+
+  return `
+
+    <div class="closed">
+
+      <div class="closed-card">
+
+        <div style="font-size:50px">
+          ${menu.emoji}
+        </div>
+
+
+        <h1>
+          Ordering is currently closed
+        </h1>
+
+
+        <p class="closed-subtitle">
+          Our current order window has ended,
+          but the next menu is already scheduled.
+        </p>
+
+
+        <div class="next-menu">
+
+          <div class="next-menu-title">
+            ${menu.emoji}
+            ${esc(menu.title)}
+          </div>
+
+
+          <div
+            style="
+              margin-top:7px;
+              color:#374151;
+              line-height:1.5
+            "
+          >
+            ${esc(menu.description)}
+          </div>
+
+
+          <div class="next-menu-row">
+
+            <div class="next-menu-label">
+              Orders open
+            </div>
+
+            <strong>
+              ${esc(
+                formatDateTime(
+                  schedule.orderOpens
+                )
+              )}
+            </strong>
+
+          </div>
+
+
+          <div class="next-menu-row">
+
+            <div class="next-menu-label">
+              Fulfilment dates
+            </div>
+
+            <strong>
+
+              ${
+                dates.length
+                  ? dates
+                      .map(
+                        d =>
+                          esc(
+                            formatDate(d)
+                          )
+                      )
+                      .join("<br>")
+                  : "To be announced"
+              }
+
+            </strong>
+
+          </div>
+
+
+          <div class="next-menu-highlight">
+
+            ⏰ Orders will open on
+            ${esc(
+              formatDateTime(
+                schedule.orderOpens
+              )
+            )}
+
+          </div>
+
+
+          <div class="next-menu-items">
+
+            <strong>
+              What's on the next menu
+            </strong>
+
+            <div style="margin-top:6px">
+              ${previewItems}
+            </div>
+
+            ${
+              menu.products.length > 5
+                ? `
+                  <div
+                    style="
+                      margin-top:5px;
+                      color:#6b7280
+                    "
+                  >
+                    + more menu items
+                  </div>
+                `
+                : ""
+            }
+
+          </div>
+
+        </div>
+
+
+        <div
+          style="
+            margin-top:18px;
+            font-size:12px;
+            color:#9ca3af
+          "
+        >
+          This page will automatically switch
+          to the ordering page when the next
+          order window opens.
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
 }
 
 
@@ -1262,32 +1646,51 @@ function render() {
   state.scheduleInfo =
     getScheduleInfo();
 
-  if (state.scheduleInfo.schedule) {
+
+  if (
+    state.scheduleInfo.schedule
+  ) {
 
     getSelectedFulfilmentDate(
       state.scheduleInfo.schedule
     );
+
   }
+
 
   const root =
     document.getElementById("app");
 
 
-  /* ----------------------------------------------------------
-     No current schedule
-     ---------------------------------------------------------- */
+  /*
+   * IMPORTANT:
+   *
+   * If there is NO active schedule,
+   * show the next scheduled menu instead
+   * of simply showing a blank / generic
+   * closed page.
+   */
 
-  if (!state.scheduleInfo.schedule) {
+  if (
+    state.scheduleInfo.status !== "open"
+  ) {
 
     root.innerHTML =
-      closedPage(null);
+      nextMenuPage(
+        state.scheduleInfo.schedule
+      );
+
+    document.body.style.paddingBottom =
+      "0px";
 
     return;
+
   }
 
 
   const schedule =
     state.scheduleInfo.schedule;
+
 
   const menu =
     MENUS[schedule.menuId];
@@ -1302,11 +1705,13 @@ function render() {
       );
 
     return;
+
   }
 
 
   const isOpen =
     state.scheduleInfo.status === "open";
+
 
   const isBanhMi =
     menu.title === "Banh Mi";
@@ -1315,8 +1720,6 @@ function render() {
   root.innerHTML = `
 
     <div class="container">
-
-      <!-- HERO -->
 
       <div class="hero">
 
@@ -1329,22 +1732,32 @@ function render() {
           ${menu.emoji}
         </div>
 
+
         <h1>
-          ${esc(STORE_CONFIG.storeName)}
+          ${esc(
+            STORE_CONFIG.storeName
+          )}
         </h1>
 
+
         <p>
-          ${esc(menu.description)}
+          ${esc(
+            menu.description
+          )}
         </p>
+
 
         <a
           class="hero-ig"
-          href="https://instagram.com/${esc(STORE_CONFIG.instagram)}"
+          href="https://instagram.com/${esc(
+            STORE_CONFIG.instagram
+          )}"
           target="_blank"
-          rel="noopener"
         >
           📸 Follow us on IG:
-          @${esc(STORE_CONFIG.instagram)}
+          @${esc(
+            STORE_CONFIG.instagram
+          )}
         </a>
 
 
@@ -1363,7 +1776,12 @@ function render() {
                 schedule.fulfilmentDates ||
                 [schedule.fulfilmentDate]
               )
-              .map(d => esc(formatDate(d)))
+              .map(
+                d =>
+                  esc(
+                    formatDate(d)
+                  )
+              )
               .join(" / ")
             }
 
@@ -1400,50 +1818,13 @@ function render() {
 
           <br>
 
-          Orders will be confirmed upon
-          receipt of payment.
+          Orders will be confirmed
+          upon receipt of payment.
 
         </div>
 
       </div>
 
-
-      <!-- UPCOMING NOTICE -->
-
-      ${
-        !isOpen
-          ? `
-            <div
-              class="card"
-              style="
-                background:#fffbeb;
-                border-color:#fde68a
-              "
-            >
-
-              <strong>
-                ⏳ Ordering is not open yet
-              </strong>
-
-              <div
-                class="small"
-                style="margin-top:5px"
-              >
-                Orders open on
-                ${esc(
-                  formatDateTime(
-                    schedule.orderOpens
-                  )
-                )}.
-              </div>
-
-            </div>
-          `
-          : ""
-      }
-
-
-      <!-- DATE / MEAL TIME -->
 
       ${fulfilmentDateSelector(
         schedule,
@@ -1451,12 +1832,8 @@ function render() {
       )}
 
 
-      <!-- CUSTOMER -->
-
       ${customerForm()}
 
-
-      <!-- MENU -->
 
       ${menuSection(
         menu,
@@ -1464,8 +1841,6 @@ function render() {
         isBanhMi
       )}
 
-
-      <!-- NOTES -->
 
       <div class="card">
 
@@ -1475,7 +1850,9 @@ function render() {
 
         <input
           id="notes"
-          value="${esc(state.customer.notes)}"
+          value="${esc(
+            state.customer.notes
+          )}"
           placeholder="Less spicy, separate sauce, etc."
         >
 
@@ -1484,12 +1861,8 @@ function render() {
     </div>
 
 
-    <!-- CART -->
-
     ${cartBar(isOpen)}
 
-
-    <!-- CUSTOMISATION MODAL -->
 
     ${
       state.customizeProduct
@@ -1507,15 +1880,21 @@ function render() {
 
 
   const stickyEl =
-    document.querySelector(".sticky");
+    document.querySelector(
+      ".sticky"
+    );
 
 
   if (stickyEl) {
 
     document.body.style.paddingBottom =
-      (stickyEl.offsetHeight + 24) +
-      "px";
+      (
+        stickyEl.offsetHeight +
+        24
+      ) + "px";
+
   }
+
 }
 
 
@@ -1543,7 +1922,9 @@ function customerForm() {
         <input
           id="name"
           required
-          value="${esc(state.customer.name)}"
+          value="${esc(
+            state.customer.name
+          )}"
           placeholder="Banh Mi"
         >
 
@@ -1559,7 +1940,9 @@ function customerForm() {
         <input
           id="phone"
           required
-          value="${esc(state.customer.phone)}"
+          value="${esc(
+            state.customer.phone
+          )}"
           placeholder="12345678"
         >
 
@@ -1571,6 +1954,7 @@ function customerForm() {
         <label>
           Order Method *
         </label>
+
 
         <div class="radio-group">
 
@@ -1622,7 +2006,6 @@ function customerForm() {
 
         ${
           state.fulfillmentType === "delivery"
-
             ? `
 
               <label>
@@ -1633,7 +2016,10 @@ function customerForm() {
                 id="address"
                 rows="2"
                 placeholder="Block/Street, Unit #, Postal Code"
-              >${esc(state.customer.address)}</textarea>
+              >${esc(
+                state.customer.address
+              )}</textarea>
+
 
               <div class="fee-notice">
 
@@ -1643,12 +2029,12 @@ function customerForm() {
               </div>
 
             `
-
             : `
 
               <label>
                 Collection Point
               </label>
+
 
               <div class="pickup-info">
 
@@ -1687,11 +2073,12 @@ function customerForm() {
     </div>
 
   `;
+
 }
 
 
 /* ============================================================
-   MENU SECTION
+   MENU
    ============================================================ */
 
 function menuSection(
@@ -1705,22 +2092,28 @@ function menuSection(
     <div class="card">
 
       <h2>
-        ${esc(menu.title)}
+        ${esc(
+          menu.title
+        )}
       </h2>
 
+
       ${menu.products
-        .map(product =>
-          productCard(
-            product,
-            isOpen,
-            isBanhMi
-          )
+        .map(
+          p =>
+            productCard(
+              p,
+              isOpen,
+              isBanhMi
+            )
         )
-        .join("")}
+        .join("")
+      }
 
     </div>
 
   `;
+
 }
 
 
@@ -1737,28 +2130,27 @@ function productCard(
   let photoContent = "";
 
 
-  /*
-    If an icon is configured, use it.
-    Otherwise look for:
-      product-id.jpg
-
-    Example:
-      bun-pork.jpg
-      bun-chicken.jpg
-      com-tam-chicken.jpg
-  */
-
-  if (PRODUCT_ICONS[product.id]) {
+  if (
+    PRODUCT_ICONS[
+      product.id
+    ]
+  ) {
 
     photoContent = `
+
       <div
         style="
-          font-size:56px;
-          text-align:center;
+          font-size:36px;
+          text-align:center
         "
       >
-        ${PRODUCT_ICONS[product.id]}
+        ${
+          PRODUCT_ICONS[
+            product.id
+          ]
+        }
       </div>
+
     `;
 
   } else {
@@ -1768,12 +2160,16 @@ function productCard(
         ? product.image
         : `${product.id}.jpg`;
 
+
     photoContent = `
 
       <img
-        src="${esc(photoPath)}"
-        alt="${esc(product.name)}"
-        loading="lazy"
+        src="${esc(
+          photoPath
+        )}"
+        alt="${esc(
+          product.name
+        )}"
         onerror="
           this.onerror=null;
           this.src='${DEFAULT_PLACEHOLDER}';
@@ -1781,36 +2177,33 @@ function productCard(
       >
 
     `;
+
   }
 
 
   /*
-    IMPORTANT:
-    Only the default version is counted here.
-
-    Customised lines remain separate,
-    therefore the normal + Add button
-    NEVER disappears just because the
-    customer customised the same item.
-  */
+   * DEFAULT ITEM COUNT
+   *
+   * Customised items are deliberately excluded
+   * so "+ Add" remains available even after
+   * a customer has customised the same product.
+   */
 
   const currentDefaultQty =
     state.cart
-      .filter(line =>
-        line.productId === product.id &&
-
-        (!line.proteins ||
-          line.proteins.length === 0) &&
-
-        (!line.addOns ||
-          line.addOns.length === 0) &&
-
-        (!line.exclusions ||
-          line.exclusions.length === 0)
+      .filter(
+        l =>
+          l.productId === product.id &&
+          (!l.proteins ||
+            l.proteins.length === 0) &&
+          (!l.addOns ||
+            l.addOns.length === 0) &&
+          (!l.exclusions ||
+            l.exclusions.length === 0)
       )
       .reduce(
-        (sum, line) =>
-          sum + line.quantity,
+        (sum,l) =>
+          sum + l.quantity,
         0
       );
 
@@ -1830,127 +2223,138 @@ function productCard(
 
     <div class="product">
 
-      <!-- LARGE FOOD IMAGE -->
+      <div class="product-inner">
 
-      <div class="photo">
-
-        ${photoContent}
-
-      </div>
-
-
-      <!-- PRODUCT INFORMATION -->
-
-      <div class="product-info">
-
-        <div class="product-name">
-
-          ${esc(product.name)}
-
+        <div class="photo">
+          ${photoContent}
         </div>
 
 
-        ${
-          product.note
-            ? `
-              <div class="note">
-                ${esc(product.note)}
-              </div>
-            `
-            : ""
-        }
+        <div class="product-info">
+
+          <div class="product-name">
+            ${esc(
+              product.name
+            )}
+          </div>
 
 
-        <div class="price">
+          ${
+            product.note
+              ? `
+                <div class="note">
+                  ${esc(
+                    product.note
+                  )}
+                </div>
+              `
+              : ""
+          }
 
-          ${money(product.price)}
+
+          <div class="price">
+            ${money(
+              product.price
+            )}
+          </div>
+
+
+          ${
+            isOpen
+              ? `
+
+                <div class="actions">
+
+                  <button
+                    class="btn btn-green"
+                    data-action="simple"
+                    data-id="${esc(
+                      product.id
+                    )}"
+                  >
+                    + Add
+                  </button>
+
+
+                  ${
+                    currentDefaultQty > 0
+                      ? `
+
+                        <div
+                          class="qty"
+                          style="margin-top:0"
+                        >
+
+                          <button
+                            data-action="menu-qty"
+                            data-id="${esc(
+                              product.id
+                            )}"
+                            data-delta="-1"
+                          >
+                            −
+                          </button>
+
+
+                          <strong
+                            style="
+                              padding:0 6px
+                            "
+                          >
+                            ${currentDefaultQty}
+                          </strong>
+
+
+                          <button
+                            class="plus"
+                            data-action="menu-qty"
+                            data-id="${esc(
+                              product.id
+                            )}"
+                            data-delta="1"
+                          >
+                            +
+                          </button>
+
+                        </div>
+
+                      `
+                      : ""
+                  }
+
+
+                  ${
+                    isCustomizable
+                      ? `
+
+                        <button
+                          class="btn btn-outline"
+                          data-action="customize"
+                          data-id="${esc(
+                            product.id
+                          )}"
+                        >
+                          Customise
+                        </button>
+
+                      `
+                      : ""
+                  }
+
+                </div>
+
+              `
+              : ""
+          }
 
         </div>
-
-
-        ${
-          isOpen
-            ? `
-
-              <div class="actions">
-
-                <!-- ALWAYS AVAILABLE -->
-
-                <button
-                  class="btn btn-green"
-                  data-action="simple"
-                  data-id="${esc(product.id)}"
-                >
-                  + Add
-                </button>
-
-
-                ${
-                  currentDefaultQty > 0
-                    ? `
-
-                      <div
-                        class="qty"
-                        style="margin-top:0"
-                      >
-
-                        <button
-                          data-action="menu-qty"
-                          data-id="${esc(product.id)}"
-                          data-delta="-1"
-                        >
-                          −
-                        </button>
-
-                        <strong
-                          style="padding:0 6px"
-                        >
-                          ${currentDefaultQty}
-                        </strong>
-
-                        <button
-                          class="plus"
-                          data-action="menu-qty"
-                          data-id="${esc(product.id)}"
-                          data-delta="1"
-                        >
-                          +
-                        </button>
-
-                      </div>
-
-                    `
-                    : ""
-                }
-
-
-                ${
-                  isCustomizable
-                    ? `
-
-                      <button
-                        class="btn btn-outline"
-                        data-action="customize"
-                        data-id="${esc(product.id)}"
-                      >
-                        Customise
-                      </button>
-
-                    `
-                    : ""
-                }
-
-              </div>
-
-            `
-            : ""
-        }
 
       </div>
 
     </div>
 
   `;
+
 }
 
 
@@ -1970,8 +2374,8 @@ function cartBar(isOpen) {
 
   const count =
     state.cart.reduce(
-      (sum, line) =>
-        sum + line.quantity,
+      (s,l) =>
+        s + l.quantity,
       0
     );
 
@@ -1980,11 +2384,9 @@ function cartBar(isOpen) {
 
     <div class="sticky">
 
-
       ${
         state.cartOpen &&
         state.cart.length
-
           ? `
 
             <div class="cart-panel">
@@ -1996,125 +2398,154 @@ function cartBar(isOpen) {
 
               <div style="margin-top:10px">
 
-                ${state.cart.map(line => `
+                ${state.cart
+                  .map(
+                    line => `
 
-                  <div class="cart-line">
+                      <div class="cart-line">
 
-                    <div class="cart-line-top">
+                        <div class="cart-line-top">
 
-                      <div>
+                          <div>
 
-                        <strong>
-                          ${esc(line.productName)}
-                        </strong>
-
-
-                        ${
-                          line.proteins.length
-                            ? `
-                              <div class="cart-detail">
-                                Protein:
-                                ${esc(
-                                  line.proteins
-                                    .map(x => x.name)
-                                    .join(" + ")
-                                )}
-                              </div>
-                            `
-                            : ""
-                        }
+                            <strong>
+                              ${esc(
+                                line.productName
+                              )}
+                            </strong>
 
 
-                        ${
-                          line.addOns.length
-                            ? `
-                              <div class="cart-detail">
-                                Add-ons:
-                                ${esc(
-                                  line.addOns
-                                    .map(x => x.name)
-                                    .join(", ")
-                                )}
-                              </div>
-                            `
-                            : ""
-                        }
+                            ${
+                              line.proteins.length
+                                ? `
+                                  <div class="cart-detail">
+                                    Protein:
+                                    ${esc(
+                                      line.proteins
+                                        .map(
+                                          x =>
+                                            x.name
+                                        )
+                                        .join(
+                                          " + "
+                                        )
+                                    )}
+                                  </div>
+                                `
+                                : ""
+                            }
 
 
-                        ${
-                          line.exclusions.length
-                            ? `
-                              <div
-                                class="cart-detail-excl"
-                              >
-                                🚫
-                                ${esc(
-                                  line.exclusions.join(", ")
-                                )}
-                              </div>
-                            `
-                            : ""
-                        }
+                            ${
+                              line.addOns.length
+                                ? `
+                                  <div class="cart-detail">
+                                    Add-ons:
+                                    ${esc(
+                                      line.addOns
+                                        .map(
+                                          x =>
+                                            x.name
+                                        )
+                                        .join(
+                                          ", "
+                                        )
+                                    )}
+                                  </div>
+                                `
+                                : ""
+                            }
 
 
-                        <div class="cart-detail">
+                            ${
+                              line.exclusions.length
+                                ? `
+                                  <div class="cart-detail-excl">
+                                    🚫
+                                    ${esc(
+                                      line.exclusions.join(
+                                        ", "
+                                      )
+                                    )}
+                                  </div>
+                                `
+                                : ""
+                            }
 
-                          ${money(line.unitPrice)}
-                          each
+
+                            <div class="cart-detail">
+
+                              ${money(
+                                line.unitPrice
+                              )}
+                              each
+
+                            </div>
+
+                          </div>
+
+
+                          <button
+                            class="btn btn-red"
+                            data-action="remove"
+                            data-line="${esc(
+                              line.lineId
+                            )}"
+                          >
+                            Remove
+                          </button>
+
+                        </div>
+
+
+                        <div class="qty">
+
+                          <button
+                            data-action="qty"
+                            data-delta="-1"
+                            data-line="${esc(
+                              line.lineId
+                            )}"
+                          >
+                            −
+                          </button>
+
+
+                          <strong>
+                            ${line.quantity}
+                          </strong>
+
+
+                          <button
+                            class="plus"
+                            data-action="qty"
+                            data-delta="1"
+                            data-line="${esc(
+                              line.lineId
+                            )}"
+                          >
+                            +
+                          </button>
+
+
+                          <strong
+                            style="
+                              margin-left:auto
+                            "
+                          >
+                            ${money(
+                              line.total
+                            )}
+                          </strong>
 
                         </div>
 
                       </div>
 
-
-                      <button
-                        class="btn btn-red"
-                        data-action="remove"
-                        data-line="${esc(line.lineId)}"
-                      >
-                        Remove
-                      </button>
-
-                    </div>
-
-
-                    <div class="qty">
-
-                      <button
-                        data-action="qty"
-                        data-delta="-1"
-                        data-line="${esc(line.lineId)}"
-                      >
-                        −
-                      </button>
-
-
-                      <strong>
-                        ${line.quantity}
-                      </strong>
-
-
-                      <button
-                        class="plus"
-                        data-action="qty"
-                        data-delta="1"
-                        data-line="${esc(line.lineId)}"
-                      >
-                        +
-                      </button>
-
-
-                      <strong
-                        style="margin-left:auto"
-                      >
-                        ${money(line.total)}
-                      </strong>
-
-                    </div>
-
-                  </div>
-
-                `).join("")}
+                    `
+                  )
+                  .join("")
+                }
 
               </div>
 
@@ -2123,7 +2554,7 @@ function cartBar(isOpen) {
                 style="
                   border-top:1px solid #e5e7eb;
                   margin-top:12px;
-                  padding-top:10px;
+                  padding-top:10px
                 "
               >
 
@@ -2134,15 +2565,17 @@ function cartBar(isOpen) {
                   </span>
 
                   <span>
-                    ${money(subtotal)}
+                    ${money(
+                      subtotal
+                    )}
                   </span>
 
                 </div>
 
 
                 ${
-                  state.fulfillmentType === "delivery"
-
+                  state.fulfillmentType ===
+                  "delivery"
                     ? `
 
                       <div
@@ -2160,13 +2593,17 @@ function cartBar(isOpen) {
                             isDeliveryTBA
                               ? `
                                 <strong
-                                  style="color:#b45309"
+                                  style="
+                                    color:#b45309
+                                  "
                                 >
                                   TBA
                                   (Advised via WA)
                                 </strong>
                               `
-                              : money(deliveryFee)
+                              : money(
+                                  deliveryFee
+                                )
                           }
 
                         </span>
@@ -2176,16 +2613,13 @@ function cartBar(isOpen) {
 
                       ${
                         isDeliveryTBA
-
                           ? `
 
-                            <div
-                              class="fee-notice"
-                            >
+                            <div class="fee-notice">
 
-                              ℹ️ Delivery fee quoted via
-                              WhatsApp based on distance
-                              when booking driver.
+                              ℹ️ Delivery fee quoted
+                              via WhatsApp based on
+                              distance when booking driver.
 
                               <br>
 
@@ -2194,7 +2628,8 @@ function cartBar(isOpen) {
                                 ${money(
                                   Math.max(
                                     0,
-                                    STORE_CONFIG.flatDeliveryThreshold -
+                                    STORE_CONFIG
+                                      .flatDeliveryThreshold -
                                     subtotal
                                   )
                                 )}
@@ -2207,15 +2642,11 @@ function cartBar(isOpen) {
                             </div>
 
                           `
-
                           : `
 
-                            <div
-                              class="fee-success"
-                            >
+                            <div class="fee-success">
 
-                              ✓ $15 flat delivery rate
-                              unlocked!
+                              ✓ $15 flat delivery rate unlocked!
 
                             </div>
 
@@ -2223,7 +2654,6 @@ function cartBar(isOpen) {
                       }
 
                     `
-
                     : `
 
                       <div
@@ -2252,7 +2682,7 @@ function cartBar(isOpen) {
                     font-size:16px;
                     margin-top:8px;
                     border-top:1px dashed #e5e7eb;
-                    padding-top:6px;
+                    padding-top:6px
                   "
                 >
 
@@ -2260,9 +2690,13 @@ function cartBar(isOpen) {
                     Total Payable
                   </span>
 
-                  <span style="color:#047857">
+                  <span
+                    style="color:#047857"
+                  >
 
-                    ${money(grandTotal)}
+                    ${money(
+                      grandTotal
+                    )}
 
                     ${
                       isDeliveryTBA
@@ -2270,7 +2704,7 @@ function cartBar(isOpen) {
                           <small
                             style="
                               font-size:11px;
-                              font-weight:normal;
+                              font-weight:normal
                             "
                           >
                             + delivery
@@ -2300,15 +2734,22 @@ function cartBar(isOpen) {
         >
 
           <div class="small">
-
-            ${count} item(s) selected
-
+            ${count}
+            item(s) selected
           </div>
+
 
           <div class="total">
 
-            ${money(grandTotal)}
-            ${isDeliveryTBA ? "*" : ""}
+            ${money(
+              grandTotal
+            )}
+
+            ${
+              isDeliveryTBA
+                ? "*"
+                : ""
+            }
 
           </div>
 
@@ -2356,11 +2797,12 @@ function cartBar(isOpen) {
     </div>
 
   `;
+
 }
 
 
 /* ============================================================
-   CUSTOMISATION MODAL
+   CUSTOMISE MODAL
    ============================================================ */
 
 function customizeModal(menu) {
@@ -2368,18 +2810,16 @@ function customizeModal(menu) {
   const product =
     state.customizeProduct;
 
+
   const isBanhMi =
     menu.title === "Banh Mi";
 
 
   /*
-    Protein choices deliberately remain flexible.
-    This allows:
-      Chicken + Pork
-      Pork + Duck
-      Chicken + Meatball
-      etc.
-  */
+   * Protein choices deliberately remain
+   * available so customers can mix similar
+   * protein types.
+   */
 
   const proteins = [
 
@@ -2415,38 +2855,44 @@ function customizeModal(menu) {
 
   if (
     product.note &&
-    product.note.includes("peanuts")
+    product.note.includes(
+      "peanuts"
+    )
   ) {
 
     availableExclusions.push(
       "No Peanuts"
     );
+
   }
 
 
   if (
     product.note &&
-    product.note.includes("basil")
+    product.note.includes(
+      "basil"
+    )
   ) {
 
     availableExclusions.push(
       "No Basil"
     );
+
   }
 
 
   const extras =
     state.selectedAddOns.reduce(
-      (sum, x) =>
-        sum + x.price,
+      (s,x) =>
+        s + x.price,
       0
     );
 
 
   const proteinTotal =
     state.selectedProteins.reduce(
-      (sum, x) =>
-        sum + x.price,
+      (s,x) =>
+        s + x.price,
       0
     );
 
@@ -2463,7 +2909,6 @@ function customizeModal(menu) {
 
       <div class="modal">
 
-
         <div class="modal-head">
 
           <div>
@@ -2473,7 +2918,9 @@ function customizeModal(menu) {
             </h2>
 
             <div class="small">
-              ${esc(product.name)}
+              ${esc(
+                product.name
+              )}
             </div>
 
           </div>
@@ -2491,10 +2938,8 @@ function customizeModal(menu) {
 
         <div class="modal-body">
 
-
           ${
             isBanhMi
-
               ? `
 
                 <strong>
@@ -2510,80 +2955,17 @@ function customizeModal(menu) {
                 </div>
 
 
-                ${proteins.map(p => {
-
-                  const selected =
-                    state.selectedProteins
-                      .some(
-                        x => x.id === p.id
-                      );
-
-                  return `
-
-                    <button
-                      class="
-                        option
-                        ${selected ? "selected" : ""}
-                      "
-                      data-action="protein"
-                      data-id="${p.id}"
-                    >
-
-                      ${
-                        selected
-                          ? "✓ "
-                          : ""
-                      }
-
-                      ${esc(p.name)}
-
-                      <span class="small">
-                        — no extra charge
-                      </span>
-
-                    </button>
-
-                  `;
-
-                }).join("")}
-
-              `
-
-              : ""
-          }
-
-
-          ${
-            availableExclusions.length
-
-              ? `
-
-                <div
-                  style="
-                    margin-top:${
-                      isBanhMi
-                        ? "18px"
-                        : "0"
-                    }
-                  "
-                >
-
-                  <strong>
-                    Dietary Preference /
-                    Exclusions
-                  </strong>
-
-                </div>
-
-
-                <div style="margin-top:8px">
-
-                  ${
-                    availableExclusions.map(ex => {
+                ${proteins
+                  .map(
+                    p => {
 
                       const selected =
-                        state.selectedExclusions
-                          .includes(ex);
+                        state.selectedProteins
+                          .some(
+                            x =>
+                              x.id === p.id
+                          );
+
 
                       return `
 
@@ -2596,8 +2978,8 @@ function customizeModal(menu) {
                                 : ""
                             }
                           "
-                          data-action="exclusion"
-                          data-val="${esc(ex)}"
+                          data-action="protein"
+                          data-id="${p.id}"
                         >
 
                           ${
@@ -2606,19 +2988,102 @@ function customizeModal(menu) {
                               : ""
                           }
 
-                          ${esc(ex)}
+                          ${esc(
+                            p.name
+                          )}
+
+                          <span class="small">
+                            — no extra charge
+                          </span>
 
                         </button>
 
                       `;
 
-                    }).join("")
+                    }
+                  )
+                  .join("")
+                }
+
+              `
+              : ""
+          }
+
+
+          ${
+            availableExclusions.length
+              ? `
+
+                <div
+                  style="
+                    margin-top:
+                      ${
+                        isBanhMi
+                          ? "18px"
+                          : "0"
+                      }
+                  "
+                >
+
+                  <strong>
+                    Dietary Preference / Exclusions
+                  </strong>
+
+                </div>
+
+
+                <div style="margin-top:8px">
+
+                  ${availableExclusions
+                    .map(
+                      ex => {
+
+                        const selected =
+                          state.selectedExclusions
+                            .includes(
+                              ex
+                            );
+
+
+                        return `
+
+                          <button
+                            class="
+                              option
+                              ${
+                                selected
+                                  ? "selected"
+                                  : ""
+                              }
+                            "
+                            data-action="exclusion"
+                            data-val="${esc(
+                              ex
+                            )}"
+                          >
+
+                            ${
+                              selected
+                                ? "✓ "
+                                : ""
+                            }
+
+                            ${esc(
+                              ex
+                            )}
+
+                          </button>
+
+                        `;
+
+                      }
+                    )
+                    .join("")
                   }
 
                 </div>
 
               `
-
               : ""
           }
 
@@ -2628,11 +3093,12 @@ function customizeModal(menu) {
             menu.addOns.filter(
               a => !a.standalone
             ).length
-
               ? `
 
                 <div
-                  style="margin-top:18px"
+                  style="
+                    margin-top:18px
+                  "
                 >
 
                   <strong>
@@ -2642,20 +3108,26 @@ function customizeModal(menu) {
                 </div>
 
 
-                <div style="margin-top:8px">
+                <div
+                  style="margin-top:8px"
+                >
 
-                  ${
-                    menu.addOns
-                      .filter(
-                        a => !a.standalone
-                      )
-                      .map(a => {
+                  ${menu.addOns
+                    .filter(
+                      a =>
+                        !a.standalone
+                    )
+                    .map(
+                      a => {
 
                         const selected =
                           state.selectedAddOns
                             .some(
-                              x => x.id === a.id
+                              x =>
+                                x.id ===
+                                a.id
                             );
+
 
                         return `
 
@@ -2678,26 +3150,33 @@ function customizeModal(menu) {
                                 : ""
                             }
 
-                            ${esc(a.name)}
+                            ${esc(
+                              a.name
+                            )}
 
                             <span
-                              style="float:right"
+                              style="
+                                float:right
+                              "
                             >
-                              +${money(a.price)}
+                              +
+                              ${money(
+                                a.price
+                              )}
                             </span>
 
                           </button>
 
                         `;
 
-                      })
-                      .join("")
+                      }
+                    )
+                    .join("")
                   }
 
                 </div>
 
               `
-
               : ""
           }
 
@@ -2705,17 +3184,18 @@ function customizeModal(menu) {
           <div class="summary">
 
             <div>
-
-              ${esc(product.name)}
+              ${esc(
+                product.name
+              )}
               —
-              ${money(product.price)}
-
+              ${money(
+                product.price
+              )}
             </div>
 
 
             ${
               state.selectedProteins.length
-
                 ? `
 
                   <div class="small">
@@ -2723,8 +3203,13 @@ function customizeModal(menu) {
                     Protein mix:
                     ${esc(
                       state.selectedProteins
-                        .map(x => x.name)
-                        .join(" + ")
+                        .map(
+                          x =>
+                            x.name
+                        )
+                        .join(
+                          " + "
+                        )
                     )}
 
                   </div>
@@ -2736,7 +3221,6 @@ function customizeModal(menu) {
 
             ${
               state.selectedExclusions.length
-
                 ? `
 
                   <div
@@ -2750,7 +3234,9 @@ function customizeModal(menu) {
                     Exclusions:
                     ${esc(
                       state.selectedExclusions
-                        .join(", ")
+                        .join(
+                          ", "
+                        )
                     )}
 
                   </div>
@@ -2762,7 +3248,6 @@ function customizeModal(menu) {
 
             ${
               state.selectedAddOns.length
-
                 ? `
 
                   <div class="small">
@@ -2770,8 +3255,13 @@ function customizeModal(menu) {
                     Add-ons:
                     ${esc(
                       state.selectedAddOns
-                        .map(x => x.name)
-                        .join(", ")
+                        .map(
+                          x =>
+                            x.name
+                        )
+                        .join(
+                          ", "
+                        )
                     )}
 
                   </div>
@@ -2788,7 +3278,7 @@ function customizeModal(menu) {
                 padding-top:10px;
                 display:flex;
                 justify-content:space-between;
-                font-weight:800;
+                font-weight:800
               "
             >
 
@@ -2796,10 +3286,12 @@ function customizeModal(menu) {
                 Total
               </span>
 
-              <span style="color:#047857">
-
-                ${money(final)}
-
+              <span
+                style="color:#047857"
+              >
+                ${money(
+                  final
+                )}
               </span>
 
             </div>
@@ -2814,7 +3306,9 @@ function customizeModal(menu) {
           >
 
             Add to Order —
-            ${money(final)}
+            ${money(
+              final
+            )}
 
           </button>
 
@@ -2825,95 +3319,7 @@ function customizeModal(menu) {
     </div>
 
   `;
-}
 
-
-/* ============================================================
-   CLOSED PAGE
-   ============================================================ */
-
-function closedPage(next) {
-
-  return `
-
-    <div class="closed">
-
-      <div class="closed-card">
-
-        <div style="font-size:50px">
-          🔒
-        </div>
-
-        <h1>
-          Ordering is currently closed
-        </h1>
-
-        <p style="color:#6b7280">
-
-          There are no menus available
-          for ordering right now.
-
-        </p>
-
-
-        ${
-          next
-            ? `
-
-              <div class="next">
-
-                <strong>
-
-                  ${MENUS[next.menuId].emoji}
-                  ${esc(
-                    MENUS[next.menuId].title
-                  )}
-
-                </strong>
-
-
-                <div
-                  class="small"
-                  style="margin-top:7px"
-                >
-
-                  Orders open:
-                  ${esc(
-                    formatDateTime(
-                      next.orderOpens
-                    )
-                  )}
-
-                </div>
-
-
-                <div class="small">
-
-                  Fulfilment:
-                  ${
-                    (
-                      next.fulfilmentDates ||
-                      [next.fulfilmentDate]
-                    )
-                    .map(d =>
-                      esc(formatDate(d))
-                    )
-                    .join(" / ")
-                  }
-
-                </div>
-
-              </div>
-
-            `
-            : ""
-        }
-
-      </div>
-
-    </div>
-
-  `;
 }
 
 
@@ -2941,6 +3347,7 @@ function errorPage(
     </div>
 
   `;
+
 }
 
 
@@ -2950,14 +3357,15 @@ function errorPage(
 
 function addSimple(product) {
 
-  /* Chilli limit */
-
   if (
-    isChilliProduct(product.id)
+    isChilliProduct(
+      product.id
+    )
   ) {
 
     const currentChilliCount =
       getTotalChilliInCart();
+
 
     if (
       currentChilliCount >=
@@ -2969,22 +3377,20 @@ function addSimple(product) {
       );
 
       return;
+
     }
+
   }
 
 
-  /*
-    Find ONLY the default version.
-    Customised versions remain separate.
-  */
-
   const existingLine =
     state.cart.find(
-      line =>
-        line.productId === product.id &&
-        line.proteins.length === 0 &&
-        line.addOns.length === 0 &&
-        line.exclusions.length === 0
+      l =>
+        l.productId ===
+          product.id &&
+        l.proteins.length === 0 &&
+        l.addOns.length === 0 &&
+        l.exclusions.length === 0
     );
 
 
@@ -3026,16 +3432,19 @@ function addSimple(product) {
 
       total:
         product.price
+
     });
 
 
     render();
+
   }
+
 }
 
 
 /* ============================================================
-   OPEN CUSTOMISATION
+   OPEN CUSTOMISE
    ============================================================ */
 
 function openCustomize(product) {
@@ -3043,18 +3452,22 @@ function openCustomize(product) {
   state.customizeProduct =
     product;
 
-  state.selectedProteins = [];
+  state.selectedProteins =
+    [];
 
-  state.selectedAddOns = [];
+  state.selectedAddOns =
+    [];
 
-  state.selectedExclusions = [];
+  state.selectedExclusions =
+    [];
 
   render();
+
 }
 
 
 /* ============================================================
-   CONFIRM CUSTOMISATION
+   CONFIRM CUSTOM
    ============================================================ */
 
 function confirmCustomize() {
@@ -3066,17 +3479,19 @@ function confirmCustomize() {
   const unit =
     product.price +
 
-    state.selectedProteins.reduce(
-      (sum, x) =>
-        sum + x.price,
-      0
-    ) +
+    state.selectedProteins
+      .reduce(
+        (s,x) =>
+          s + x.price,
+        0
+      ) +
 
-    state.selectedAddOns.reduce(
-      (sum, x) =>
-        sum + x.price,
-      0
-    );
+    state.selectedAddOns
+      .reduce(
+        (s,x) =>
+          s + x.price,
+        0
+      );
 
 
   state.cart.push({
@@ -3111,6 +3526,7 @@ function confirmCustomize() {
 
     total:
       unit
+
   });
 
 
@@ -3130,11 +3546,12 @@ function confirmCustomize() {
     true;
 
   render();
+
 }
 
 
 /* ============================================================
-   CHOICE HELPERS
+   TOGGLE CHOICE
    ============================================================ */
 
 function toggleChoice(
@@ -3144,21 +3561,31 @@ function toggleChoice(
 
   const exists =
     collection.some(
-      x => x.id === item.id
+      x =>
+        x.id === item.id
     );
+
 
   return exists
     ? collection.filter(
-        x => x.id !== item.id
+        x =>
+          x.id !== item.id
       )
     : [
         ...collection,
         item
       ];
+
 }
 
 
-function toggleExclusion(val) {
+/* ============================================================
+   EXCLUSION
+   ============================================================ */
+
+function toggleExclusion(
+  val
+) {
 
   if (
     state.selectedExclusions
@@ -3168,19 +3595,22 @@ function toggleExclusion(val) {
     state.selectedExclusions =
       state.selectedExclusions
         .filter(
-          x => x !== val
+          x =>
+            x !== val
         );
 
   } else {
 
     state.selectedExclusions
       .push(val);
+
   }
+
 }
 
 
 /* ============================================================
-   UPDATE CART QUANTITY
+   UPDATE QUANTITY
    ============================================================ */
 
 function updateQuantity(
@@ -3190,55 +3620,68 @@ function updateQuantity(
 
   state.cart =
     state.cart
-      .map(line => {
-
-        if (
-          line.lineId !== lineId
-        ) {
-          return line;
-        }
-
-
-        if (
-          delta > 0 &&
-          isChilliProduct(
-            line.productId
-          )
-        ) {
-
-          const currentChilliCount =
-            getTotalChilliInCart();
+      .map(
+        line => {
 
           if (
-            currentChilliCount >=
-            CHILLI_ORDER_LIMIT
+            line.lineId !==
+            lineId
           ) {
 
-            alert(
-              `Sorry, you can only order a maximum of ${CHILLI_ORDER_LIMIT} chilli bottle(s) per order.`
+            return line;
+
+          }
+
+
+          if (
+            delta > 0 &&
+            isChilliProduct(
+              line.productId
+            )
+          ) {
+
+            const currentChilliCount =
+              getTotalChilliInCart();
+
+
+            if (
+              currentChilliCount >=
+              CHILLI_ORDER_LIMIT
+            ) {
+
+              alert(
+                `Sorry, you can only order a maximum of ${CHILLI_ORDER_LIMIT} chilli bottle(s) per order.`
+              );
+
+              return line;
+
+            }
+
+          }
+
+
+          const quantity =
+            Math.max(
+              0,
+              line.quantity +
+              delta
             );
 
-            return line;
-          }
+
+          return {
+
+            ...line,
+
+            quantity,
+
+            total:
+              quantity *
+              line.unitPrice
+
+          };
+
         }
-
-
-        const quantity =
-          Math.max(
-            0,
-            line.quantity + delta
-          );
-
-
-        return {
-          ...line,
-          quantity,
-          total:
-            quantity *
-            line.unitPrice
-        };
-
-      })
+      )
       .filter(
         line =>
           line.quantity > 0
@@ -3246,6 +3689,7 @@ function updateQuantity(
 
 
   render();
+
 }
 
 
@@ -3255,44 +3699,48 @@ function updateQuantity(
 
 function submitOrder() {
 
-  /* Read current customer fields */
-
   state.customer.name =
     document
       .getElementById("name")
       ?.value
-      .trim() || "";
+      .trim() ||
+    "";
+
 
   state.customer.phone =
     document
       .getElementById("phone")
       ?.value
-      .trim() || "";
+      .trim() ||
+    "";
+
 
   state.customer.address =
     document
       .getElementById("address")
       ?.value
-      .trim() || "";
+      .trim() ||
+    "";
+
 
   state.customer.notes =
     document
       .getElementById("notes")
       ?.value
-      .trim() || "";
+      .trim() ||
+    "";
 
 
   saveCustomer();
 
-
-  /* Verify schedule is still open */
 
   const info =
     getScheduleInfo();
 
 
   if (
-    info.status !== "open"
+    info.status !==
+    "open"
   ) {
 
     alert(
@@ -3302,22 +3750,22 @@ function submitOrder() {
     render();
 
     return;
+
   }
 
 
-  /* Cart */
-
-  if (!state.cart.length) {
+  if (
+    !state.cart.length
+  ) {
 
     alert(
       "Please add at least one item."
     );
 
     return;
+
   }
 
-
-  /* Customer */
 
   if (
     !state.customer.name ||
@@ -3329,13 +3777,13 @@ function submitOrder() {
     );
 
     return;
+
   }
 
 
-  /* Delivery address */
-
   if (
-    state.fulfillmentType === "delivery" &&
+    state.fulfillmentType ===
+      "delivery" &&
     !state.customer.address
   ) {
 
@@ -3344,6 +3792,7 @@ function submitOrder() {
     );
 
     return;
+
   }
 
 
@@ -3357,18 +3806,23 @@ function submitOrder() {
     );
 
 
-  if (!selectedFulfilmentDate) {
+  if (
+    !selectedFulfilmentDate
+  ) {
 
     alert(
       "Please select a fulfilment date."
     );
 
     return;
+
   }
 
 
   const menu =
-    MENUS[schedule.menuId];
+    MENUS[
+      schedule.menuId
+    ];
 
 
   const {
@@ -3380,71 +3834,79 @@ function submitOrder() {
     calculateTotals();
 
 
-  /* ----------------------------------------------------------
-     ORDER ITEMS FOR GOOGLE SHEETS
-     ---------------------------------------------------------- */
-
   const itemsText =
     state.cart
-      .map(line => {
+      .map(
+        line => {
 
-        let itemStr =
-          `${line.productName} x${line.quantity} (${money(line.total)})`;
+          let itemStr =
+            `${line.productName} x${line.quantity} (${money(line.total)})`;
 
 
-        if (
-          line.proteins.length
-        ) {
+          if (
+            line.proteins.length
+          ) {
 
-          itemStr +=
-            ` [Protein: ${line.proteins
-              .map(x => x.name)
-              .join(" + ")}]`;
+            itemStr +=
+              ` [Protein: ${line.proteins.map(
+                x =>
+                  x.name
+              ).join(" + ")}]`;
+
+          }
+
+
+          if (
+            line.exclusions.length
+          ) {
+
+            itemStr +=
+              ` [Exclusions: ${line.exclusions.join(", ")}]`;
+
+          }
+
+
+          if (
+            line.addOns.length
+          ) {
+
+            itemStr +=
+              ` [Add-ons: ${line.addOns.map(
+                x =>
+                  x.name
+              ).join(", ")}]`;
+
+          }
+
+
+          return itemStr;
+
         }
-
-
-        if (
-          line.exclusions.length
-        ) {
-
-          itemStr +=
-            ` [Exclusions: ${line.exclusions
-              .join(", ")}]`;
-        }
-
-
-        if (
-          line.addOns.length
-        ) {
-
-          itemStr +=
-            ` [Add-ons: ${line.addOns
-              .map(x => x.name)
-              .join(", ")}]`;
-        }
-
-
-        return itemStr;
-
-      })
+      )
       .join("\n");
 
 
   const timeLabel =
-    state.deliveryTime === "12pm"
+    state.deliveryTime ===
+      "12pm"
+
       ? "12:00 PM (Lunch)"
+
       : "6:00 PM (Dinner)";
 
 
   const locationLabel =
-    state.fulfillmentType === "delivery"
+    state.fulfillmentType ===
+      "delivery"
+
       ? state.customer.address
+
       : STORE_CONFIG.pickupLocation;
 
 
-  /* ----------------------------------------------------------
-     GOOGLE SHEETS DATA
-     ---------------------------------------------------------- */
+  /*
+   * GOOGLE SHEETS DATA
+   */
 
   const sheetData = {
 
@@ -3464,7 +3926,8 @@ function submitOrder() {
       timeLabel,
 
     fulfillmentType:
-      state.fulfillmentType === "delivery"
+      state.fulfillmentType ===
+        "delivery"
         ? "Delivery"
         : "Self-Collection",
 
@@ -3481,12 +3944,17 @@ function submitOrder() {
       money(subtotal),
 
     deliveryFee:
-      state.fulfillmentType === "delivery"
+      state.fulfillmentType ===
+        "delivery"
+
         ? (
             isDeliveryTBA
               ? "TBA"
-              : money(deliveryFee)
+              : money(
+                  deliveryFee
+                )
           )
+
         : "$0.00",
 
     totalAmount:
@@ -3496,16 +3964,13 @@ function submitOrder() {
           ? " + Delivery"
           : ""
       )
+
   };
 
 
   /*
-    GOOGLE APPS SCRIPT
-
-    Keep mode:no-cors.
-    This is intentionally left compatible
-    with your current working Apps Script.
-  */
+   * SEND TO GOOGLE SHEETS
+   */
 
   if (
     STORE_CONFIG.googleSheetUrl
@@ -3525,7 +3990,9 @@ function submitOrder() {
         },
 
         body:
-          JSON.stringify(sheetData)
+          JSON.stringify(
+            sheetData
+          )
 
       }
     )
@@ -3536,12 +4003,13 @@ function submitOrder() {
           err
         )
     );
+
   }
 
 
-  /* ----------------------------------------------------------
-     WHATSAPP MESSAGE
-     ---------------------------------------------------------- */
+  /*
+   * WHATSAPP ORDER
+   */
 
   let text =
     `*NEW ORDER - ${menu.title.toUpperCase()}*\n\n`;
@@ -3559,7 +4027,8 @@ function submitOrder() {
 
   text +=
     `*Method:* ${
-      state.fulfillmentType === "delivery"
+      state.fulfillmentType ===
+        "delivery"
         ? "Delivery"
         : "Self-Collection"
     }\n`;
@@ -3575,7 +4044,8 @@ function submitOrder() {
 
   text +=
     `*${
-      state.fulfillmentType === "delivery"
+      state.fulfillmentType ===
+        "delivery"
         ? "Delivery Address"
         : "Collection Point"
     }:* ${locationLabel}\n`;
@@ -3587,6 +4057,7 @@ function submitOrder() {
 
     text +=
       `*General Remarks:* ${state.customer.notes}\n`;
+
   }
 
 
@@ -3594,51 +4065,61 @@ function submitOrder() {
     `\n*--- ORDER ITEMS ---*\n`;
 
 
-  state.cart.forEach(line => {
-
-    text +=
-      `• ${line.productName} x${line.quantity} - ${money(line.total)}\n`;
-
-
-    if (
-      line.proteins.length
-    ) {
+  state.cart.forEach(
+    line => {
 
       text +=
-        `   Protein mix: ${line.proteins
-          .map(x => x.name)
-          .join(" + ")}\n`;
+        `• ${line.productName} x${line.quantity} - ${money(line.total)}\n`;
+
+
+      if (
+        line.proteins.length
+      ) {
+
+        text +=
+          `   Protein mix: ${line.proteins.map(
+            x =>
+              x.name
+          ).join(" + ")}\n`;
+
+      }
+
+
+      if (
+        line.exclusions.length
+      ) {
+
+        text +=
+          `   Exclusions: ${line.exclusions.join(", ")}\n`;
+
+      }
+
+
+      if (
+        line.addOns.length
+      ) {
+
+        text +=
+          `   Add-ons: ${line.addOns.map(
+            x =>
+              x.name
+          ).join(", ")}\n`;
+
+      }
+
     }
-
-
-    if (
-      line.exclusions.length
-    ) {
-
-      text +=
-        `   Exclusions: ${line.exclusions.join(", ")}\n`;
-    }
-
-
-    if (
-      line.addOns.length
-    ) {
-
-      text +=
-        `   Add-ons: ${line.addOns
-          .map(x => x.name)
-          .join(", ")}\n`;
-    }
-
-  });
+  );
 
 
   text +=
-    `\n*Subtotal:* ${money(subtotal)}\n`;
+    `\n*Subtotal:* ${money(
+      subtotal
+    )}\n`;
 
 
   if (
-    state.fulfillmentType === "delivery"
+    state.fulfillmentType ===
+      "delivery"
   ) {
 
     if (
@@ -3649,15 +4130,22 @@ function submitOrder() {
         `*Delivery Fee:* TBA (Advised via reply based on driver quote)\n`;
 
       text +=
-        `*ESTIMATED TOTAL:* ${money(subtotal)} + delivery fee\n`;
+        `*ESTIMATED TOTAL:* ${money(
+          subtotal
+        )} + delivery fee\n`;
 
     } else {
 
       text +=
-        `*Delivery Fee:* ${money(deliveryFee)} (Flat Rate)\n`;
+        `*Delivery Fee:* ${money(
+          deliveryFee
+        )} (Flat Rate)\n`;
 
       text +=
-        `*TOTAL PAYABLE:* ${money(grandTotal)}\n`;
+        `*TOTAL PAYABLE:* ${money(
+          grandTotal
+        )}\n`;
+
     }
 
   } else {
@@ -3666,7 +4154,10 @@ function submitOrder() {
       `*Delivery Fee:* $0.00 (Self-Collection)\n`;
 
     text +=
-      `*TOTAL PAYABLE:* ${money(grandTotal)}\n`;
+      `*TOTAL PAYABLE:* ${money(
+        grandTotal
+      )}\n`;
+
   }
 
 
@@ -3674,16 +4165,17 @@ function submitOrder() {
     `\n*Payment via PayNow:* ${STORE_CONFIG.paynowDetails}\n`;
 
 
-  /* Open WhatsApp */
-
   window.open(
     `https://wa.me/${
       STORE_CONFIG.whatsappNumber
     }?text=${
-      encodeURIComponent(text)
+      encodeURIComponent(
+        text
+      )
     }`,
     "_blank"
   );
+
 }
 
 
@@ -3700,374 +4192,425 @@ function bindEvents(
     .querySelectorAll(
       "[data-action]"
     )
-    .forEach(el => {
+    .forEach(
+      el => {
 
-      el.addEventListener(
-        "click",
-        () => {
+        el.addEventListener(
+          "click",
+          () => {
 
-          const action =
-            el.dataset.action;
+            const action =
+              el.dataset.action;
 
 
-          /* SIMPLE ADD */
-
-          if (
-            action === "simple"
-          ) {
-
-            const p =
-              menu.products.find(
-                x =>
-                  x.id ===
-                  el.dataset.id
-              );
+            /* SIMPLE ADD */
 
             if (
-              p &&
-              isOpen
+              action ===
+              "simple"
             ) {
 
-              addSimple(p);
-            }
-          }
-
-
-          /* DEFAULT MENU QUANTITY */
-
-          if (
-            action === "menu-qty"
-          ) {
-
-            const productId =
-              el.dataset.id;
-
-            const delta =
-              Number(
-                el.dataset.delta
-              );
-
-
-            if (
-              delta > 0
-            ) {
-
-              const product =
+              const p =
                 menu.products.find(
-                  p =>
-                    p.id === productId
+                  x =>
+                    x.id ===
+                    el.dataset.id
                 );
 
+
               if (
-                product &&
+                p &&
                 isOpen
               ) {
 
-                addSimple(
-                  product
-                );
+                addSimple(p);
+
               }
 
-            } else {
-
-              const line =
-                state.cart.find(
-                  l =>
-                    l.productId === productId &&
-                    l.proteins.length === 0 &&
-                    l.addOns.length === 0 &&
-                    l.exclusions.length === 0
-                )
-                ||
-                state.cart.find(
-                  l =>
-                    l.productId === productId
-                );
-
-
-              if (line) {
-
-                updateQuantity(
-                  line.lineId,
-                  -1
-                );
-              }
             }
-          }
 
 
-          /* CUSTOMISE */
-
-          if (
-            action === "customize"
-          ) {
-
-            const p =
-              menu.products.find(
-                x =>
-                  x.id ===
-                  el.dataset.id
-              );
+            /* MENU QUANTITY */
 
             if (
-              p &&
-              isOpen
+              action ===
+              "menu-qty"
             ) {
 
-              openCustomize(p);
-            }
-          }
+              const productId =
+                el.dataset.id;
+
+              const delta =
+                Number(
+                  el.dataset.delta
+                );
 
 
-          /* CLOSE MODAL */
+              if (
+                delta > 0
+              ) {
 
-          if (
-            action === "close-modal"
-          ) {
-
-            state.customizeProduct =
-              null;
-
-            render();
-          }
+                const product =
+                  menu.products.find(
+                    p =>
+                      p.id ===
+                      productId
+                  );
 
 
-          /* PROTEIN */
+                if (
+                  product &&
+                  isOpen
+                ) {
 
-          if (
-            action === "protein"
-          ) {
+                  addSimple(
+                    product
+                  );
 
-            const p = [
+                }
 
-              {
-                id: "pork",
-                name: "Grilled Pork",
-                price: 0
-              },
+              } else {
 
-              {
-                id: "chicken",
-                name: "Grilled Chicken",
-                price: 0
-              },
+                const line =
+                  state.cart.find(
+                    l =>
+                      l.productId ===
+                        productId &&
+                      l.proteins.length ===
+                        0 &&
+                      l.addOns.length ===
+                        0 &&
+                      l.exclusions.length ===
+                        0
+                  ) ||
+                  state.cart.find(
+                    l =>
+                      l.productId ===
+                      productId
+                  );
 
-              {
-                id: "meatball",
-                name: "Pork Meatball",
-                price: 0
-              },
 
-              {
-                id: "duck",
-                name: "Smoked Duck",
-                price: 0
+                if (line) {
+
+                  updateQuantity(
+                    line.lineId,
+                    -1
+                  );
+
+                }
+
               }
 
-            ]
-            .find(
-              x =>
-                x.id ===
-                el.dataset.id
-            );
+            }
 
 
-            if (p) {
+            /* CUSTOMISE */
 
-              state.selectedProteins =
-                toggleChoice(
-                  state.selectedProteins,
+            if (
+              action ===
+              "customize"
+            ) {
+
+              const p =
+                menu.products.find(
+                  x =>
+                    x.id ===
+                    el.dataset.id
+                );
+
+
+              if (
+                p &&
+                isOpen
+              ) {
+
+                openCustomize(
                   p
                 );
 
-              render();
+              }
+
             }
-          }
 
 
-          /* EXCLUSION */
+            /* CLOSE MODAL */
 
-          if (
-            action === "exclusion"
-          ) {
+            if (
+              action ===
+              "close-modal"
+            ) {
 
-            toggleExclusion(
-              el.dataset.val
-            );
+              state.customizeProduct =
+                null;
 
-            render();
-          }
+              render();
+
+            }
 
 
-          /* ADD-ON */
+            /* PROTEIN */
 
-          if (
-            action === "addon"
-          ) {
+            if (
+              action ===
+              "protein"
+            ) {
 
-            const a =
-              menu.addOns.find(
-                x =>
-                  x.id ===
-                  el.dataset.id
+              const p =
+                [
+
+                  {
+                    id:"pork",
+                    name:"Grilled Pork",
+                    price:0
+                  },
+
+                  {
+                    id:"chicken",
+                    name:"Grilled Chicken",
+                    price:0
+                  },
+
+                  {
+                    id:"meatball",
+                    name:"Pork Meatball",
+                    price:0
+                  },
+
+                  {
+                    id:"duck",
+                    name:"Smoked Duck",
+                    price:0
+                  }
+
+                ].find(
+                  x =>
+                    x.id ===
+                    el.dataset.id
+                );
+
+
+              if (p) {
+
+                state.selectedProteins =
+                  toggleChoice(
+                    state.selectedProteins,
+                    p
+                  );
+
+                render();
+
+              }
+
+            }
+
+
+            /* EXCLUSION */
+
+            if (
+              action ===
+              "exclusion"
+            ) {
+
+              toggleExclusion(
+                el.dataset.val
               );
 
-            if (a) {
+              render();
 
-              state.selectedAddOns =
-                toggleChoice(
-                  state.selectedAddOns,
-                  a
+            }
+
+
+            /* ADDON */
+
+            if (
+              action ===
+              "addon"
+            ) {
+
+              const a =
+                menu.addOns.find(
+                  x =>
+                    x.id ===
+                    el.dataset.id
+                );
+
+
+              if (a) {
+
+                state.selectedAddOns =
+                  toggleChoice(
+                    state.selectedAddOns,
+                    a
+                  );
+
+                render();
+
+              }
+
+            }
+
+
+            /* CONFIRM CUSTOM */
+
+            if (
+              action ===
+              "confirm-custom"
+            ) {
+
+              confirmCustomize();
+
+            }
+
+
+            /* CART */
+
+            if (
+              action ===
+              "toggle-cart"
+            ) {
+
+              state.cartOpen =
+                !state.cartOpen;
+
+              render();
+
+            }
+
+
+            /* REMOVE */
+
+            if (
+              action ===
+              "remove"
+            ) {
+
+              state.cart =
+                state.cart.filter(
+                  x =>
+                    x.lineId !==
+                    el.dataset.line
                 );
 
               render();
+
             }
-          }
 
 
-          /* CONFIRM CUSTOM */
+            /* CART QUANTITY */
 
-          if (
-            action ===
-            "confirm-custom"
-          ) {
+            if (
+              action ===
+              "qty"
+            ) {
 
-            confirmCustomize();
-          }
-
-
-          /* CART */
-
-          if (
-            action ===
-            "toggle-cart"
-          ) {
-
-            state.cartOpen =
-              !state.cartOpen;
-
-            render();
-          }
-
-
-          /* REMOVE */
-
-          if (
-            action === "remove"
-          ) {
-
-            state.cart =
-              state.cart.filter(
-                x =>
-                  x.lineId !==
-                  el.dataset.line
+              updateQuantity(
+                el.dataset.line,
+                Number(
+                  el.dataset.delta
+                )
               );
 
-            render();
+            }
+
+
+            /* SUBMIT */
+
+            if (
+              action ===
+              "submit"
+            ) {
+
+              submitOrder();
+
+            }
+
           }
+        );
+
+      }
+    );
 
 
-          /* CART QUANTITY */
-
-          if (
-            action === "qty"
-          ) {
-
-            updateQuantity(
-              el.dataset.line,
-              Number(
-                el.dataset.delta
-              )
-            );
-          }
-
-
-          /* SUBMIT */
-
-          if (
-            action === "submit"
-          ) {
-
-            submitOrder();
-          }
-
-        }
-      );
-
-    });
-
-
-  /* ----------------------------------------------------------
-     FULFILMENT DATE
-     ---------------------------------------------------------- */
+  /*
+   * FULFILMENT DATE
+   */
 
   document
     .querySelectorAll(
       'input[name="fulfilmentDate"]'
     )
-    .forEach(radio => {
+    .forEach(
+      radio => {
 
-      radio.addEventListener(
-        "change",
-        e => {
+        radio.addEventListener(
+          "change",
+          e => {
 
-          state.selectedFulfilmentDate =
-            e.target.value;
-        }
-      );
+            state.selectedFulfilmentDate =
+              e.target.value;
 
-    });
+          }
+        );
+
+      }
+    );
 
 
-  /* ----------------------------------------------------------
-     DELIVERY / PICKUP
-     ---------------------------------------------------------- */
+  /*
+   * FULFILMENT TYPE
+   */
 
   document
     .querySelectorAll(
       'input[name="fulfillment"]'
     )
-    .forEach(radio => {
+    .forEach(
+      radio => {
 
-      radio.addEventListener(
-        "change",
-        e => {
+        radio.addEventListener(
+          "change",
+          e => {
 
-          state.fulfillmentType =
-            e.target.value;
+            state.fulfillmentType =
+              e.target.value;
 
-          render();
-        }
-      );
+            render();
 
-    });
+          }
+        );
+
+      }
+    );
 
 
-  /* ----------------------------------------------------------
-     MEAL TIME
-     ---------------------------------------------------------- */
+  /*
+   * TIME SLOT
+   */
 
   document
     .querySelectorAll(
       'input[name="deliveryTime"]'
     )
-    .forEach(radio => {
+    .forEach(
+      radio => {
 
-      radio.addEventListener(
-        "change",
-        e => {
+        radio.addEventListener(
+          "change",
+          e => {
 
-          state.deliveryTime =
-            e.target.value;
-        }
-      );
+            state.deliveryTime =
+              e.target.value;
 
-    });
+          }
+        );
+
+      }
+    );
 
 
-  /* ----------------------------------------------------------
-     CUSTOMER FIELDS
-     ---------------------------------------------------------- */
+  /*
+   * SAVE CUSTOMER DETAILS
+   */
 
   [
     "name",
@@ -4075,33 +4618,40 @@ function bindEvents(
     "address",
     "notes"
   ]
-  .forEach(id => {
+  .forEach(
+    id => {
 
-    const input =
-      document.getElementById(id);
-
-    if (!input) {
-      return;
-    }
+      const input =
+        document.getElementById(
+          id
+        );
 
 
-    input.addEventListener(
-      "input",
-      () => {
-
-        state.customer[id] =
-          input.value;
-
-        saveCustomer();
+      if (!input) {
+        return;
       }
-    );
 
-  });
+
+      input.addEventListener(
+        "input",
+        () => {
+
+          state.customer[id] =
+            input.value;
+
+          saveCustomer();
+
+        }
+      );
+
+    }
+  );
+
 }
 
 
 /* ============================================================
-   GLOBAL ERROR HANDLER
+   ERROR HANDLER
    ============================================================ */
 
 window.addEventListener(
@@ -4109,24 +4659,23 @@ window.addEventListener(
   function(e) {
 
     const app =
-      document.getElementById("app");
+      document.getElementById(
+        "app"
+      );
+
 
     if (
       app &&
-      (
-        !app.innerHTML.trim() ||
-        app.innerHTML.includes(
-          "The order page could not load"
-        )
-      )
+      !app.innerHTML.trim()
     ) {
 
       app.innerHTML =
         errorPage(
           "The order page could not load",
           e.message ||
-          "A JavaScript error occurred."
+            "A JavaScript error occurred."
         );
+
     }
 
   }
@@ -4134,21 +4683,22 @@ window.addEventListener(
 
 
 /* ============================================================
-   INITIAL LOAD
+   INITIAL RENDER
    ============================================================ */
 
 render();
 
 
 /* ============================================================
-   PERIODIC SCHEDULE CHECK
+   AUTOMATIC SCHEDULE REFRESH
    ============================================================
 
-   This allows the page to recognise when an order window
-   opens/closes without the customer having to refresh.
+   This is important.
 
-   It deliberately does NOT render while someone is typing
-   into a field or customising an item.
+   If the page is left open when an order window
+   opens or closes, it will refresh automatically.
+
+   It does NOT refresh while someone is typing.
    ============================================================ */
 
 setInterval(
@@ -4157,11 +4707,14 @@ setInterval(
     const activeEl =
       document.activeElement;
 
+
     const isTyping =
       activeEl &&
       (
-        activeEl.tagName === "INPUT" ||
-        activeEl.tagName === "TEXTAREA"
+        activeEl.tagName ===
+          "INPUT" ||
+        activeEl.tagName ===
+          "TEXTAREA"
       );
 
 
@@ -4171,6 +4724,7 @@ setInterval(
     ) {
 
       render();
+
     }
 
   },
