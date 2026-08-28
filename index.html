@@ -2666,7 +2666,7 @@ function customizeModal(menu) {
                           ${esc(p.name)}
 
                           <span class="small">
-                            — no extra charge
+                            — ${ p.price ? `+${money(p.price)}` : "no extra charge" }
                           </span>
 
                         </button>
