@@ -669,7 +669,7 @@ const PRODUCT_ICONS = {
 
   "bowls-addon-meat": "🥩",
 
-  "addon-meat": "🥩",
+  "addon-veg": "🥬",
 
   "bowls-addon-egg": "🍳",
 
@@ -801,9 +801,9 @@ const MENUS = {
     addOns: [
 
       {
-        id: "addon-meat",
-        name: "Extra Meat",
-        price: 2
+        id: "addon-veg",
+        name: "Extra Veg",
+        price: 1
       },
 
       {
@@ -2490,6 +2490,9 @@ function customizeModal(menu) {
   const isBanhMi =
     menu.title === "Banh Mi";
 
+  const isVeg =
+    product.id === "banh-mi-veg";
+
 
   /*
    * Keep multiple protein selection.
@@ -2613,20 +2616,19 @@ function customizeModal(menu) {
 
 
           ${
-            isBanhMi
-
+            isBanhMi && !isVeg
               ? `
 
                 <strong>
-                  Protein mix
+                  Additional Protein
                 </strong>
 
                 <div
                   class="small"
                   style="margin:5px 0 10px"
                 >
-                  Select another protein for a mix,
-                  e.g. Chicken + Pork.
+                  Add an extra protein on top, e.g.
+                  Chicken + Pork.
                 </div>
 
 
@@ -2844,7 +2846,7 @@ function customizeModal(menu) {
               state.selectedProteins.length
                 ? `
                   <div class="small">
-                    Protein mix:
+                    Additional Protein:
                     ${esc(
                       state.selectedProteins
                         .map(x => x.name)
@@ -3954,7 +3956,7 @@ function submitOrder() {
       ) {
 
         text +=
-          `   Protein mix: ${
+          `   Additional Protein: ${
             line.proteins
               .map(x => x.name)
               .join(" + ")
