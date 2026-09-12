@@ -683,6 +683,7 @@ const PRODUCT_ICONS = {
    ============================================================ */
 
 const CHILLI_ORDER_LIMIT = 2;
+const PUDDING_ORDER_LIMIT = 10;
 
 
 /* ============================================================
@@ -888,7 +889,14 @@ const MENUS = {
         note:
           "Served fresh, not fried! Plump prawns, tender pork, aromatic herbs, and soft bún rice noodles hand-rolled in translucent bánh tráng rice paper. ⚠️ Contains basil"
       },
-
+     {
+          id: "bowls-addon-pudding",
+          name: "Pudding",
+          image: "pudding.jpg",
+          price: 2,
+          standalone: true
+     },
+     
       {
         id: "bowls-addon-chilli",
         name:
@@ -1327,6 +1335,13 @@ function getTotalChilliInCart() {
     0
   );
 
+}
+
+function isPuddingProduct(id) {
+  return id === "bowls-addon-pudding";
+ }
+
+function getTotalPuddingInCart() {  return state.cart.reduce((sum, line) => isPuddingProduct(line.productId) ? sum + line.quantity : sum, 0);
 }
 
 
@@ -3284,6 +3299,13 @@ function addSimple(product) {
     }
 
   }
+ if (isPuddingProduct(product.id)) {
+    const currentPuddingCount = getTotalPuddingInCart();
+    if (currentPuddingCount >= PUDDING_ORDER_LIMIT) {
+         alert(`Sorry, you can only order a maximum of ${PUDDING_ORDER_LIMIT} pudding(s) per order.`);
+         return;
+    }
+ }
 
 
   const existingLine =
@@ -3553,6 +3575,13 @@ function updateQuantity(
           }
 
         }
+         if (delta > 0 && isPuddingProduct(line.productId)) {
+              const currentPuddingCount = getTotalPuddingInCart();
+              if (currentPuddingCount >= PUDDING_ORDER_LIMIT) {
+                     alert(`Sorry, you can only order a maximum of ${PUDDING_ORDER_LIMIT} pudding(s) per order.`);
+                     return line;
+              }
+         }
 
 
         const quantity =
