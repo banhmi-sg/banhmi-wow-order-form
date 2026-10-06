@@ -602,6 +602,37 @@
       padding: 24px 20px;
     }
   }
+
+/* Brand showcase used only when no menu is scheduled. */
+.pause-page{max-width:980px;margin:auto;padding:24px 16px 56px;line-height:1.6}
+.pause-hero{background:#065F46;color:#FFF7E8;padding:48px 32px;border-radius:24px}
+.pause-brand{font-weight:700;letter-spacing:.06em;color:#F2C14E}
+.pause-hero h1{font-size:clamp(32px,6vw,54px);line-height:1.12;margin:20px 0}
+.pause-hero p{max-width:620px;color:#FFF7E8}
+.pause-cta{display:inline-block;background:#F2C14E;color:#065F46;padding:13px 20px;border-radius:12px;text-decoration:none;font-weight:700;margin-top:12px}
+.pause-cta:focus-visible{outline:3px solid white;outline-offset:4px}
+.pause-section{margin-top:36px}.pause-section h2{color:#065F46;font-size:26px;margin-bottom:8px}
+.pause-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:20px}
+.pause-food{margin:0;background:white;border:1px solid #d1d5db;border-radius:18px;overflow:hidden}
+.pause-food img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.pause-food div{padding:20px}.pause-food h3{margin:0 0 8px;color:#065F46;font-size:19px}
+.pause-food p{margin:0;color:#374151;font-size:15px}
+.pause-steps{background:#FFF7E8;border-radius:18px;padding:24px 28px}.pause-steps li{margin:12px 0}
+.pause-footer{text-align:center;border-top:1px solid #d1d5db;padding-top:24px;margin-top:36px}
+@media(max-width:680px){.pause-grid{grid-template-columns:1fr}.pause-hero{padding:32px 24px}.pause-food img{max-height:280px}}
+
+
+/* Larger food photos in both the ordering menu and browse-only preview. */
+.product-inner{flex-direction:column;padding:0;gap:0}
+.photo{width:100%;height:auto;aspect-ratio:4/3;border-radius:0;background:#FFF7E8;font-size:15px}
+.photo img{object-fit:contain;background:#FFF7E8}
+.product-info{padding:20px;width:100%}.product-name{font-size:20px}.note{font-size:14px;line-height:1.6}
+.preview-products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start}
+.preview-group{scroll-margin-top:20px;margin-top:32px}.preview-group>h3{font-size:24px;color:#065F46}
+.preview-nav{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}
+.preview-nav a{background:#065F46;color:white;padding:10px 16px;border-radius:999px;text-decoration:none;font-weight:bold}
+.preview-nav a:focus-visible{outline:3px solid #065F46;outline-offset:3px}
+@media(max-width:600px){.preview-products{grid-template-columns:1fr}.photo{width:100%;height:auto;aspect-ratio:4/3}.product-inner{padding:0;gap:0}.product-info{padding:18px}}
 </style>
 </head>
 
@@ -1470,6 +1501,7 @@ function render() {
    * NOTHING SCHEDULED
    */
 
+  document.body.style.paddingBottom = "";
   root.innerHTML =
     noUpcomingSalesPage();
 
@@ -1935,7 +1967,7 @@ function productCard(
         src="${esc(photoPath)}"
         alt="${esc(product.name)}"
         onerror="
-          this.onerror=null;
+          this.onerror=()=>{const box=this.parentElement;this.remove();box.textContent='Photo coming soon';};
           this.src='${DEFAULT_PLACEHOLDER}';
         "
       >
@@ -2015,9 +2047,7 @@ function productCard(
           }
 
 
-          <div class="price">
-            ${money(product.price)}
-          </div>
+          ${isOpen ? `<div class="price">${money(product.price)}</div>` : ""}
 
 
           ${
@@ -2998,7 +3028,7 @@ function closedPage(next) {
             )}"
             alt="${esc(menu.title)}"
             onerror="
-              this.onerror=null;
+              this.onerror=()=>{this.parentElement.hidden=true;};
               this.src='${esc(
                 STORE_CONFIG.closedPageImage
               )}';
@@ -3121,133 +3151,53 @@ function closedPage(next) {
    CLOSED PAGE — NOTHING SCHEDULED
    ============================================================ */
 
+function previewMenuGroup(id, title, products) {
+  return `<section class="preview-group" id="preview-${esc(id)}" aria-labelledby="heading-${esc(id)}">
+    <h3 id="heading-${esc(id)}">${esc(title)}</h3>
+    <div class="preview-products">${products.map(p => productCard(p, false, id === "banh-mi")).join("")}</div>
+  </section>`;
+}
+
 function noUpcomingSalesPage() {
-
   return `
-
-    <div class="closed">
-
-      <div class="closed-card">
-
-
-        <div class="closed-image">
-
-          <img
-            src="${esc(
-              STORE_CONFIG.closedPageImage
-            )}"
-            alt="Banh Mi Wow"
-            onerror="
-              this.style.display='none';
-            "
-          >
-
-        </div>
-
-
-        <div class="closed-content">
-
-          <div class="closed-logo">
-            🥖
-          </div>
-
-
-          <h1>
-            ${esc(
-              STORE_CONFIG.storeName
-            )}
-          </h1>
-
-
-          <p
-            style="
-              color:#047857;
-              font-weight:600
-            "
-          >
-            Vietnamese delights, made with love.
-          </p>
-
-
-          <div
-            style="
-              background:#ecfdf5;
-              border:1px solid #d1fae5;
-              border-radius:9px;
-              padding:16px;
-              margin-top:20px;
-            "
-          >
-
-            <strong
-              style="color:#065f46"
-            >
-              We're taking a little break
-            </strong>
-
-
-            <p
-              style="
-                margin:7px 0 0;
-                font-size:13px
-              "
-            >
-              We're not taking orders at the
-              moment. We'll be back with more
-              Vietnamese delights soon.
-            </p>
-
-          </div>
-
-
-          <p
-            style="
-              margin-top:20px;
-              font-size:13px
-            "
-          >
-            Follow us on Instagram for our
-            next menu announcement.
-          </p>
-
-
-          <a
-            class="closed-instagram"
-            href="${esc(
-              STORE_CONFIG.instagramUrl
-            )}"
-            target="_blank"
-            rel="noopener"
-          >
-            📸 Follow @${esc(
-              STORE_CONFIG.instagram
-            )}
-          </a>
-
-
-          <p
-            style="
-              margin-top:20px;
-              font-size:12px
-            "
-          >
-            Thank you for your support! ❤️
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-
+    <main class="pause-page">
+      <header class="pause-hero">
+        <div class="pause-brand">${esc(STORE_CONFIG.storeName)}</div>
+        <p>Vietnamese delights, made with love.</p>
+        <h1>A little pause.<br>More WOW to come.</h1>
+        <p>We’re taking a break from orders at the moment. While we’re away, explore a taste of our menus below.</p>
+        <p>Follow @${esc(STORE_CONFIG.instagram)} for our next menu announcement. Thanks for your support.</p>
+        <a class="pause-cta" href="${esc(STORE_CONFIG.instagramUrl)}" target="_blank" rel="noopener noreferrer">Follow for menu updates</a>
+      </header>
+      <section class="pause-section" aria-labelledby="taste-heading">
+        <h2 id="taste-heading">A taste of our menus</h2>
+        <p>Menu preview only. Orders are currently closed; selection and prices may vary at the next opening.</p>
+        <nav class="preview-nav" aria-label="Menu categories">
+          <a href="#preview-banh-mi">Banh mi</a><a href="#preview-bowls">Bowls</a><a href="#preview-sides">Sides</a><a href="#preview-desserts">Desserts</a>
+        </nav>
+        ${previewMenuGroup("banh-mi", "Banh mi", MENUS["banh-mi"].products.filter(p => !p.standalone))}
+        ${previewMenuGroup("bowls", "Bowls", MENUS.bowls.products.filter(p => p.id.startsWith("bun-") || p.id.startsWith("com-tam-")))}
+        ${previewMenuGroup("sides", "Sides & chilli", MENUS.bowls.products.filter(p => p.id.startsWith("spring-") || p.id === "bowls-addon-chilli"))}
+        ${previewMenuGroup("desserts", "Desserts", MENUS.bowls.products.filter(p => p.id === "bowls-addon-pudding"))}
+      </section>
+      <section class="pause-section pause-steps" aria-labelledby="ordering-heading">
+        <h2 id="ordering-heading">How ordering works</h2>
+        <ol>
+          <li><strong>Look out for the menu.</strong> Follow us on Instagram for menu announcements.</li>
+          <li><strong>Choose during the order window.</strong> Return here to see the current selection, prices and closing time.</li>
+          <li><strong>Check the fulfilment details.</strong> Available dates, collection and delivery details will be shown with the menu.</li>
+        </ol>
+      </section>
+      <section class="pause-section" aria-labelledby="hello-heading">
+        <h2 id="hello-heading">Hello from Banh Mi Wow</h2>
+        <p>From baguettes to bowls, sides and something sweet, explore Vietnamese flavours with us. We’ll share our next menu announcement on Instagram.</p>
+      </section>
+      <footer class="pause-footer"><p>Keep a little WOW in your feed.</p><a href="${esc(STORE_CONFIG.instagramUrl)}" style="color:#065F46;font-weight:700" target="_blank" rel="noopener noreferrer">@${esc(STORE_CONFIG.instagram)}</a></footer>
+    </main>
   `;
-
 }
 
 
-/* ============================================================
-   ERROR PAGE
-   ============================================================ */
 
 function errorPage(
   title,
