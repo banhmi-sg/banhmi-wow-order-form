@@ -835,7 +835,7 @@ const MENUS = {
         image: "pudding-canva.png",
         name: "Original Pudding with Caramel",
         price: 2,
-        note: "Caramel at the bottom. Minimum order: 2 bowls.",
+        note: "Our house-made Vietnamese custard is silky, smooth, and melts in your mouth. Perfectly steamed with a rich, amber caramel sauce at the bottom. Minimum order: 2 bowls.",
         standalone: true
       },
 
@@ -1306,7 +1306,7 @@ function formatDateTime(value) {
   return new Intl.DateTimeFormat(
     "en-SG",
     {
-      dateStyle: "medium",
+      dateStyle: "full",
       timeStyle: "short",
       timeZone: "Asia/Singapore"
     }
@@ -2060,7 +2060,7 @@ function productCard(
             product.note
               ? `
                 <div class="note">
-                  ${esc(product.note)}
+                  ${esc(product.note).replace("Minimum order: 2 bowls.", "<strong>Minimum order: 2 bowls.</strong>")}
                 </div>
               `
               : ""
