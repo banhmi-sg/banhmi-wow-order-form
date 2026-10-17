@@ -667,10 +667,6 @@ const STORE_CONFIG = {
   googleSheetUrl:
     "https://script.google.com/macros/s/AKfycbzE8ND6xYYZiHLppJOZoYUgsedewpZopmuX1qqOtYN8CwBeEFrDpqwYLjlM1nYQfrsX/exec",
 
-  flatDeliveryFee: 15.00,
-
-  flatDeliveryThreshold: 80.00,
-
   pickupLocation:
     "T22 Poolside Pavilion",
 
@@ -843,7 +839,7 @@ const MENUS = {
         id: "addon-chilli",
         image: "bowls-addon-chilli-canva.png",
         name: "Spicy homemade chilli",
-        note: "No preservatives. Best refrigerated after 2 days. Maximum 2 bottles per order.",
+        note: "Approx. 200 ml per bottle. No preservatives. Best refrigerated after 2 days. Maximum 2 bottles per order.",
         price: 6.8,
         standalone: true
       }
@@ -1291,7 +1287,7 @@ function fulfilmentDateSelector(
    UTILITIES
    ============================================================ */
 
-MENUS["banh-mi"].products.push({ id: "spicy-pork-rind", image: "spicy-pork-rind-clear-final.png", name: "Spicy Pork Rind (150 g)", price: 10, note: "Keto-friendly and mild spicy", standalone: true }, { id: "fried-soya-crisps", image: "Crispy-Strips-Doily-Cream.png", name: "Home made fried soya crisps", price: 7.5, note: "Approx. weight: 180 g", standalone: true }); function money(n) {
+MENUS["banh-mi"].products.push({ id: "spicy-pork-rind", image: "spicy-pork-rind-clear-final.png", name: "Spicy Pork Rind", price: 10, note: "150 g per pack. Keto-friendly and mild spicy", standalone: true }, { id: "fried-soya-crisps", image: "Crispy-Strips-Doily-Cream.png", name: "Homemade Fried Soya Crisps", price: 7.5, note: "Approx. 180 g per tub", standalone: true }); function money(n) {
 
   return (
     STORE_CONFIG.currency +
@@ -1403,63 +1399,14 @@ function getTotalPuddingInCart() {  return state.cart.reduce((sum, line) => isPu
    ============================================================ */
 
 function calculateTotals() {
-
-  const subtotal =
-    state.cart.reduce(
-      (s, line) =>
-        s + line.total,
-      0
-    );
-
-
-  let deliveryFee = 0;
-
-  let isDeliveryTBA = false;
-
-
-  if (
-    state.fulfillmentType === "delivery" &&
-    subtotal > 0
-  ) {
-
-    if (
-      subtotal >=
-      STORE_CONFIG.flatDeliveryThreshold
-    ) {
-
-      deliveryFee =
-        STORE_CONFIG.flatDeliveryFee;
-
-      isDeliveryTBA = false;
-
-    } else {
-
-      deliveryFee = 0;
-
-      isDeliveryTBA = true;
-
-    }
-
-  }
-
-
-  const grandTotal =
-    subtotal + deliveryFee;
-
-
+  const subtotal = state.cart.reduce((sum, line) => sum + line.total, 0);
   return {
     subtotal,
-    deliveryFee,
-    isDeliveryTBA,
-    grandTotal
+    deliveryFee: 0,
+    isDeliveryTBA: state.fulfillmentType === "delivery" && subtotal > 0,
+    grandTotal: subtotal
   };
-
 }
-
-
-/* ============================================================
-   MAIN RENDER
-   ============================================================ */
 
 function render() {
 
@@ -1852,8 +1799,7 @@ function customerForm() {
 
               <div class="fee-notice">
 
-                🚚 Delivery charge will be advised
-                separately based on delivery distance.
+                🚚 Delivery charge will be advised separately when GrabExpress is booked.
 
               </div>
 
@@ -1910,42 +1856,19 @@ function customerForm() {
    MENU
    ============================================================ */
 
-function menuSection(
-  menu,
-  isOpen,
-  isBanhMi
-) {
-
-  return `
-
-    <div class="card">
-
-      <h2>
-        ${esc(menu.title)}
-      </h2>
-
-      ${
-        menu.products
-          .map(product =>
-            productCard(
-              product,
-              isOpen,
-              isBanhMi
-            )
-          )
-          .join("")
-      }
-
-    </div>
-
-  `;
-
+function menuSection(menu, isOpen, isBanhMi) {
+  const groups = isBanhMi
+    ? [{ title: "Banh Mi", products: menu.products.filter(p => !p.standalone) },
+       { title: "Sides & Snacks", products: menu.products.filter(p => p.standalone) }]
+    : [{ title: menu.title, products: menu.products }];
+  return groups.filter(group => group.products.length).map(group => `
+    <section class="card" aria-label="${esc(group.title)}">
+      <h2>${esc(group.title)}</h2>
+      ${isBanhMi && group.title === "Banh Mi" ? '<p class="fee-notice">🧀 Make it cheesy! Nacho Cheese +$1 — tap Customise to add.</p>' : ''}
+      ${group.products.map(product => productCard(product, isOpen, isBanhMi)).join("")}
+    </section>
+  `).join("");
 }
-
-
-/* ============================================================
-   PRODUCT CARD
-   ============================================================ */
 
 function productCard(
   product,
@@ -2370,7 +2293,7 @@ function cartBar(isOpen) {
                                 <strong
                                   style="color:#b45309"
                                 >
-                                  TBA (Advised via WA)
+                                  Advised separately
                                 </strong>
                               `
                               : money(deliveryFee)
@@ -2381,48 +2304,7 @@ function cartBar(isOpen) {
                       </div>
 
 
-                      ${
-                        isDeliveryTBA
-
-                          ? `
-
-                            <div class="fee-notice">
-
-                              ℹ️ Delivery fee quoted via
-                              WhatsApp based on distance
-                              when booking driver.
-
-                              <br>
-
-                              💡 Add
-                              <strong>
-                                ${money(
-                                  Math.max(
-                                    0,
-                                    STORE_CONFIG.flatDeliveryThreshold -
-                                    subtotal
-                                  )
-                                )}
-                              </strong>
-                              more to hit $80 for
-                              <strong>
-                                $15 flat delivery
-                              </strong>!
-
-                            </div>
-
-                          `
-
-                          : `
-
-                            <div class="fee-success">
-
-                              ✓ $15 flat delivery rate unlocked!
-
-                            </div>
-
-                          `
-                      }
+                      <div class="fee-notice">Delivery charge will be advised separately when GrabExpress is booked.</div>
 
                     `
 
@@ -2459,7 +2341,7 @@ function cartBar(isOpen) {
                 >
 
                   <span>
-                    Total Payable
+                    ${isDeliveryTBA ? "Subtotal (delivery extra)" : "Total Payable"}
                   </span>
 
                   <span style="color:#047857">
@@ -2533,11 +2415,12 @@ function cartBar(isOpen) {
               : ""
           }
         >
-          Order via WhatsApp
+          Continue to WhatsApp
         </button>
 
       </div>
 
+      <div class="small" style="max-width:680px;margin:0 auto;padding:0 12px 8px;text-align:center">Tap Send in WhatsApp to complete your order request. Confirmation follows payment.</div>
     </div>
 
   `;
@@ -3794,6 +3677,8 @@ function submitOrder() {
 
   const sheetData = {
 
+    orderStatus: "Pending WhatsApp confirmation",
+
     menuTitle:
       menu.title,
 
@@ -3892,7 +3777,7 @@ function submitOrder() {
    */
 
   let text =
-    `*NEW ORDER - ${menu.title.toUpperCase()}*\n\n`;
+    `*ORDER REQUEST - ${menu.title.toUpperCase()}*\n\n`;
 
 
   text +=
@@ -4015,7 +3900,7 @@ function submitOrder() {
     ) {
 
       text +=
-        `*Delivery Fee:* TBA (Advised via reply based on driver quote)\n`;
+        `*Delivery Fee:* Advised separately when GrabExpress is booked\n`;
 
       text +=
         `*ESTIMATED TOTAL:* ${
