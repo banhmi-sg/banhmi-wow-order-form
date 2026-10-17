@@ -838,8 +838,8 @@ const MENUS = {
       {
         id: "addon-chilli",
         image: "bowls-addon-chilli-canva.png",
-        name: "Spicy homemade chilli",
-        note: "Approx. 200 ml per bottle. No preservatives. Best refrigerated after 2 days. Maximum 2 bottles per order.",
+        name: "Homemade Spicy Chilli",
+        note: "No preservatives. Best refrigerated after 2 days. Maximum 2 bottles per order. Approx. 200 ml per bottle.",
         price: 6.8,
         standalone: true
       }
@@ -1287,7 +1287,7 @@ function fulfilmentDateSelector(
    UTILITIES
    ============================================================ */
 
-MENUS["banh-mi"].products.push({ id: "spicy-pork-rind", image: "spicy-pork-rind-clear-final.png", name: "Spicy Pork Rind", price: 10, note: "150 g per pack. Keto-friendly and mild spicy", standalone: true }, { id: "fried-soya-crisps", image: "Crispy-Strips-Doily-Cream.png", name: "Homemade Fried Soya Crisps", price: 7.5, note: "Approx. 180 g per tub", standalone: true }); function money(n) {
+MENUS["banh-mi"].products.push({ id: "spicy-pork-rind", image: "spicy-pork-rind-clear-final.png", name: "Spicy Pork Rind", price: 10, note: "Keto-friendly and mild spicy. 150 g per pack.", standalone: true }, { id: "fried-soya-crisps", image: "Crispy-Strips-Doily-Cream.png", name: "Homemade Soya Crisps", price: 7.5, note: "Approx. 180 g per tub", standalone: true }); function money(n) {
 
   return (
     STORE_CONFIG.currency +
@@ -1606,6 +1606,15 @@ function renderOrderingPage() {
       </div>
 
 
+      ${menuSection(
+        menu,
+        isOpen,
+        isBanhMi
+      )}
+
+
+      <h2 id="checkout-details">Checkout Details</h2>
+
       ${fulfilmentDateSelector(
         schedule,
         isOpen
@@ -1613,13 +1622,6 @@ function renderOrderingPage() {
 
 
       ${customerForm()}
-
-
-      ${menuSection(
-        menu,
-        isOpen,
-        isBanhMi
-      )}
 
 
       <div class="card">
@@ -3552,6 +3554,9 @@ function submitOrder() {
     alert(
       "Please enter your name and phone number."
     );
+
+    document.getElementById("checkout-details").scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById(!state.customer.name ? "name" : "phone").focus({ preventScroll: true });
 
     return;
 
