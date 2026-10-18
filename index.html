@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Banh Mi Wow - Vietnamese Delights</title>
+<link rel="icon" type="image/png" href="Banh-Mi-Wow-Logo-v1.png">
 
 <style>
   * { box-sizing: border-box; }
@@ -39,6 +40,27 @@
     border-radius: 10px 10px 0 0;
     padding: 24px;
     border-top: 8px solid #064e3b;
+  }
+
+  .hero-brand {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .brand-logo {
+    display: block;
+    width: 144px;
+    height: 144px;
+    object-fit: contain;
+    border-radius: 12px;
+    flex: none;
+  }
+
+  @media (max-width: 480px) {
+    .hero-brand { gap: 12px; }
+    .hero .brand-logo { width: 100px; height: 100px; }
+    .hero .hero-brand h1 { font-size: 24px; }
   }
 
   .hero h1 {
@@ -1516,15 +1538,9 @@ function renderOrderingPage() {
 
       <div class="hero">
 
-        <div
-          style="
-            font-size:40px;
-            margin-bottom:6px
-          "
-        >
-          ${menu.emoji}
-        </div>
-
+        <div class="hero-brand">
+          <img class="brand-logo" src="Banh-Mi-Wow-Logo-v1.png" alt="Banh Mi Wow logo" width="144" height="144" fetchpriority="high">
+          <div>
         <h1>
           ${esc(STORE_CONFIG.storeName)}
         </h1>
@@ -1542,7 +1558,8 @@ function renderOrderingPage() {
           📸 Follow us on IG:
           @${esc(STORE_CONFIG.instagram)}
         </a>
-
+          </div>
+        </div>
 
         <div class="hero-grid">
 
@@ -2946,7 +2963,7 @@ function closedPage(next) {
         <div class="closed-content">
 
           <div class="closed-logo">
-            ${menu.emoji}
+            <img class="brand-logo" src="Banh-Mi-Wow-Logo-v1.png" alt="Banh Mi Wow logo" width="144" height="144">
           </div>
 
 
@@ -3067,7 +3084,7 @@ function noUpcomingSalesPage() {
   return `
     <main class="pause-page">
       <header class="pause-hero">
-        <div class="pause-brand">${esc(STORE_CONFIG.storeName)}</div>
+        <img class="brand-logo" src="Banh-Mi-Wow-Logo-v1.png" alt="Banh Mi Wow" width="144" height="144" style="margin:0 auto 16px">
         <p>Vietnamese delights, made with love.</p>
         <h1>A little pause.<br>More WOW to come.</h1>
         <p>We’re taking a break from orders at the moment. While we’re away, explore a taste of our menus below.</p>
