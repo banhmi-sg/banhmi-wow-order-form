@@ -959,19 +959,19 @@ const MENUS = {
       },
      {
           id: "bowls-addon-pudding",
-          name: "Pudding",
+          name: "Bánh Flan – Caramel Pudding",
           image: "pudding-canva.png",
           price: 2,
           note:
-      "Our house-made Vietnamese custard is silky, smooth, and melts in your mouth. Perfectly steamed and topped with a rich, amber caramel sauce.",
+      "Our house-made Vietnamese custard is silky, smooth, and melts in your mouth. Perfectly steamed with a rich, amber caramel sauce at the bottom. Minimum order: 2 bowls.",
           standalone: true
      },
      
       {
         id: "bowls-addon-chilli",
         image: "bowls-addon-chilli-canva.png",
-        name:
-          "Our Spicy Chilli Bottle (~200ml)",
+        name: "Homemade Spicy Chilli",
+        note: "No preservatives. Best refrigerated after 2 days. Maximum 2 bottles per order. Approx. 200 ml per bottle.",
         price: 6.8,
         standalone: true
       }
@@ -1309,7 +1309,16 @@ function fulfilmentDateSelector(
    UTILITIES
    ============================================================ */
 
-MENUS["banh-mi"].products.push({ id: "spicy-pork-rind", image: "spicy-pork-rind-clear-final.png", name: "Spicy Pork Rind", price: 9.8, note: "Keto-friendly and mild spicy. 150 g per pack.", standalone: true }, { id: "fried-soya-crisps", image: "Soya-Crisps-Black-Lid.png", name: "Homemade Soya Crisps", price: 7.5, note: "Vegetarian. Approx. 180 g per tub", standalone: true }); function money(n) {
+MENUS["banh-mi"].products.push({ id: "spicy-pork-rind", image: "spicy-pork-rind-clear-final.png", name: "Spicy Pork Rind", price: 9.8, note: "Keto-friendly and mild spicy. 150 g per pack.", standalone: true }, { id: "fried-soya-crisps", image: "Soya-Crisps-Black-Lid.png", name: "Homemade Soya Crisps", price: 7.5, note: "Vegetarian. Approx. 180 g per tub", standalone: true });
+
+// Share the approved pork rind and soya crisps across both menus.
+MENUS.bowls.products.push(
+  ...MENUS["banh-mi"].products
+    .filter(product => ["spicy-pork-rind", "fried-soya-crisps"].includes(product.id))
+    .map(product => ({ ...product }))
+);
+
+function money(n) {
 
   return (
     STORE_CONFIG.currency +
@@ -1409,7 +1418,7 @@ function getTotalChilliInCart() {
 }
 
 function isPuddingProduct(id) {
-  return id === "bowls-addon-pudding";
+  return id === "bowls-addon-pudding" || id === "pudding-original";
  }
 
 function getTotalPuddingInCart() {  return state.cart.reduce((sum, line) => isPuddingProduct(line.productId) ? sum + line.quantity : sum, 0);
@@ -3099,7 +3108,7 @@ function noUpcomingSalesPage() {
         </nav>
         ${previewMenuGroup("banh-mi", "Banh mi", MENUS["banh-mi"].products.filter(p => !p.standalone))}
         ${previewMenuGroup("bowls", "Bowls", MENUS.bowls.products.filter(p => p.id.startsWith("bun-") || p.id.startsWith("com-tam-")))}
-        ${previewMenuGroup("sides", "Sides & chilli", MENUS.bowls.products.filter(p => p.id.startsWith("spring-") || p.id === "bowls-addon-chilli"))}
+        ${previewMenuGroup("sides", "Sides & chilli", MENUS.bowls.products.filter(p => p.id.startsWith("spring-") || ["bowls-addon-chilli", "spicy-pork-rind", "fried-soya-crisps"].includes(p.id)))}
         ${previewMenuGroup("desserts", "Desserts", MENUS.bowls.products.filter(p => p.id === "bowls-addon-pudding"))}
       </section>
       <section class="pause-section pause-steps" aria-labelledby="ordering-heading">
@@ -3230,13 +3239,13 @@ function addSimple(product) {
 
     exclusions: [],
 
-    quantity: product.id === "pudding-original" ? 2 : 1,
+    quantity: isPuddingProduct(product.id) ? 2 : 1,
 
     unitPrice:
       product.price,
 
     total:
-      product.price * (product.id === "pudding-original" ? 2 : 1)
+      product.price * (isPuddingProduct(product.id) ? 2 : 1)
 
   });
 
@@ -3459,7 +3468,7 @@ function updateQuantity(
 
 
         const nextQuantity = line.quantity + delta;
-        const quantity = line.productId === "pudding-original" && nextQuantity === 1
+        const quantity = isPuddingProduct(line.productId) && nextQuantity === 1
           ? (delta < 0 ? 0 : 2)
           : Math.max(0, nextQuantity);
 
@@ -3558,7 +3567,7 @@ function submitOrder() {
   }
 
 
-  if (state.cart.filter(line => line.productId === "pudding-original").reduce((sum, line) => sum + line.quantity, 0) === 1) {
+  if (getTotalPuddingInCart() === 1) {
     alert("Original pudding has a minimum order of 2 bowls.");
     return;
   }
