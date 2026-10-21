@@ -628,6 +628,16 @@
 /* Brand showcase used only when no menu is scheduled. */
 .pause-page{max-width:980px;margin:auto;padding:24px 16px 56px;line-height:1.6}
 .pause-hero{background:#065F46;color:#FFF7E8;padding:48px 32px;border-radius:24px}
+.pause-hero.promo-hero{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.25fr);align-items:center;gap:28px;padding:28px;background:#fff7e8;color:#064e3b;border:1px solid #eadfc9}
+.promo-copy .brand-logo{width:76px;height:76px;border-radius:12px}
+.pause-hero .promo-copy h1{font-size:clamp(30px,3.5vw,44px);line-height:1.08;letter-spacing:-.035em;margin:16px 0}
+.pause-hero .promo-status{color:#4b5563;font-size:14px;margin:0 0 4px}
+.promo-copy .pause-cta{background:#065f46;color:#fff7e8;padding:11px 15px;font-size:14px;margin-top:10px}
+.promo-copy .pause-cta:focus-visible{outline-color:#065f46}
+.promo-menu-link{display:block;width:fit-content;color:#065f46;font-size:14px;font-weight:700;margin-top:14px;text-underline-offset:4px}
+.promo-film{margin:0;min-width:0;border-radius:16px;overflow:hidden;background:#f5ead0;box-shadow:0 10px 28px rgba(6,78,59,.12)}
+.promo-film video{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:contain;background:#f5ead0}
+@media(max-width:680px){.pause-hero.promo-hero{grid-template-columns:1fr;gap:22px;padding:22px}.promo-copy .brand-logo{width:60px;height:60px;float:left;margin:0 14px 8px 0}.pause-hero .promo-copy h1{font-size:32px;margin:0 0 14px;min-height:60px}.promo-copy .promo-status{clear:both}.promo-film{border-radius:12px}.promo-menu-link{display:inline-block;margin-left:12px}}
 .pause-brand{font-weight:700;letter-spacing:.06em;color:#F2C14E}
 .pause-hero h1{font-size:clamp(32px,6vw,54px);line-height:1.12;margin:20px 0}
 .pause-hero p{max-width:620px;color:#FFF7E8}
@@ -3092,13 +3102,20 @@ function previewMenuGroup(id, title, products) {
 function noUpcomingSalesPage() {
   return `
     <main class="pause-page">
-      <header class="pause-hero">
-        <img class="brand-logo" src="Banh-Mi-Wow-Logo-v1.png" alt="Banh Mi Wow" width="144" height="144" style="margin:0 auto 16px">
-        <p>Vietnamese delights, made with love.</p>
-        <h1>A little pause.<br>More WOW to come.</h1>
-        <p>We’re taking a break from orders at the moment. While we’re away, explore a taste of our menus below.</p>
-        <p>Follow @${esc(STORE_CONFIG.instagram)} for our next menu announcement. Thanks for your support.</p>
-        <a class="pause-cta" href="${esc(STORE_CONFIG.instagramUrl)}" target="_blank" rel="noopener noreferrer">Follow for menu updates</a>
+      <header class="pause-hero promo-hero">
+        <div class="promo-copy">
+          <img class="brand-logo" src="Banh-Mi-Wow-Logo-v1.png" alt="Banh Mi Wow" width="76" height="76">
+          <h1>Big flavour.<br>Every bite.</h1>
+          <p class="promo-status">Orders are closed for now.</p>
+          <a class="pause-cta" href="${esc(STORE_CONFIG.instagramUrl)}" target="_blank" rel="noopener noreferrer">Next menu on Instagram ↗</a>
+          <a class="promo-menu-link" href="#taste-heading">Explore the menu ↓</a>
+        </div>
+        <figure class="promo-film">
+          <video controls playsinline preload="none" poster="promo-poster.jpg" width="1280" height="720" aria-label="Banh Mi Wow promotional video">
+            <source src="banh-mi-wow-promo-web.mp4" type="video/mp4">
+            Your browser does not support embedded video. <a href="banh-mi-wow-promo-web.mp4">Watch the Banh Mi Wow video</a>.
+          </video>
+        </figure>
       </header>
       <section class="pause-section" aria-labelledby="taste-heading">
         <h2 id="taste-heading">A taste of our menus</h2>
@@ -4478,10 +4495,13 @@ setInterval(
         activeEl.tagName === "TEXTAREA"
       );
 
+    const promoVideo = document.querySelector(".promo-film video");
+    const isVideoPlaying = promoVideo && !promoVideo.paused && !promoVideo.ended;
 
     if (
       !isTyping &&
-      !state.customizeProduct
+      !state.customizeProduct &&
+      !isVideoPlaying
     ) {
 
       render();
