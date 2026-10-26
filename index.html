@@ -554,6 +554,17 @@
     font-size: 13px;
   }
 
+  .price-update-notice {
+    background: #fff8e7;
+    color: #533c19;
+    border: 1px solid #ead8ae;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 0 14px;
+  }
+
   .fee-notice {
     font-size: 11px;
     color: #b45309;
@@ -1902,6 +1913,7 @@ function menuSection(menu, isOpen, isBanhMi) {
   return groups.filter(group => group.products.length).map(group => `
     <section class="card" aria-label="${esc(group.title)}">
       <h2>${esc(group.title)}</h2>
+      ${isBanhMi && group.title === "Banh Mi" && state.scheduleInfo.schedule?.id === "banh-mi-oct-30-31" ? '<p class="price-update-notice">📢 <strong>Last order round at current Bánh Mì prices.</strong> From the next round, all Bánh Mì base prices will increase by <strong>$0.50</strong> due to rising ingredient costs. Thank you for your support 💚</p>' : ''}
       ${isBanhMi && group.title === "Banh Mi" ? '<p class="fee-notice">🧀 Make it cheesy! Nacho Cheese +$1 — tap Customise to add.</p>' : ''}
       ${group.products.map(product => productCard(product, isOpen, isBanhMi)).join("")}
     </section>
