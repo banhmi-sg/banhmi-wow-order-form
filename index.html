@@ -1330,7 +1330,7 @@ function fulfilmentDateSelector(
    UTILITIES
    ============================================================ */
 
-MENUS["banh-mi"].products.push({ id: "spicy-pork-rind", image: "spicy-pork-rind-clear-final.png", name: "Spicy Pork Rind", price: 9.8, note: "Keto-friendly and mild spicy. 150 g per pack.", standalone: true }, { id: "fried-soya-crisps", image: "Soya-Crisps-Black-Lid.png", name: "Homemade Soya Crisps", price: 7.5, note: "Vegetarian. Approx. 180 g per tub", standalone: true });
+MENUS["banh-mi"].products.push({ id: "spicy-pork-rind", image: "spicy-pork-rind-clear-final.png", name: "Spicy Pork Rind", price: 9.8, note: "Keto-friendly and mild spicy. 150 g per pack.", standalone: true }, { id: "spicy-pork-rind-trial", image: "spicy-pork-rind-trial-50g.png", name: "Spicy Pork Rind – Trial Pack (50g)", price: 3.5, note: "Try a little crunch with your Bánh Mì. Keto-friendly and mildly spicy. $3.50 with any Bánh Mì. 50 g per pack.", standalone: true }, { id: "fried-soya-crisps", image: "Soya-Crisps-Black-Lid.png", name: "Homemade Soya Crisps", price: 7.5, note: "Vegetarian. Approx. 180 g per tub", standalone: true });
 
 // Share the approved pork rind and soya crisps across both menus.
 MENUS.bowls.products.push(
@@ -1338,6 +1338,15 @@ MENUS.bowls.products.push(
     .filter(product => ["spicy-pork-rind", "fried-soya-crisps"].includes(product.id))
     .map(product => ({ ...product }))
 );
+
+function hasBanhMiInCart() {
+  const banhMiIds = new Set(MENUS["banh-mi"].products.filter(product => !product.standalone).map(product => product.id));
+  return state.cart.some(line => line.quantity > 0 && banhMiIds.has(line.productId));
+}
+
+function hasTrialPackInCart() {
+  return state.cart.some(line => line.productId === "spicy-pork-rind-trial" && line.quantity > 0);
+}
 
 function money(n) {
 
@@ -1461,6 +1470,11 @@ function calculateTotals() {
 }
 
 function render() {
+
+  if (hasTrialPackInCart() && !hasBanhMiInCart()) {
+    state.cart = state.cart.filter(line => line.productId !== "spicy-pork-rind-trial");
+    alert("The trial pack was removed because it is only available with a Bánh Mì. Add a Bánh Mì to include it again.");
+  }
 
   state.scheduleInfo =
     getScheduleInfo();
@@ -3189,6 +3203,11 @@ function errorPage(
 
 function addSimple(product) {
 
+  if (product.id === "spicy-pork-rind-trial" && !hasBanhMiInCart()) {
+    alert("Please add a Bánh Mì first. The $3.50 trial pack is available with any Bánh Mì.");
+    return;
+  }
+
   if (
     isChilliProduct(product.id)
   ) {
@@ -3595,6 +3614,11 @@ function submitOrder() {
 
   }
 
+
+  if (hasTrialPackInCart() && !hasBanhMiInCart()) {
+    alert("Please add a Bánh Mì to order the $3.50 pork rind trial pack.");
+    return;
+  }
 
   if (getTotalPuddingInCart() === 1) {
     alert("Original pudding has a minimum order of 2 bowls.");
